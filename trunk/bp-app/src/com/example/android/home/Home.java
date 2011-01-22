@@ -1,5 +1,6 @@
 package com.example.android.home;
 
+import android.R;
 import android.app.Activity;
 import android.os.Bundle;
 
