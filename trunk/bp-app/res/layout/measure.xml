@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent" 
+              android:layout_height="fill_parent" 
+              android:orientation="vertical">
+              
+    <TextView android:id="@+id/text0"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="Acquire blood pressure"
+              android:textStyle="bold"/>
+
+	<ImageView android:layout_width="wrap_content"
+			android:id="@+id/graph"
+			android:src="@drawable/bp"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/text0">
+	</ImageView>
+
+	<ImageView android:layout_width="wrap_content"
+			android:id="@+id/results"
+			android:src="@drawable/bp"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/graph">
+	</ImageView>
+
+	<Button android:id="@+id/button_help"
+			android:text="Help"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:layout_below="@+id/results">
+	</Button>
+	<Button android:id="@+id/button_save"
+			android:text="Save"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/results"
+			android:layout_weight="1"
+			android:layout_toRightOf="@+id/button_help">
+	</Button>
+	<Button android:id="@+id/button_discard"
+			android:text="Discard"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/results"
+			android:layout_weight="1"
+			android:layout_toRightOf="@+id/button_save">
+	</Button>
+
+</RelativeLayout>
