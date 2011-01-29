@@ -1,4 +1,4 @@
-fs = 10000;t = 0:1/fs:2;x1 = (sawtooth(1*pi*t,0.12));plot(t,x1); %wave1
+fs = 10000;t = 0:1/fs:2;x1 = (sawtooth(1*pi*t,0.12));%plot(t,x1); %wave1
 
 %oscillations
 tt = (0:1/4000:2);
@@ -6,7 +6,7 @@ xs = 0.025.*sin(1*pi*100*tt);plot(xs);
 g1=0:0.0025:20;
 gy=gaussmf(g1,[2 5]);
 %plot(g1,gy);
-sum=gy.*xs;plot(sum);
+sum=gy.*xs;%plot(sum);
 clear tt xs g1 gy;
 
 %this worked crap
