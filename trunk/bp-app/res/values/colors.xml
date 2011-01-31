@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<color name="graphview_background_color">#FFFFFF</color>
+	<color name="graphview_foreground_color">#FF0000</color>
+
+	<color name="valuesview_background_color_left">#000066</color>
+	<color name="valuesview_foreground_color_left">#AAAA00</color>
+
+	<color name="valuesview_background_color_right">#BBFFDD</color>
+	<color name="valuesview_foreground_color_right">#000000</color>
+</resources>
