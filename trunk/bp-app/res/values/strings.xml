@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, Home!</string>
     <string name="app_name">Blood Pressure</string>
+    <string name="measure_title">Measure</string>
+    
+    <string name="home_title">Instructions</string>
+    
+    <string name="home_subtitle1">What you need</string>
+    
+    <string name="home_text1">- Cuff without manometer\n
+- BP device\n
+- Android phone\n
+- USB cable</string>
+
 </resources>
