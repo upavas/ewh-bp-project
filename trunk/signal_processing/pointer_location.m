@@ -6,6 +6,7 @@ repeat = 1;
 fprintf('Blood Pressure Interface\n');
 fprintf('This program will run until the input value is zero\n');
 
+value_array = [];
 
 while repeat == 1
 
@@ -44,7 +45,6 @@ while repeat == 1
             y_array = [y_array, y];
             
             pressure_array = [pressure_array, x];
-            
             time_array = [time_array, time];
             
 
@@ -107,9 +107,12 @@ while repeat == 1
     end
     
     pressure_array
+    time_array
     %Insert signal processing algorithms
     %output blood pressure stats
-
+   
+    [systole, diastole, bpm] = signal_processing_program(pressure_array, time_array)
+    
 
     repeat = input('Enter 1 to repeat or any other number to close\n');
 
