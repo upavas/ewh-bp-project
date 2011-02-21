@@ -1,0 +1,13 @@
+
+syntax: regexp
+\.apk$
+syntax: regexp
+\.dex$
+syntax: regexp
+\.ap_$
+syntax: regexp
+^trunk/bp-app/bin$
+\.swp$
+\~$
+\.out$
+\.log$

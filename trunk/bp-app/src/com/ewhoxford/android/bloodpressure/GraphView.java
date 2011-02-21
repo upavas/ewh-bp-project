@@ -11,6 +11,7 @@ import android.content.Context;
 import android.graphics.*;
 import android.graphics.drawable.*;
 import android.view.*;
+import android.widget.Button;
 import android.util.AttributeSet;
 import android.content.res.Resources;
 
@@ -53,6 +54,43 @@ public class GraphView extends View
 		initGraphView();
 	}
 
+	
+	public boolean onTrackballEvent(MotionEvent me){
+		float x=me.getX();
+		float y=me.getY();
+		if(valuesEnd<59){
+		valuesEnd = valuesEnd +1;
+		values[valuesEnd]=(int) y*20;
+		this.invalidate(); // redraw
+		System.out.printf("inside-yvalue:"+values[valuesEnd]);
+		}		
+		System.out.printf("outside-yvalue:"+values[valuesEnd]);
+		
+		return true;
+		
+		
+		
+	};
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent me) {
+		// TODO Auto-generated method stub
+		
+		float x=me.getX();
+		float y=me.getY();
+		if(valuesEnd<59){
+		valuesEnd = valuesEnd +1;
+		values[valuesEnd]=(int) y*20;
+		this.invalidate(); // redraw
+		System.out.printf("inside-yvalue:"+values[valuesEnd]);
+		}		
+		System.out.printf("outside-yvalue:"+values[valuesEnd]);
+		
+		return true;
+		//return super.onTouchEvent(me);
+	}
+	
+	
 	// Initialization method
 	protected void initGraphView()
 	{
@@ -71,6 +109,7 @@ public class GraphView extends View
 		PaintCurve.setColor(r.getColor(R.color.graphview_foreground_color));
 		PaintCurve.setStrokeWidth(1);
 		PaintCurve.setStyle(Paint.Style.FILL_AND_STROKE);
+		System.out.printf("inside:"+this.getClass().getName()+"initGraphView");
 
 	}
 
