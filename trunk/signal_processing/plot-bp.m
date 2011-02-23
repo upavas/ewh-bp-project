@@ -1,18 +1,19 @@
 clear all
 close all
 
-x2=csvread('bp-carlos-h2.csv');
+x2=csvread('bp-joao-1.csv');
 
 
 
-y_p1=abs(x2(:,2)-255);
+y_p1_o=abs(x2(:,2)-255);
 x_p1=x2(:,1);
 figure(1)
-plot(y_p1,'o')
+plot(y_p1_o,'o')
 title('Y')
 figure(2)
 plot(x_p1,'o')
 title('X')
+y_p1=medfilt1(y_p1_o,10);       
 
 
 
