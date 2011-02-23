@@ -18,7 +18,7 @@
 
 #include <linux/input.h>
 
-#define MOUSEFILE "/dev/input/event5"
+#define MOUSEFILE "/dev/input/event11"
 
 #define test_bit(bit, array)    (array[bit/8] & (1<<(bit%8)))
 

@@ -86,7 +86,12 @@ int main()
 		exit(EXIT_FAILURE);
 	}
     
+    
+    
     double m=0;
+    
+     while pressure > 1 
+    
 	while(read(fd, &ie, sizeof(struct input_event))) {
 
         if(ie.type==2){
@@ -108,7 +113,7 @@ int main()
         /*
 	 * Plot the result
 	 */
-        engEvalString(ep, "figure(1)");
+    engEvalString(ep, "figure(1)");
 	engEvalString(ep, "plot(y);");
 	engEvalString(ep, "title('Pressure');");
 	engEvalString(ep, "xlabel('Time');");
