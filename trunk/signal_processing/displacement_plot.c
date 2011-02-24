@@ -90,7 +90,7 @@ int main()
     
     double m=0;
     
-     while pressure > 1 
+    engEvalString(ep,"while pressure > 1") 
     
 	while(read(fd, &ie, sizeof(struct input_event))) {
 
@@ -125,7 +125,7 @@ int main()
         
 	}
 
-	
+	engEvalString(ep,"end");
 	
 	/*
 	 * We're done for Part I! Free memory, close MATLAB engine.
