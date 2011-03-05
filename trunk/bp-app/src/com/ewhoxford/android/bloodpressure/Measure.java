@@ -17,10 +17,7 @@ import android.view.View.OnClickListener;
 
 //Class Measure : activity that pops when the user wants to start taking blood pressure
 public class Measure extends Activity implements OnClickListener {
-	int[] values;
-	int valuesEnd;
-	Random rand;
-	int d;
+
 	GraphView graph;
 
 	// To be performed on the creation
@@ -39,20 +36,12 @@ public class Measure extends Activity implements OnClickListener {
 
 		// #### End of Set up click listeners for all the buttons
 
-		// Simulate fake BP acquisition
-		values = new int[60];
-		rand = new Random();
-		d = 4;
 		graph = (GraphView) findViewById(R.id.graph);
 
-		//		
-		// values[0] = 40;
-		// valuesEnd = 0;
-		//
-		addValue();
+		acquireDataFromMouse();
 	}
 
-	protected void addValue() {
+	protected void acquireDataFromMouse() {
 
 		File f;
 		f = new File("/dev/input/mice");
@@ -64,7 +53,7 @@ public class Measure extends Activity implements OnClickListener {
 			try {
 
 				FileInputStream finp = new FileInputStream(f);
-				int b;
+
 				int count = 0;
 				char[] mouseV = new char[3];
 				do {
@@ -76,32 +65,16 @@ public class Measure extends Activity implements OnClickListener {
 					}
 					System.out.println("" + (int) mouseV[0] + ","
 							+ (int) mouseV[1] + "," + (int) mouseV[2]);
-					valuesEnd = valuesEnd + 1;
-					int j = valuesEnd;
-					values[j] = mouseV[2];
+
 					i = 0;
-				} while ((mouseV[0] != -1) && (count < 100));
+					
+					graph.sendNewValueToDisplay((float) mouseV[2]);
+				} while ((mouseV[0] != -1) && (count < 20));
 				finp.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
-			graph.plotValues(values, valuesEnd);
-
-			// if (i < 59) {
-			//
-			// final Handler handler = new Handler();
-			// Timer t = new Timer();
-			// t.schedule(new TimerTask() {
-			// public void run() {
-			// handler.post(new Runnable() {
-			// public void run() {
-			// addValue();
-			// }
-			// });
-			// }
-			// }, 80);
-			//
 		}
 	}
 
@@ -116,12 +89,6 @@ public class Measure extends Activity implements OnClickListener {
 
 		}
 	}
-
-	public OnClickListener mCorkyListener = new OnClickListener() {
-		public void onClick(View v) {
-			// do something when the button is clicked
-		}
-	};
 
 	void printSamples(MotionEvent ev) {
 		final int historySize = ev.getHistorySize();
