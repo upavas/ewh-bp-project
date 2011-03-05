@@ -2,6 +2,8 @@
 package com.ewhoxford.android.bloodpressure;
 
 //Import resources
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,16 +24,15 @@ public class Measure extends Activity implements OnClickListener {
 	GraphView graph;
 
 	// To be performed on the creation
-	public void onCreate(Bundle savedInstanceState)
-    {
-    	// Parent's method
-        super.onCreate(savedInstanceState);
-        
-        // Layout
-        setContentView(R.layout.measure);
+	public void onCreate(Bundle savedInstanceState) {
+		// Parent's method
+		super.onCreate(savedInstanceState);
+
+		// Layout
+		setContentView(R.layout.measure);
 
 		// #### Set up click listeners for all the buttons
-		
+
 		// Help button
 		View HelpButton = findViewById(R.id.button_help);
 		HelpButton.setOnClickListener(this);
@@ -43,36 +44,62 @@ public class Measure extends Activity implements OnClickListener {
 		rand = new Random();
 		d = 4;
 		graph = (GraphView) findViewById(R.id.graph);
-		
-		
-//		
-//		values[0] = 40;
-//		valuesEnd = 0;
-//
-//		addValue();
+
+		//		
+		// values[0] = 40;
+		// valuesEnd = 0;
+		//
+		addValue();
 	}
 
 	protected void addValue() {
-		valuesEnd = valuesEnd + 1;
-		int i = valuesEnd;
-		values[i] = values[i - 1] + rand.nextInt(d + 1) - d / 2;
 
-		graph.plotValues(values, valuesEnd);
+		File f;
+		f = new File("/dev/input/mice");
 
-		if (i < 59) {
+		if (!f.exists() && f.length() < 0)
+			System.out.println("The specified file is not exist");
+		else {
 
-			final Handler handler = new Handler();
-			Timer t = new Timer();
-			t.schedule(new TimerTask() {
-				public void run() {
-					handler.post(new Runnable() {
-						public void run() {
-							addValue();
-						}
-					});
-				}
-			}, 80);
+			try {
 
+				FileInputStream finp = new FileInputStream(f);
+				int b;
+				char[] mouseV = new char[3];
+				do {
+					int i = 0;
+					while (i <= 2) {
+						mouseV[i] = (char) finp.read();
+						i = i + 1;
+					}
+					System.out.println("" + (int) mouseV[0] + ","
+							+ (int) mouseV[1] + "," + (int) mouseV[2]);
+					valuesEnd = valuesEnd + 1;
+					int j = valuesEnd;
+					values[j] = mouseV[2];
+					i = 0;
+				} while (mouseV[0] != -1);
+				finp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			graph.plotValues(values, valuesEnd);
+
+			// if (i < 59) {
+			//
+			// final Handler handler = new Handler();
+			// Timer t = new Timer();
+			// t.schedule(new TimerTask() {
+			// public void run() {
+			// handler.post(new Runnable() {
+			// public void run() {
+			// addValue();
+			// }
+			// });
+			// }
+			// }, 80);
+			//
 		}
 	}
 

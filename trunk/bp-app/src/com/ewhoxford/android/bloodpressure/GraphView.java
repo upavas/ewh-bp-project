@@ -21,7 +21,7 @@ public class GraphView extends View
 	// Attributes
 	private Paint PaintRect;	// Paint object for background rectangle
 	private Paint PaintCurve;	// Paint object for the curve
-	int[] values = new int[60]; // Array of data to be plotted
+	int[] values = new int[50000]; // Array of data to be plotted
 	int valuesEnd = -1;			// Maximum element of the array that has been completed
 
 	// Constructor 1/3
