@@ -23,6 +23,7 @@ public class GraphView extends View
 	private Paint PaintCurve;	// Paint object for the curve
 	float[] values = new float[50000]; // Array of data to be plotted
 	float valuesMax = 0;			// Maximum value in the array
+	float valuesMin = 0;			// Minimum value in the array
 	int valuesEnd = -1;			// Maximum index of the array that has been completed
 
 	// Constructor 1/3
@@ -59,17 +60,8 @@ public class GraphView extends View
 	public boolean onTrackballEvent(MotionEvent me){
 		float x=me.getX();
 		float y=me.getY();
-		if(valuesEnd<59){
-		valuesEnd = valuesEnd +1;
-		values[valuesEnd]=(int) y*20;
-		this.invalidate(); // redraw
-		System.out.printf("inside-yvalue:"+values[valuesEnd]);
-		}		
-		System.out.printf("outside-yvalue:"+values[valuesEnd]);
-		
+		//sendNewValueToDisplay(y);
 		return true;
-		
-		
 		
 	};
 	
@@ -79,16 +71,8 @@ public class GraphView extends View
 		
 		float x=me.getX();
 		float y=me.getY();
-		if(valuesEnd<59){
-		valuesEnd = valuesEnd +1;
-		values[valuesEnd]=(int) y*20;
-		this.invalidate(); // redraw
-		System.out.printf("inside-yvalue:"+values[valuesEnd]);
-		}		
-		System.out.printf("outside-yvalue:"+values[valuesEnd]);
-		
+		//sendNewValueToDisplay(y);
 		return true;
-		//return super.onTouchEvent(me);
 	}
 	
 	
@@ -126,12 +110,12 @@ public class GraphView extends View
 		
 		// Range ?
 		float max_h = valuesEnd * 1.3f;
-		float max_v = valuesMax * 1.3f;
+		float max_v = (valuesMax - valuesMin) * 1.3f;
 		
 		// Draw a line
 		for (int i=0; i<valuesEnd; i++)
 		{
-			canvas.drawLine(i*w/max_h, values[i]*h/max_v, (i+1)*w/max_h, values[i+1]*h/max_v, PaintCurve);
+			canvas.drawLine(i*w/max_h, (values[i]-valuesMin)*h/max_v, (i+1)*w/max_h, (values[i+1]-valuesMin)*h/max_v, PaintCurve);
 		}
 
 
@@ -145,7 +129,11 @@ public class GraphView extends View
 		if (newValue > valuesMax)
 		{
 			valuesMax = newValue;
-		}		
+		}
+		if (newValue < valuesMin)
+		{
+			valuesMin = newValue;
+		}
 		this.invalidate();
 	}
 

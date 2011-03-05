@@ -37,7 +37,8 @@ public class Measure extends Activity implements OnClickListener {
 		// #### End of Set up click listeners for all the buttons
 
 		graph = (GraphView) findViewById(R.id.graph);
-
+		
+		graph.invalidate();
 		acquireDataFromMouse();
 	}
 
@@ -69,7 +70,7 @@ public class Measure extends Activity implements OnClickListener {
 					i = 0;
 					
 					graph.sendNewValueToDisplay((float) mouseV[2]);
-				} while ((mouseV[0] != -1) && (count < 20));
+				} while ((mouseV[0] != -1) && (count < 50));
 				finp.close();
 			} catch (Exception e) {
 				e.printStackTrace();
