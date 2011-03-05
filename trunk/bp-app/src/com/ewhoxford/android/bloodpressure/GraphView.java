@@ -21,8 +21,9 @@ public class GraphView extends View
 	// Attributes
 	private Paint PaintRect;	// Paint object for background rectangle
 	private Paint PaintCurve;	// Paint object for the curve
-	int[] values = new int[50000]; // Array of data to be plotted
-	int valuesEnd = -1;			// Maximum element of the array that has been completed
+	float[] values = new float[50000]; // Array of data to be plotted
+	float valuesMax = 0;			// Maximum value in the array
+	int valuesEnd = -1;			// Maximum index of the array that has been completed
 
 	// Constructor 1/3
 	public GraphView(Context context)
@@ -123,22 +124,28 @@ public class GraphView extends View
 		// Draw the background rectangle
 		canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), PaintRect);
 		
+		// Range ?
+		float max_h = valuesEnd * 1.3f;
+		float max_v = valuesMax * 1.3f;
+		
 		// Draw a line
-		int max = 100;
 		for (int i=0; i<valuesEnd; i++)
 		{
-			canvas.drawLine(i*w/60, values[i]*h/max, (i+1)*w/60, values[i+1]*h/max, PaintCurve);
+			canvas.drawLine(i*w/max_h, values[i]*h/max_v, (i+1)*w/max_h, values[i+1]*h/max_v, PaintCurve);
 		}
-		
 
 
 	}
 	
 	// Plot a set of values in the form of a curve
-	public void plotValues(int[] newValues, int newEnd)
+	public void sendNewValueToDisplay(float newValue)
 	{
-		values = newValues;
-		valuesEnd = newEnd;
+		valuesEnd++;
+		values[valuesEnd] = newValue;
+		if (newValue > valuesMax)
+		{
+			valuesMax = newValue;
+		}		
 		this.invalidate();
 	}
 
