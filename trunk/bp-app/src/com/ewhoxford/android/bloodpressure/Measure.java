@@ -65,8 +65,10 @@ public class Measure extends Activity implements OnClickListener {
 
 				FileInputStream finp = new FileInputStream(f);
 				int b;
+				int count = 0;
 				char[] mouseV = new char[3];
 				do {
+					count++;
 					int i = 0;
 					while (i <= 2) {
 						mouseV[i] = (char) finp.read();
@@ -78,7 +80,7 @@ public class Measure extends Activity implements OnClickListener {
 					int j = valuesEnd;
 					values[j] = mouseV[2];
 					i = 0;
-				} while (mouseV[0] != -1);
+				} while ((mouseV[0] != -1) && (count < 100));
 				finp.close();
 			} catch (Exception e) {
 				e.printStackTrace();
