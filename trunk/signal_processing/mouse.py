@@ -9,7 +9,7 @@ if __name__ == '__main__':
     mouse = file('/dev/input/mice')
     
    # bpWriter1 = csv.writer(open('bp-carlos-h1.csv', 'wb'), delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-    bpWriter2 = csv.writer(open('bp-marco-2.csv', 'wb'), delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    bpWriter2 = csv.writer(open('marco_050311_1.csv', 'wb'), delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     while True:
         status, dx2, dy2 = tuple(ord(c) for c in mouse.read(3))
        # dx = to_signed(dx2)

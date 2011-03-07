@@ -1,9 +1,7 @@
 clear all
 close all
 
-x2=csvread('bp-marco-2.csv');
-
-
+x2=csvread('marco_050311_1.csv');
 
 y_p1_o=abs(x2(:,3)-255);
 x_p1=x2(:,2);
@@ -14,9 +12,6 @@ figure(2)
 plot(x_p1,'o')
 title('X')
 y_p1=medfilt1(y_p1_o,10);       
-
-
-
 
 y_p1_converted=zeros(size(y_p1));
 for i=1:length(y_p1)
