@@ -15,7 +15,7 @@ import android.util.AttributeSet;
 import android.content.res.Resources;
 
 // Class GraphView : a view controller for displaying the blood pressure / time graph
-public class ValuesView extends View
+public class MeasureView extends View
 {
 	// Attributes
 	private Paint PaintRectLeft;	// Paint object for background rectangle of the left
@@ -24,7 +24,7 @@ public class ValuesView extends View
 	private Paint PaintFontRight;	// Paint object for fonts of the right rectangle
 
 	// Constructor 1/3
-	public ValuesView(Context context)
+	public MeasureView(Context context)
 	{
 		// Parent's constructor
 		super(context);
@@ -34,7 +34,7 @@ public class ValuesView extends View
 	}
 
 	// Constructor 2/3
-	public ValuesView(Context context, AttributeSet attrs)
+	public MeasureView(Context context, AttributeSet attrs)
 	{
 		// Parent's constructor
 		super(context, attrs);
@@ -44,7 +44,7 @@ public class ValuesView extends View
 	}
 	
 	// Constructor 3/3
-	public ValuesView(Context context, AttributeSet ats, int defaultStyle)
+	public MeasureView(Context context, AttributeSet ats, int defaultStyle)
 	{
 		// Parent's constructor
 		super(context, ats, defaultStyle);

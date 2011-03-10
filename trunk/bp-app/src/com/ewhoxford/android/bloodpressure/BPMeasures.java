@@ -98,6 +98,21 @@ public final class BPMeasures {
 		 * </P>
 		 */
 		public static final String MEASUREMENT_FILE = "measurement_file";
+		/**
+		 * true if measurement file was saved by the user, false if not
+		 * <P>
+		 * Type: BOOLEAN
+		 * </P>
+		 */
+		public static final String MEASUREMENT_FILE_EXIST = "measurement_file_exist";
+		
+		/**
+		 * The measurement syncronized with central server
+		 * <P>
+		 * Type: BOOLEAN
+		 * </P>
+		 */
+		public static final String MEASUREMENT_FILE_SYNC = "measurement_file_sync";
 
 		/**
 		 * The timestamp for when the note was created
