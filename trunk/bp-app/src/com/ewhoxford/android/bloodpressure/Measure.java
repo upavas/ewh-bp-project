@@ -4,13 +4,9 @@ package com.ewhoxford.android.bloodpressure;
 //Import resources
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
