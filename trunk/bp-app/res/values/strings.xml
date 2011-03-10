@@ -12,4 +12,8 @@
 - Android phone\n
 - USB cable</string>
 
+<string name="add_measure">new measure</string>
+<string name="help">help</string>
+<string name="menu_delete">DELETE</string>
+<string name="measure_view">Measure View</string>
 </resources>
