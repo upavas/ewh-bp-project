@@ -4,20 +4,19 @@
 	android:versionName="1.0">
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
 		android:debuggable="true">
+
+
 		<activity android:name=".MeasureList" android:label="@string/app_name">
 			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
+				<action android:name="android.intent.action.MAIN"></action>
+				<category android:name="android.intent.category.LAUNCHER"></category>
 			</intent-filter>
 		</activity>
-		<activity android:name=".Measure" android:label="@string/measure_title">
-		</activity>
-		<activity android:name=".MeasureView" android:label="@string/measure_view">
-		</activity>
-		<activity android:name=".help" android:label="@string/help">
-		</activity>
+		<activity android:name=".Measure"></activity>
 
 	</application>
+	<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="5" />
+
 
 
 </manifest> 

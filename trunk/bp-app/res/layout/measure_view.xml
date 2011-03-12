@@ -15,8 +15,8 @@
 -->
 
 <view xmlns:android="http://schemas.android.com/apk/res/android"
-    class="com.example.android.notepad.NoteEditor$LinedEditText"
-    android:id="@+id/note"
+    class="com.ewhoxford.android.bloodpressure.MeasureView$EditNote"
+    android:id="@+id/BPMeasure"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"

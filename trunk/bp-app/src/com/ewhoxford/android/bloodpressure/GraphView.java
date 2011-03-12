@@ -2,33 +2,26 @@
 package com.ewhoxford.android.bloodpressure;
 
 //Import resources
-import java.util.Random;
-
-import com.ewhoxford.android.bloodpressure.R;
-
-// Import Android stuff
 import android.content.Context;
-import android.graphics.*;
-import android.graphics.drawable.*;
-import android.view.*;
-import android.widget.Button;
-import android.util.AttributeSet;
 import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
 
 // Class GraphView : a view controller for displaying the blood pressure / time graph
-public class GraphView extends View
-{
+public class GraphView extends View {
 	// Attributes
-	private Paint PaintRect;	// Paint object for background rectangle
-	private Paint PaintCurve;	// Paint object for the curve
+	private Paint PaintRect; // Paint object for background rectangle
+	private Paint PaintCurve; // Paint object for the curve
 	float[] values = new float[50000]; // Array of data to be plotted
-	float valuesMax = 0;			// Maximum value in the array
-	float valuesMin = 0;			// Minimum value in the array
-	int valuesEnd = -1;			// Maximum index of the array that has been completed
+	float valuesMax = 0; // Maximum value in the array
+	float valuesMin = 0; // Minimum value in the array
+	int valuesEnd = -1; // Maximum index of the array that has been completed
 
 	// Constructor 1/3
-	public GraphView(Context context)
-	{
+	public GraphView(Context context) {
 		// Parent's constructor
 		super(context);
 
@@ -37,8 +30,7 @@ public class GraphView extends View
 	}
 
 	// Constructor 2/3
-	public GraphView(Context context, AttributeSet attrs)
-	{
+	public GraphView(Context context, AttributeSet attrs) {
 		// Parent's constructor
 		super(context, attrs);
 
@@ -47,8 +39,7 @@ public class GraphView extends View
 	}
 
 	// Constructor 3/3
-	public GraphView(Context context, AttributeSet ats,	int defaultStyle)
-	{
+	public GraphView(Context context, AttributeSet ats, int defaultStyle) {
 		// Parent's constructor
 		super(context, ats, defaultStyle);
 
@@ -56,29 +47,26 @@ public class GraphView extends View
 		initGraphView();
 	}
 
-	
-	public boolean onTrackballEvent(MotionEvent me){
-		float x=me.getX();
-		float y=me.getY();
-		//sendNewValueToDisplay(y);
+	public boolean onTrackballEvent(MotionEvent me) {
+		float x = me.getX();
+		float y = me.getY();
+		// sendNewValueToDisplay(y);
 		return true;
-		
+
 	};
-	
+
 	@Override
 	public boolean onTouchEvent(MotionEvent me) {
 		// TODO Auto-generated method stub
-		
-		float x=me.getX();
-		float y=me.getY();
-		//sendNewValueToDisplay(y);
+
+		float x = me.getX();
+		float y = me.getY();
+		// sendNewValueToDisplay(y);
 		return true;
 	}
-	
-	
+
 	// Initialization method
-	protected void initGraphView()
-	{
+	protected void initGraphView() {
 		setFocusable(true);
 
 		Resources r = this.getResources();
@@ -88,55 +76,51 @@ public class GraphView extends View
 		PaintRect.setColor(r.getColor(R.color.graphview_background_color));
 		PaintRect.setStrokeWidth(1);
 		PaintRect.setStyle(Paint.Style.FILL_AND_STROKE);
-		
+
 		// Paint object for curve
 		PaintCurve = new Paint(Paint.ANTI_ALIAS_FLAG);
 		PaintCurve.setColor(r.getColor(R.color.graphview_foreground_color));
 		PaintCurve.setStrokeWidth(1);
 		PaintCurve.setStyle(Paint.Style.FILL_AND_STROKE);
-		System.out.printf("inside:"+this.getClass().getName()+"initGraphView");
+		System.out.printf("inside:" + this.getClass().getName()
+				+ "initGraphView");
 
 	}
 
 	// Draw method
-	protected void onDraw(Canvas canvas)
-	{
+	protected void onDraw(Canvas canvas) {
 		// Measures
 		int w = getMeasuredWidth();
 		int h = getMeasuredHeight();
-		
+
 		// Draw the background rectangle
-		canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), PaintRect);
-		
+		canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(),
+				PaintRect);
+
 		// Range ?
 		float max_h = valuesEnd * 1.3f;
 		float max_v = (valuesMax - valuesMin) * 1.3f;
-		
-		// Draw a line
-		for (int i=0; i<valuesEnd; i++)
-		{
-			canvas.drawLine(i*w/max_h, (values[i]-valuesMin)*h/max_v, (i+1)*w/max_h, (values[i+1]-valuesMin)*h/max_v, PaintCurve);
-		}
 
+		// Draw a line
+		for (int i = 0; i < valuesEnd; i++) {
+			canvas.drawLine(i * w / max_h, (values[i] - valuesMin) * h / max_v,
+					(i + 1) * w / max_h, (values[i + 1] - valuesMin) * h
+							/ max_v, PaintCurve);
+		}
 
 	}
-	
+
 	// Plot a set of values in the form of a curve
-	public void sendNewValueToDisplay(float newValue)
-	{
+	public void sendNewValueToDisplay(float newValue) {
 		valuesEnd++;
 		values[valuesEnd] = newValue;
-		if (newValue > valuesMax)
-		{
+		if (newValue > valuesMax) {
 			valuesMax = newValue;
 		}
-		if (newValue < valuesMin)
-		{
+		if (newValue < valuesMin) {
 			valuesMin = newValue;
 		}
 		this.invalidate();
 	}
-
-
 
 }
