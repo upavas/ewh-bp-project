@@ -14,12 +14,20 @@
      limitations under the License.
 -->
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/text1"
-    android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:textAppearance="?android:attr/textAppearanceLarge"
-    android:gravity="center_vertical"
-    android:paddingLeft="5dip"
-    android:singleLine="true"
-/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <ListView android:layout_width="match_parent"
+              android:id="@+id/bpMeasureList"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"/>
+    <CheckBox android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/selectAll"
+              android:text="@string/select_all"/>
+    <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/newBPMeasureButton"
+            android:text="add_measure"/>
+</LinearLayout>
