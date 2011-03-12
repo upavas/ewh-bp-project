@@ -18,4 +18,5 @@
 <string name="measure_view">Measure View</string>
 <string name="menu_revert">Revert</string>
 <string name="menu_discard">Discard</string>
+<string name="select_all">Select All</string>
 </resources>

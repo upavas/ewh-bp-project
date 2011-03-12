@@ -32,20 +32,17 @@ import android.net.Uri;
 import android.provider.LiveFolders;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Button;
 
 import com.ewhoxford.android.bloodpressure.BPMeasures.BPMeasure;
 
 /**
- * Provides access to a database of notes. Each note has a title, the note
- * itself, a creation date and a modified data.
+ * Provides access to a database of BP Measures. Each BP Measure has an ID, note, SP, DP, Pulse rate,
+ *  a creation date and a modified data.
  */
 public class BPMeasureProvider extends ContentProvider {
 
 	private static final String TAG = "BPMeasureProvider";
 
-
-	
 	private static final String DATABASE_NAME = "bp_measures.db";
 	private static final int DATABASE_VERSION = 1;
 	private static final String MEASURES_TABLE_NAME = "measures";
