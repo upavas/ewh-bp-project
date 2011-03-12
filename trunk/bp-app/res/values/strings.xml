@@ -16,4 +16,6 @@
 <string name="help">help</string>
 <string name="menu_delete">DELETE</string>
 <string name="measure_view">Measure View</string>
+<string name="menu_revert">Revert</string>
+<string name="menu_discard">Discard</string>
 </resources>

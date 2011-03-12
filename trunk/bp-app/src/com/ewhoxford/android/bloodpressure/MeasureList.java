@@ -32,6 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -49,7 +50,8 @@ public class MeasureList extends ListActivity {
 	public static final int MENU_ITEM_DELETE = Menu.FIRST;
 	public static final int MENU_ITEM_INSERT = Menu.FIRST + 1;
 	private static final int MENU_ITEM_HELP = Menu.FIRST + 2;
-
+	 private Button mAddMeasureButton;
+	
 	/**
 	 * The columns we are interested in from the database
 	 */
@@ -152,17 +154,17 @@ public class MeasureList extends ListActivity {
 		// overall list. In a normal install, there are no additional
 		// actions found here, but this allows other applications to extend
 		// our menu with their own actions.
-		Intent intent = new Intent(null, Measure.class);
-		intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
-		menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE, 0, 0,
-				new ComponentName(this, MeasureList.class), null, intent, 0,
-				null);
-		Intent intent2 = new Intent(null, Help.class);
-		intent2.addCategory(Intent.CATEGORY_ALTERNATIVE);
-		
-		menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE, 0, 0,
-				new ComponentName(this, MeasureList.class), null, intent2, 0,
-				null);
+//		Intent intent = new Intent(null, Measure.class);
+//		intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
+//		menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE, 0, 0,
+//				new ComponentName(this, MeasureList.class), null, intent, 0,
+//				null);
+//		Intent intent2 = new Intent(null, Help.class);
+//		intent2.addCategory(Intent.CATEGORY_ALTERNATIVE);
+//		
+//		menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE, 0, 0,
+//				new ComponentName(this, MeasureList.class), null, intent2, 0,
+//				null);
 
 		return true;
 	}

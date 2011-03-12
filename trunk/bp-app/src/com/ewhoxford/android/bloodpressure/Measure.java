@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 public class Measure extends Activity implements OnClickListener {
 
 	GraphView graph;
+	BPSignalProcessing signalProcessing;
 
 	// To be performed on the creation
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class Measure extends Activity implements OnClickListener {
 					i = 0;
 					
 					graph.sendNewValueToDisplay((float) mouseV[2]);
+					signalProcessing.sendNewValueToProcess(mouseV[1], mouseV[2]);
 				} while ((mouseV[0] != -1) && (count < 50));
 				finp.close();
 			} catch (Exception e) {
