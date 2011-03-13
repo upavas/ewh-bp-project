@@ -7,15 +7,20 @@ import java.io.FileInputStream;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
 //Class Measure : activity that pops when the user wants to start taking blood pressure
 public class Measure extends Activity implements OnClickListener {
 
 	GraphView graph;
 	BPSignalProcessing signalProcessing;
+	boolean saveFile = false;
 
 	// To be performed on the creation
 	public void onCreate(Bundle savedInstanceState) {
@@ -27,6 +32,32 @@ public class Measure extends Activity implements OnClickListener {
 
 		// #### Set up click listeners for all the buttons
 
+		final EditText edittext = (EditText) findViewById(R.id.edittext);
+		edittext.setOnKeyListener(new OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// If the event is a key-down event on the "enter" button
+				if ((event.getAction() == KeyEvent.ACTION_DOWN)
+						&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
+					// Perform action on key press
+					// Toast.makeText(HelloFormStuff.this, edittext.getText(),
+					// Toast.LENGTH_SHORT).show();
+					return true;
+				}
+				return false;
+			}
+		});
+
+		final CheckBox checkbox = (CheckBox) findViewById(R.id.checkbox);
+		checkbox.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				// Perform action on clicks, depending on whether it's now
+				// checked
+				if (((CheckBox) v).isChecked()) {
+					saveFile = true;
+				}
+			}
+		});
+
 		// Help button
 		View HelpButton = findViewById(R.id.button_help);
 		HelpButton.setOnClickListener(this);
@@ -34,7 +65,7 @@ public class Measure extends Activity implements OnClickListener {
 		// #### End of Set up click listeners for all the buttons
 
 		graph = (GraphView) findViewById(R.id.graph);
-		
+
 		graph.invalidate();
 		acquireDataFromMouse();
 	}
@@ -65,9 +96,10 @@ public class Measure extends Activity implements OnClickListener {
 							+ (int) mouseV[1] + "," + (int) mouseV[2]);
 
 					i = 0;
-					
+
 					graph.sendNewValueToDisplay((float) mouseV[2]);
-					signalProcessing.sendNewValueToProcess(mouseV[1], mouseV[2]);
+					signalProcessing
+							.sendNewValueToProcess(mouseV[1], mouseV[2]);
 				} while ((mouseV[0] != -1) && (count < 50));
 				finp.close();
 			} catch (Exception e) {
