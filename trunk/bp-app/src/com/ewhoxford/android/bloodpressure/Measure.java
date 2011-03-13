@@ -96,7 +96,7 @@ public class Measure extends Activity implements OnClickListener {
 							+ (int) mouseV[1] + "," + (int) mouseV[2]);
 
 					i = 0;
-
+					
 					graph.sendNewValueToDisplay((float) mouseV[2]);
 					signalProcessing
 							.sendNewValueToProcess(mouseV[1], mouseV[2]);
