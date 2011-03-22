@@ -4,35 +4,32 @@ import com.androidplot.series.XYSeries;
 
 public class SimpleXYSeries implements XYSeries {
 
-	
 	private final float[] vals;
-	
+
 	public SimpleXYSeries(int l, int[][] vals1) {
 		int valsx = 0;
 		int valsy = 0;
 		float aux1 = 0;
-	    float aux2 = 0;
+		float aux2 = 0;
 		vals = new float[l];
 
 		int i = 0;
 
 		while (i < l) {
-			valsy = Math.abs(vals1[i][1]-255);
-			if (vals1[i][0]==1){
-				valsx = 2*2*2*2*2*2*2*2;
-			}
-			else if (vals1[i][0]==2){
-				valsx = 2*2*2*2*2*2*2*2*2;
-			}
-			else if (vals1[i][0]==3){
-				valsx = (2*2*2*2*2*2*2*2)+(2*2*2*2*2*2*2*2*2);
-			}
-			else{
+			valsy = Math.abs(vals1[i][1] - 255);
+			if (vals1[i][0] == 1) {
+				valsx = 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2;
+			} else if (vals1[i][0] == 2) {
+				valsx = 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2;
+			} else if (vals1[i][0] == 3) {
+				valsx = (2 * 2 * 2 * 2 * 2 * 2 * 2 * 2)
+						+ (2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2);
+			} else {
 				valsx = 0;
 			}
-			aux1 = (float) (valsx+valsy)/1024;
-			aux2 = (float) (aux1-0.04);
-			vals[i] = (float) (aux2*7.50061683/0.018);
+			aux1 = (float) (valsx + valsy) / 1024;
+			aux2 = (float) (aux1 - 0.04);
+			vals[i] = (float) (aux2 * 7.50061683 / 0.018);
 			i++;
 		}
 
@@ -65,16 +62,6 @@ public class SimpleXYSeries implements XYSeries {
 	@Override
 	public int size() {
 		return vals.length;
-	}
-
-	@Override
-	public void onReadBegin() {
-
-	}
-
-	@Override
-	public void onReadEnd() {
-
 	}
 
 	// return vals[index]
