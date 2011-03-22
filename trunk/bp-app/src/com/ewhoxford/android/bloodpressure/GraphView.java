@@ -110,17 +110,6 @@ public class GraphView extends View {
 
 	}
 
-	// Plot a set of values in the form of a curve
-	public void sendNewValueToDisplay(float newValue) {
-		valuesEnd++;
-		values[valuesEnd] = newValue;
-		if (newValue > valuesMax) {
-			valuesMax = newValue;
-		}
-		if (newValue < valuesMin) {
-			valuesMin = newValue;
-		}
-		this.invalidate();
-	}
+	
 
 }
