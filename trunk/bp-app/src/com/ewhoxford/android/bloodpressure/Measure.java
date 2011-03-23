@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
+import android.R;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,9 +25,10 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.LineAndPointRenderer;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
+import com.ewhoxford.android.mouseInputDevice.MiceStreamActivityListener;
 
 //Class Measure : activity that pops when the user wants to start taking blood pressure
-public class Measure extends Activity implements Observer{
+public class Measure extends Activity implements Observer {
 
 	private static final int HISTORY_SIZE = 12000;
 	GraphView graph;
@@ -131,8 +133,11 @@ public class Measure extends Activity implements Observer{
 
 		// get rid of the visual aids for positioning:
 		// bpMeasureXYPlot.disableAllMarkup();
+		// acquireDataFromMouse();
 
-		acquireDataFromMouse();
+		MiceStreamActivityListener miceListener = new MiceStreamActivityListener();
+		miceListener.addObserver(this);
+
 	}
 
 	protected void acquireDataFromMouse() {
@@ -221,9 +226,22 @@ public class Measure extends Activity implements Observer{
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
+
+		if (bpMeasureHistory.size() > HISTORY_SIZE) {
+			bpMeasureHistory.removeFirst();
+		}
+
+		char[] mouseV = (char[]) arg1;
+
+		// add the latest history sample:
+		bpMeasureHistory.addLast((int) mouseV[2]);
+
+		// update the plot with the updated history Lists:
+		bpMeasureSeries.setModel(bpMeasureHistory,
+				SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+
+		// redraw the Plots:
+		bpMeasureXYPlot.redraw();
 	}
-	
-	
 
 }
