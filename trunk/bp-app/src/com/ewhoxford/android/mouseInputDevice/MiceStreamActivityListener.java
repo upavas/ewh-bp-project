@@ -5,14 +5,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Observable;
 
-import com.androidplot.xy.SimpleXYSeries;
+import com.ewhoxford.android.bloodpressure.Measure;
 
 public class MiceStreamActivityListener extends Observable {
 
-	
-	
-	
-	
+	private char[] mouse = new char[3];
+
 	public MiceStreamActivityListener() {
 		
 		File f;
@@ -42,9 +40,9 @@ public class MiceStreamActivityListener extends Observable {
 
 					// signal processing here
 
-					yValue = (int) (mouseV[2]);
+					// yValue = (int) (mouseV[2]);
+					setMouse(mouseV);
 
-					
 				} while ((mouseV[0] != -1) && (count < 50));
 				finp.close();
 			} catch (IOException e) {
@@ -52,9 +50,17 @@ public class MiceStreamActivityListener extends Observable {
 			}
 
 		}
-		 setChanged();
+
 	}
-	
-	
+
+	public void setMouse(char[] mouse) {
+		this.mouse = mouse;
+		setChanged();
+		notifyObservers(mouse);
+	}
+
+	public char[] getMouse() {
+		return mouse;
+	}
 
 }
