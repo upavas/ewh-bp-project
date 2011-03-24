@@ -5,11 +5,11 @@ package com.ewhoxford.android.bloodpressure;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.EventListener;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
-import android.R;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -25,18 +25,20 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.LineAndPointRenderer;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
+import com.ewhoxford.android.bloodpressure.model.PressureDataPoint;
 import com.ewhoxford.android.mouseInputDevice.MiceStreamActivityListener;
 
 //Class Measure : activity that pops when the user wants to start taking blood pressure
-public class Measure extends Activity implements Observer {
+public class Measure extends Activity implements EventListener {
 
 	private static final int HISTORY_SIZE = 12000;
-	GraphView graph;
-	BPSignalProcessing signalProcessing;
+
 	boolean saveFile = false;
 	private XYPlot bpMeasureXYPlot;
 	private LinkedList<Number> bpMeasureHistory;
+
 	private SimpleXYSeries bpMeasureSeries = null;
+	private boolean active = true;
 
 	{
 		bpMeasureHistory = new LinkedList<Number>();
@@ -136,7 +138,7 @@ public class Measure extends Activity implements Observer {
 		// acquireDataFromMouse();
 
 		MiceStreamActivityListener miceListener = new MiceStreamActivityListener();
-		miceListener.addObserver(this);
+		//miceListener.addObserver(this);
 
 	}
 
@@ -185,6 +187,7 @@ public class Measure extends Activity implements Observer {
 
 					// redraw the Plots:
 					bpMeasureXYPlot.redraw();
+					// bpMeasureXYPlot.redraw();
 
 				} while ((mouseV[0] != -1) && (count < 50));
 				finp.close();
@@ -224,24 +227,46 @@ public class Measure extends Activity implements Observer {
 		}
 	}
 
-	@Override
-	public void update(Observable arg0, Object arg1) {
-
-		if (bpMeasureHistory.size() > HISTORY_SIZE) {
-			bpMeasureHistory.removeFirst();
-		}
-
-		char[] mouseV = (char[]) arg1;
-
-		// add the latest history sample:
-		bpMeasureHistory.addLast((int) mouseV[2]);
-
-		// update the plot with the updated history Lists:
-		bpMeasureSeries.setModel(bpMeasureHistory,
-				SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-
-		// redraw the Plots:
-		bpMeasureXYPlot.redraw();
-	}
-
+//	@Override
+//	public void update(Observable arg0, Object arg1) {
+//
+//		// if (bpMeasureHistory.size() > HISTORY_SIZE) {
+//		// bpMeasureHistory.removeFirst();
+//		// }
+//
+//		if (arg1 instanceof PressureDataPoint) {
+//			PressureDataPoint p = (PressureDataPoint) arg1;
+//
+//			char[] data = p.getMouseData();
+//			int yValue = (int) (data[2]);
+//
+//			// get rid the oldest sample in history:
+//			if (bpMeasureHistory.size() > HISTORY_SIZE) {
+//				bpMeasureHistory.removeFirst();
+//			}
+//			System.out.println("value2:"+yValue);
+//			// add the latest history sample:
+//			bpMeasureHistory.addLast(yValue);
+//
+//			// update the plot with the updated history Lists:
+//			bpMeasureSeries.setModel(bpMeasureHistory,
+//					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+//
+//			// redraw the Plots:
+//			bpMeasureXYPlot.redraw();
+//			// bpMeasureXYPlot.redraw();
+//
+//			// char[] mouseV = (char[]) arg1;
+//			//
+//			// // add the latest history sample:
+//			// bpMeasureHistory.addLast((int) mouseV[2]);
+//			//
+//			// // update the plot with the updated history Lists:
+//			// bpMeasureSeries.setModel(bpMeasureHistory,
+//			// SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+//
+//			// redraw the Plots:
+//			// bpMeasureXYPlot.redraw();
+//		}
+//	}
 }
