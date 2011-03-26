@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -320,27 +319,24 @@ public class MeasureList extends Activity {
 		// fields, new int[] {R.id.contactEntryText});
 		// mContactList.setAdapter(adapter);
 	}
-	
-	
-    private Cursor getBPMeasureList()
-    {
-        // Run query
-        Uri uri = BPMeasures.BPMeasure.CONTENT_URI;
-        String[] projection = new String[] {
-        		
-        		BPMeasures.BPMeasure._ID,
-        		BPMeasures.BPMeasure.NOTE,
-        		BPMeasures.BPMeasure.CREATED_DATE,
-        		BPMeasures.BPMeasure.PULSE,
-        		BPMeasures.BPMeasure.SP,
-        		BPMeasures.BPMeasure.DP,
 
-        };
-        String selection = null;//ContactsContract.Contacts.IN_VISIBLE_GROUP + " = '" +(mShowInvisible ? "0" : "1") + "'";
-        String[] selectionArgs = null;
-        String sortOrder =  BPMeasure.DEFAULT_SORT_ORDER;
+	private Cursor getBPMeasureList() {
+		// Run query
+		Uri uri = BPMeasures.BPMeasure.CONTENT_URI;
+		String[] projection = new String[] {
 
-        return managedQuery(uri, projection, selection, selectionArgs, sortOrder);
-    }
+		BPMeasures.BPMeasure._ID, BPMeasures.BPMeasure.NOTE,
+				BPMeasures.BPMeasure.CREATED_DATE, BPMeasures.BPMeasure.PULSE,
+				BPMeasures.BPMeasure.SP, BPMeasures.BPMeasure.DP,
+
+		};
+		String selection = null;// ContactsContract.Contacts.IN_VISIBLE_GROUP +
+								// " = '" +(mShowInvisible ? "0" : "1") + "'";
+		String[] selectionArgs = null;
+		String sortOrder = BPMeasure.DEFAULT_SORT_ORDER;
+
+		return managedQuery(uri, projection, selection, selectionArgs,
+				sortOrder);
+	}
 
 }

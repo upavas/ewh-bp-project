@@ -2,13 +2,11 @@
 package com.ewhoxford.android.bloodpressure;
 
 //Import resources
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.EventListener;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -18,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.view.View.OnTouchListener;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
@@ -25,17 +24,19 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.LineAndPointRenderer;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
-import com.ewhoxford.android.bloodpressure.model.PressureDataPoint;
 import com.ewhoxford.android.mouseInputDevice.MiceStreamActivityListener;
 
 //Class Measure : activity that pops when the user wants to start taking blood pressure
-public class Measure extends Activity implements EventListener {
+public class Measure extends Activity implements Observer {
 
-	private static final int HISTORY_SIZE = 12000;
+	private static final int HISTORY_SIZE = 500;
 
 	boolean saveFile = false;
 	private XYPlot bpMeasureXYPlot;
 	private LinkedList<Number> bpMeasureHistory;
+
+	int count = 0;
+	MiceStreamActivityListener miceListener;
 
 	private SimpleXYSeries bpMeasureSeries = null;
 	private boolean active = true;
@@ -88,15 +89,10 @@ public class Measure extends Activity implements EventListener {
 
 		// #### End of Set up click listeners for all the buttons
 
-		// graph = (GraphView) findViewById(R.id.graph);
-
-		// graph.invalidate();
-
-		// initialize our XYPlot reference:
+		// initialize our XYPlot reference and real time update code:
 		bpMeasureXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
-		bpMeasureXYPlot.setRangeBoundaries(0, 200, XYPlot.BoundaryMode.FIXED);
-		bpMeasureXYPlot
-				.setDomainBoundaries(0, 12000, XYPlot.BoundaryMode.FIXED);
+		bpMeasureXYPlot.setRangeBoundaries(0, 300, XYPlot.BoundaryMode.FIXED);
+		bpMeasureXYPlot.setDomainBoundaries(0, 500, XYPlot.BoundaryMode.FIXED);
 		bpMeasureXYPlot
 				.addSeries(bpMeasureSeries, LineAndPointRenderer.class,
 						new LineAndPointFormatter(Color.rgb(100, 100, 200),
@@ -108,94 +104,35 @@ public class Measure extends Activity implements EventListener {
 		bpMeasureXYPlot.setRangeLabel("Pressure(mmHg)");
 		bpMeasureXYPlot.getRangeLabelWidget().pack();
 		bpMeasureXYPlot.disableAllMarkup();
-		// ReadCSV r = new ReadCSV();
-		// int[][] vals1 = r.readCSV();
-		// add a new series
-		// bpMeasureXYPlot.addSeries(new SimpleXYSeries(vals1.length, vals1),
-		// LineAndPointRenderer.class, new LineAndPointFormatter(Color
-		// .rgb(200, 0, 0), Color.rgb(0, 0, 200)));
 
-		// // reduce the number of range labels
-		// mySimpleXYPlot.getGraphWidget().setRangeTicksPerLabel(4);
+		// bpMeasureXYPlot.setOnKeyListener(kL);
+		// bpMeasureXYPlot.setOnTouchListener(onTouchL);
 
-		// reposition the domain label to look a little cleaner:
-		// Widget domainLabelWidget = bpMeasureXYPlot.getDomainLabelWidget();
+		miceListener = new MiceStreamActivityListener();
+		miceListener.addObserver(this);
+		Timer updateTimer = new Timer("real time pressure");
+		updateTimer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				updateGui();
+			}
+		}, 0, 30);
 
-		// bpMeasureXYPlot.position(domainLabelWidget, // the widget to position
-		// 45, // x position value, in this case 45 pixels
-		// XLayoutStyle.ABSOLUTE_FROM_LEFT, // how the x position value is
-		// // applied, in this case
-		// // from the left
-		// 0, // y position value
-		// YLayoutStyle.ABSOLUTE_FROM_BOTTOM, // how the y position is
-		// // applied, in this case
-		// // from the bottom
-		// AnchorPosition.LEFT_BOTTOM); // point to use as the origin of
-		// // the widget being positioned
-
-		// get rid of the visual aids for positioning:
-		// bpMeasureXYPlot.disableAllMarkup();
-		// acquireDataFromMouse();
-
-		MiceStreamActivityListener miceListener = new MiceStreamActivityListener();
-		//miceListener.addObserver(this);
-
+		// #### End of char real time update code
 	}
 
-	protected void acquireDataFromMouse() {
+	private void updateGui() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
 
-		File f;
-		f = new File("/dev/input/mice");
-		int yValue = 0;
-		if (!f.exists() && f.length() < 0)
-			System.out.println("The specified file is not exist");
-		else {
-
-			try {
-
-				FileInputStream finp = new FileInputStream(f);
-
-				int count = 0;
-				char[] mouseV = { 0, 0, 0 };
-				do {
-					count++;
-					int i = 0;
-					while (i <= 2) {
-						mouseV[i] = (char) finp.read();
-						i = i + 1;
-					}
-					System.out.println("" + (int) mouseV[0] + ","
-							+ (int) mouseV[1] + "," + (int) mouseV[2]);
-
-					i = 0;
-
-					// signal processing here
-
-					yValue = (int) (mouseV[2]);
-
-					// get rid the oldest sample in history:
-					if (bpMeasureHistory.size() > HISTORY_SIZE) {
-						bpMeasureHistory.removeFirst();
-					}
-
-					// add the latest history sample:
-					bpMeasureHistory.addLast(yValue);
-
-					// update the plot with the updated history Lists:
-					bpMeasureSeries.setModel(bpMeasureHistory,
-							SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-
-					// redraw the Plots:
-					bpMeasureXYPlot.redraw();
-					// bpMeasureXYPlot.redraw();
-
-				} while ((mouseV[0] != -1) && (count < 50));
-				finp.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+			
+				//bpMeasureHistory.add(100);
+				bpMeasureSeries.setModel(bpMeasureHistory,
+						SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+				bpMeasureXYPlot.redraw();
 			}
-
-		}
+		});
 	}
 
 	// event : click on something
@@ -227,46 +164,47 @@ public class Measure extends Activity implements EventListener {
 		}
 	}
 
-//	@Override
-//	public void update(Observable arg0, Object arg1) {
-//
-//		// if (bpMeasureHistory.size() > HISTORY_SIZE) {
-//		// bpMeasureHistory.removeFirst();
-//		// }
-//
-//		if (arg1 instanceof PressureDataPoint) {
-//			PressureDataPoint p = (PressureDataPoint) arg1;
-//
-//			char[] data = p.getMouseData();
-//			int yValue = (int) (data[2]);
-//
-//			// get rid the oldest sample in history:
-//			if (bpMeasureHistory.size() > HISTORY_SIZE) {
-//				bpMeasureHistory.removeFirst();
-//			}
-//			System.out.println("value2:"+yValue);
-//			// add the latest history sample:
-//			bpMeasureHistory.addLast(yValue);
-//
-//			// update the plot with the updated history Lists:
-//			bpMeasureSeries.setModel(bpMeasureHistory,
-//					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-//
-//			// redraw the Plots:
-//			bpMeasureXYPlot.redraw();
-//			// bpMeasureXYPlot.redraw();
-//
-//			// char[] mouseV = (char[]) arg1;
-//			//
-//			// // add the latest history sample:
-//			// bpMeasureHistory.addLast((int) mouseV[2]);
-//			//
-//			// // update the plot with the updated history Lists:
-//			// bpMeasureSeries.setModel(bpMeasureHistory,
-//			// SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-//
-//			// redraw the Plots:
-//			// bpMeasureXYPlot.redraw();
-//		}
-//	}
+	public void update(Observable arg0, Object arg1) {
+
+		if (arg1 instanceof char[]) {
+
+			char[] data = (char[]) arg1;
+			int yValue = (int) (data[2]);
+
+			// get rid the oldest sample in history:
+			if (bpMeasureHistory.size() > HISTORY_SIZE) {
+				bpMeasureHistory.removeFirst();
+			}
+			// add the latest history sample:
+			bpMeasureHistory.addLast(yValue);
+
+		}
+	}
+
+	private final OnTouchListener onTouchL = new OnTouchListener() {
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			bpMeasureHistory.addLast(200);
+			System.out.println("OnKeyListener:" + "I am your mouse");
+			bpMeasureSeries.setModel(bpMeasureHistory,
+					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+			bpMeasureXYPlot.redraw();
+			return true;
+		}
+	};
+
+	private final OnKeyListener kL = new OnKeyListener() {
+
+		@Override
+		public boolean onKey(View v, int keyCode, KeyEvent event) {
+			bpMeasureHistory.addLast(200);
+			bpMeasureSeries.setModel(bpMeasureHistory,
+					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+			bpMeasureXYPlot.redraw();
+			System.out.println("OnKeyListener:" + "I am your mouse");
+			return true;
+		}
+	};
+
 }
