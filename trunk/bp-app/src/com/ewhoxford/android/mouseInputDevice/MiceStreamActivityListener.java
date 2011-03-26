@@ -2,20 +2,22 @@ package com.ewhoxford.android.mouseInputDevice;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Observable;
-
-import com.ewhoxford.android.bloodpressure.model.PressureDataPoint;
 
 public class MiceStreamActivityListener extends Observable {
 
 	private static final long SLEEP_TIME = 300;
 	private Map<Long, char[]> bpMeasureHistoryTimeMap;
+	private LinkedList<Number> bpMeasureArray;
 
 	{
 		bpMeasureHistoryTimeMap = new HashMap<Long, char[]>();
+		bpMeasureArray = new LinkedList<Number>();
 	}
 
 	private boolean active = true;
@@ -80,49 +82,14 @@ public class MiceStreamActivityListener extends Observable {
 	private Thread miceReaderThread = null;
 
 	public MiceStreamActivityListener() {
-		// new Generator1().start();
 
+		// miceReaderRun();
 		miceReaderThread = new Thread(new Runnable() {
 			public void run() {
 				miceReaderRun();
 			}
 		}, "Mice Reader");
 		miceReaderThread.start();
-
-		// get rid the oldest sample in history:
-		long time = 0;
-
-		while (active) {
-			try {
-
-				Thread.sleep(1000);
-				time = System.currentTimeMillis();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			// add the latest history sample:
-
-			int yValue;
-			char[] bpValue = { 0, 0, 0 };
-			if (bpMeasureHistoryTimeMap.get(time) == null) {
-				yValue = 0;
-				System.out.println("value1:" + yValue);
-			} else {
-				bpValue = bpMeasureHistoryTimeMap.get(time);
-				yValue = (int) bpValue[2];
-				System.out.println("value2:" + yValue);
-			}
-
-			PressureDataPoint p = new PressureDataPoint();
-			p.setMouseData(bpValue);
-			p.setTime(time);
-			setChanged();
-			notifyObservers(p);
-
-		}
-
 	}
 
 	// public class Generator1 extends Thread {
@@ -131,20 +98,19 @@ public class MiceStreamActivityListener extends Observable {
 		File f;
 		f = new File("/dev/input/mice");
 		int yValue = 0;
-		if (!f.exists() && f.length() < 0)
+		if (!f.exists() && f.length() < 0) {
 			System.out.println("The specified file is not exist");
-		else {
+			notifyObservers(new FileNotFoundException(
+					"/dev/input/mice not available"));
+		} else {
 			try {
-
 				FileInputStream finp = new FileInputStream(f);
 				int count = 0;
 				char[] mouseV = { 0, 0, 0 };
 
 				while (true) {
-
 					count++;
 					int i = 0;
-
 					while (i <= 2) {
 						mouseV[i] = (char) finp.read();
 						i = i + 1;
@@ -156,7 +122,9 @@ public class MiceStreamActivityListener extends Observable {
 
 					bpMeasureHistoryTimeMap.put(System.currentTimeMillis(),
 							mouseV);
-
+					bpMeasureArray.add(yValue);
+					setChanged();
+					notifyObservers(mouseV);
 					if (!active) {
 						finp.close();
 					}
@@ -165,6 +133,7 @@ public class MiceStreamActivityListener extends Observable {
 				}
 			} catch (IOException e) {
 				e.printStackTrace(System.err);
+				notifyObservers(e);
 			}
 		}
 	}
@@ -175,6 +144,31 @@ public class MiceStreamActivityListener extends Observable {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+	public Map<Long, char[]> getBpMeasureHistoryTimeMap() {
+		return bpMeasureHistoryTimeMap;
+	}
+
+	public void setBpMeasureHistoryTimeMap(
+			Map<Long, char[]> bpMeasureHistoryTimeMap) {
+		this.bpMeasureHistoryTimeMap = bpMeasureHistoryTimeMap;
+	}
+
+	public Thread getMiceReaderThread() {
+		return miceReaderThread;
+	}
+
+	public void setMiceReaderThread(Thread miceReaderThread) {
+		this.miceReaderThread = miceReaderThread;
+	}
+
+	public void setBpMeasureArray(LinkedList<Number> bpMeasureArray) {
+		this.bpMeasureArray = bpMeasureArray;
+	}
+
+	public LinkedList<Number> getBpMeasureArray() {
+		return bpMeasureArray;
 	}
 
 }

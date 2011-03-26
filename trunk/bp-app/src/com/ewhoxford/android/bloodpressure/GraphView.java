@@ -82,9 +82,7 @@ public class GraphView extends View {
 		PaintCurve.setColor(r.getColor(R.color.graphview_foreground_color));
 		PaintCurve.setStrokeWidth(1);
 		PaintCurve.setStyle(Paint.Style.FILL_AND_STROKE);
-		System.out.printf("inside:" + this.getClass().getName()
-				+ "initGraphView");
-
+		
 	}
 
 	// Draw method
