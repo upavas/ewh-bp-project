@@ -1,4 +1,4 @@
-package com.ewhoxford.android.bloodpressure;
+package com.ewhoxford.android.mouseInputDevice;
 
 import java.io.BufferedReader;
 import java.io.File;

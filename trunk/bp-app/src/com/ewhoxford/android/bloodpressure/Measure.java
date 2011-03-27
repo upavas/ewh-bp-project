@@ -5,8 +5,6 @@ package com.ewhoxford.android.bloodpressure;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -16,25 +14,27 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
-import android.view.View.OnTouchListener;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.androidplot.Plot;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.LineAndPointRenderer;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
+import com.ewhoxford.android.bloodpressure.model.SampleDynamicSeries;
 import com.ewhoxford.android.mouseInputDevice.MiceStreamActivityListener;
+import com.ewhoxford.android.mouseInputDevice.SampleDynamicXYDatasource;
 
 //Class Measure : activity that pops when the user wants to start taking blood pressure
-public class Measure extends Activity implements Observer {
+public class Measure extends Activity {
 
 	private static final int HISTORY_SIZE = 500;
 
 	boolean saveFile = false;
 	private XYPlot bpMeasureXYPlot;
 	private LinkedList<Number> bpMeasureHistory;
-
+	private MyPlotUpdater plotUpdater;
 	int count = 0;
 	MiceStreamActivityListener miceListener;
 
@@ -45,6 +45,24 @@ public class Measure extends Activity implements Observer {
 		bpMeasureHistory = new LinkedList<Number>();
 		bpMeasureSeries = new SimpleXYSeries("");
 
+	}
+
+	private class MyPlotUpdater implements Observer {
+		Plot plot;
+
+		public MyPlotUpdater(Plot plot) {
+			this.plot = plot;
+		}
+
+		@Override
+		public void update(Observable o, Object arg) {
+			try {
+				plot.postRedraw();
+			} catch (InterruptedException e) {
+				e.printStackTrace(); // To change body of catch statement use
+				// File | Settings | File Templates.
+			}
+		}
 	}
 
 	// To be performed on the creation
@@ -90,11 +108,20 @@ public class Measure extends Activity implements Observer {
 		// #### End of Set up click listeners for all the buttons
 
 		// initialize our XYPlot reference and real time update code:
+
+		plotUpdater = new MyPlotUpdater(bpMeasureXYPlot);
+
+		// getInstance and position datasets:
+		SampleDynamicXYDatasource data = new SampleDynamicXYDatasource();
+		SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
+				"Blood Pressure");
+
 		bpMeasureXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
+		// freeze the range boundaries:
 		bpMeasureXYPlot.setRangeBoundaries(0, 300, XYPlot.BoundaryMode.FIXED);
 		bpMeasureXYPlot.setDomainBoundaries(0, 500, XYPlot.BoundaryMode.FIXED);
 		bpMeasureXYPlot
-				.addSeries(bpMeasureSeries, LineAndPointRenderer.class,
+				.addSeries(signalSeries, LineAndPointRenderer.class,
 						new LineAndPointFormatter(Color.rgb(100, 100, 200),
 								Color.BLACK));
 		bpMeasureXYPlot.setDomainStepValue(5);
@@ -105,20 +132,23 @@ public class Measure extends Activity implements Observer {
 		bpMeasureXYPlot.getRangeLabelWidget().pack();
 		bpMeasureXYPlot.disableAllMarkup();
 
-		// bpMeasureXYPlot.setOnKeyListener(kL);
-		// bpMeasureXYPlot.setOnTouchListener(onTouchL);
+		// hook up the plotUpdater to the data model:
+		data.addObserver(plotUpdater);
 
-		miceListener = new MiceStreamActivityListener();
-		miceListener.addObserver(this);
-		Timer updateTimer = new Timer("real time pressure");
-		updateTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				updateGui();
-			}
-		}, 0, 30);
+		// miceListener = new MiceStreamActivityListener();
+		// miceListener.addObserver(this);
+		// Timer updateTimer = new Timer("real time pressure");
+		// updateTimer.scheduleAtFixedRate(new TimerTask() {
+		// @Override
+		// public void run() {
+		// updateGui();
+		// }
+		// }, 0, 30);
 
 		// #### End of char real time update code
+
+		// kick off the data generating thread:
+		new Thread(data).start();
 	}
 
 	private void updateGui() {
@@ -126,8 +156,7 @@ public class Measure extends Activity implements Observer {
 			@Override
 			public void run() {
 
-			
-				//bpMeasureHistory.add(100);
+				// bpMeasureHistory.add(100);
 				bpMeasureSeries.setModel(bpMeasureHistory,
 						SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
 				bpMeasureXYPlot.redraw();
@@ -164,47 +193,21 @@ public class Measure extends Activity implements Observer {
 		}
 	}
 
-	public void update(Observable arg0, Object arg1) {
-
-		if (arg1 instanceof char[]) {
-
-			char[] data = (char[]) arg1;
-			int yValue = (int) (data[2]);
-
-			// get rid the oldest sample in history:
-			if (bpMeasureHistory.size() > HISTORY_SIZE) {
-				bpMeasureHistory.removeFirst();
-			}
-			// add the latest history sample:
-			bpMeasureHistory.addLast(yValue);
-
-		}
-	}
-
-	private final OnTouchListener onTouchL = new OnTouchListener() {
-
-		@Override
-		public boolean onTouch(View v, MotionEvent event) {
-			bpMeasureHistory.addLast(200);
-			System.out.println("OnKeyListener:" + "I am your mouse");
-			bpMeasureSeries.setModel(bpMeasureHistory,
-					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-			bpMeasureXYPlot.redraw();
-			return true;
-		}
-	};
-
-	private final OnKeyListener kL = new OnKeyListener() {
-
-		@Override
-		public boolean onKey(View v, int keyCode, KeyEvent event) {
-			bpMeasureHistory.addLast(200);
-			bpMeasureSeries.setModel(bpMeasureHistory,
-					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-			bpMeasureXYPlot.redraw();
-			System.out.println("OnKeyListener:" + "I am your mouse");
-			return true;
-		}
-	};
+	// public void update(Observable arg0, Object arg1) {
+	//
+	// if (arg1 instanceof char[]) {
+	//
+	// char[] data = (char[]) arg1;
+	// int yValue = (int) (data[2]);
+	//
+	// // get rid the oldest sample in history:
+	// if (bpMeasureHistory.size() > HISTORY_SIZE) {
+	// bpMeasureHistory.removeFirst();
+	// }
+	// // add the latest history sample:
+	// bpMeasureHistory.addLast(yValue);
+	//
+	// }
+	// }
 
 }
