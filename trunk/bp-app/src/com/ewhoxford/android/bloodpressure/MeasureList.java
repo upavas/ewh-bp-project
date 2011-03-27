@@ -331,7 +331,7 @@ public class MeasureList extends Activity {
 
 		};
 		String selection = null;// ContactsContract.Contacts.IN_VISIBLE_GROUP +
-								// " = '" +(mShowInvisible ? "0" : "1") + "'";
+		// " = '" +(mShowInvisible ? "0" : "1") + "'";
 		String[] selectionArgs = null;
 		String sortOrder = BPMeasure.DEFAULT_SORT_ORDER;
 

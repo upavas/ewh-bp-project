@@ -1,4 +1,4 @@
-package com.ewhoxford.android.bloodpressure;
+package com.ewhoxford.android.bloodpressure.model;
 
 import com.androidplot.series.XYSeries;
 
