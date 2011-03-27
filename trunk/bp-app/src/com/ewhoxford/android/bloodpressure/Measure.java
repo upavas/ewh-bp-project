@@ -7,6 +7,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -22,7 +23,6 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.LineAndPointRenderer;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
-import com.ewhoxford.android.bloodpressure.model.SampleDynamicSeries;
 import com.ewhoxford.android.mouseInputDevice.MiceStreamActivityListener;
 import com.ewhoxford.android.mouseInputDevice.SampleDynamicXYDatasource;
 
@@ -37,9 +37,11 @@ public class Measure extends Activity {
 	private MyPlotUpdater plotUpdater;
 	int count = 0;
 	MiceStreamActivityListener miceListener;
-
+	SampleDynamicXYDatasource data;
 	private SimpleXYSeries bpMeasureSeries = null;
-	private boolean active = true;
+	boolean maxPressureReached = false;
+	boolean minPressureReached = false;
+	ProgressDialog myProgressDialog;
 
 	{
 		bpMeasureHistory = new LinkedList<Number>();
@@ -49,6 +51,7 @@ public class Measure extends Activity {
 
 	private class MyPlotUpdater implements Observer {
 		Plot plot;
+		float pressureValue = 0;
 
 		public MyPlotUpdater(Plot plot) {
 			this.plot = plot;
@@ -56,13 +59,29 @@ public class Measure extends Activity {
 
 		@Override
 		public void update(Observable o, Object arg) {
+
+			pressureValue = data.getPressureValue();
+
+			if (pressureValue > 180)
+				maxPressureReached = true;
+
+			if (maxPressureReached)
+				if (pressureValue < 20) {
+					minPressureReached = true;
+					o.deleteObservers();
+					startSignalProcessing();
+				}
+
+			bpMeasureSeries.setModel(data.getBpMeasure(),
+					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
 			try {
 				plot.postRedraw();
 			} catch (InterruptedException e) {
-				e.printStackTrace(); // To change body of catch statement use
-				// File | Settings | File Templates.
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
+
 	}
 
 	// To be performed on the creation
@@ -109,22 +128,23 @@ public class Measure extends Activity {
 
 		// initialize our XYPlot reference and real time update code:
 
-		plotUpdater = new MyPlotUpdater(bpMeasureXYPlot);
-
 		// getInstance and position datasets:
-		SampleDynamicXYDatasource data = new SampleDynamicXYDatasource();
-		SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
-				"Blood Pressure");
+		data = new SampleDynamicXYDatasource();
+		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
+		// "Blood Pressure");
 
 		bpMeasureXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
+		// register plot with plot updater observer
+		plotUpdater = new MyPlotUpdater(bpMeasureXYPlot);
 		// freeze the range boundaries:
 		bpMeasureXYPlot.setRangeBoundaries(0, 300, XYPlot.BoundaryMode.FIXED);
-		bpMeasureXYPlot.setDomainBoundaries(0, 500, XYPlot.BoundaryMode.FIXED);
 		bpMeasureXYPlot
-				.addSeries(signalSeries, LineAndPointRenderer.class,
+				.setDomainBoundaries(0, 12000, XYPlot.BoundaryMode.FIXED);
+		bpMeasureXYPlot
+				.addSeries(bpMeasureSeries, LineAndPointRenderer.class,
 						new LineAndPointFormatter(Color.rgb(100, 100, 200),
 								Color.BLACK));
-		bpMeasureXYPlot.setDomainStepValue(5);
+		bpMeasureXYPlot.setDomainStepValue(3);
 		bpMeasureXYPlot.setTicksPerRangeLabel(3);
 		bpMeasureXYPlot.setDomainLabel("Time (s)");
 		bpMeasureXYPlot.getDomainLabelWidget().pack();
@@ -151,18 +171,18 @@ public class Measure extends Activity {
 		new Thread(data).start();
 	}
 
-	private void updateGui() {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-
-				// bpMeasureHistory.add(100);
-				bpMeasureSeries.setModel(bpMeasureHistory,
-						SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-				bpMeasureXYPlot.redraw();
-			}
-		});
-	}
+	// private void updateGui() {
+	// runOnUiThread(new Runnable() {
+	// @Override
+	// public void run() {
+	//
+	// // bpMeasureHistory.add(100);
+	// bpMeasureSeries.setModel(bpMeasureHistory,
+	// SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+	// bpMeasureXYPlot.redraw();
+	// }
+	// });
+	// }
 
 	// event : click on something
 	public void onClick(View V) {
@@ -193,21 +213,31 @@ public class Measure extends Activity {
 		}
 	}
 
-	// public void update(Observable arg0, Object arg1) {
-	//
-	// if (arg1 instanceof char[]) {
-	//
-	// char[] data = (char[]) arg1;
-	// int yValue = (int) (data[2]);
-	//
-	// // get rid the oldest sample in history:
-	// if (bpMeasureHistory.size() > HISTORY_SIZE) {
-	// bpMeasureHistory.removeFirst();
-	// }
-	// // add the latest history sample:
-	// bpMeasureHistory.addLast(yValue);
-	//
-	// }
-	// }
+	private void startSignalProcessing() {
+
+		myProgressDialog = ProgressDialog.show(Measure.this, "Please wait...",
+				"Doing Extreme Calculations...", true);
+
+		new Thread() {
+			public void run() {
+				try {
+					// Do some Fake-Work
+					sleep(400);
+
+					ValuesView valuesView = (ValuesView) findViewById(R.id.results);
+					valuesView.requestFocus();
+					valuesView.setSPressure(180);
+					valuesView.setDPressure(40);
+					valuesView.setPulseRate(80);
+					valuesView.invalidate();
+
+				} catch (Exception e) {
+				}
+				// Dismiss the Dialog
+				myProgressDialog.dismiss();
+			}
+		}.start();
+
+	}
 
 }
