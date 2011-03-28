@@ -11,7 +11,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
@@ -185,18 +184,17 @@ public class Measure extends Activity {
 
 		builder = new AlertDialog.Builder(this);
 		builder.setMessage("Are you sure you want to discard measure?")
-				.setCancelable(false)
-				.setPositiveButton("Yes",
+				.setCancelable(false).setPositiveButton("Yes",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								Measure.this.finish();
 							}
-						})
-				.setNegativeButton("No", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						dialog.cancel();
-					}
-				});
+						}).setNegativeButton("No",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
 
 		Button saveButton = (Button) findViewById(R.id.button_save);
 		saveButton.setEnabled(false);
@@ -207,31 +205,6 @@ public class Measure extends Activity {
 				String fileLocation = "";
 
 				if (saveFile) {
-
-					boolean mExternalStorageAvailable = false;
-					boolean mExternalStorageWriteable = false;
-					String state = Environment.getExternalStorageState();
-
-					if (Environment.MEDIA_MOUNTED.equals(state)) {
-						// We can read and write the media
-						mExternalStorageAvailable = mExternalStorageWriteable = true;
-					} else if (Environment.MEDIA_MOUNTED_READ_ONLY
-							.equals(state)) {
-						// We can only read the media
-						mExternalStorageAvailable = true;
-						mExternalStorageWriteable = false;
-					} else {
-						// Something else is wrong. It may be one of many other
-						// states, but all we need
-						// to know is we can neither read nor write
-						mExternalStorageAvailable = mExternalStorageWriteable = false;
-					}
-
-					if (mExternalStorageAvailable && mExternalStorageWriteable) {
-						// int i=O;
-
-					}
-
 				}
 
 			}
@@ -295,8 +268,8 @@ public class Measure extends Activity {
 		}
 		System.out.printf("At time %d:", ev.getEventTime());
 		for (int p = 0; p < pointerCount; p++) {
-			System.out.printf("  pointer %d: (%f,%f)", ev.getPointerId(p),
-					ev.getX(p), ev.getY(p));
+			System.out.printf("  pointer %d: (%f,%f)", ev.getPointerId(p), ev
+					.getX(p), ev.getY(p));
 		}
 	}
 
@@ -307,29 +280,34 @@ public class Measure extends Activity {
 
 		new Thread() {
 			public void run() {
-				try {
-					// Do some Fake-Work
-					int l = data.getBpMeasure().size();
-					float[] arrayTime = new float[l];
-					double[] arrayPressure = new double[l];
-					int i = 0;
-					int fs = 100;
-					while (i < l) {
-						arrayPressure[i] = data.getBpMeasure().get(i)
-								.doubleValue();
-						arrayTime[i] = ((float) i / (float) fs);
-						i++;
-					}
 
-					TimeSeriesMod signal = new TimeSeriesMod();
-					signal.setPressure(arrayPressure);
-					signal.setTime(arrayTime);
-					bloodPressureValues = new BloodPressureValues();
-					SignalProcessing r = new SignalProcessing();
-					bloodPressureValues = r.signalProcessing(signal, fs);
-
-				} catch (Exception e) {
+				// Do some Fake-Work
+				int l = data.getBpMeasure().size();
+				float[] arrayTime = new float[l];
+				double[] arrayPressure = new double[l];
+				int i = 0;
+				int fs = 100;
+				while (i < l) {
+					arrayPressure[i] = data.getBpMeasure().get(i).doubleValue();
+					arrayTime[i] = ((float) i / (float) fs);
+					i++;
 				}
+
+				TimeSeriesMod signal = new TimeSeriesMod();
+				signal.setPressure(arrayPressure);
+				signal.setTime(arrayTime);
+				bloodPressureValues = new BloodPressureValues();
+				SignalProcessing r = new SignalProcessing();
+
+				try {
+					bloodPressureValues = r.signalProcessing(signal, fs);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					myProgressDialog.dismiss();
+					mHandler.post(updataBPResultView);
+				}
+
 				// Dismiss the Dialog
 				myProgressDialog.dismiss();
 				mHandler.post(updataBPResultView);
