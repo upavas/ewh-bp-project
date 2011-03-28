@@ -2,19 +2,25 @@
 package com.ewhoxford.android.bloodpressure;
 
 //Import resources
-import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Handler.Callback;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
@@ -23,17 +29,19 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.LineAndPointRenderer;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
+import com.ewhoxford.android.bloodpressure.signalProcessing.BloodPressureValues;
+import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
+import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 import com.ewhoxford.android.mouseInputDevice.MiceStreamActivityListener;
 import com.ewhoxford.android.mouseInputDevice.SampleDynamicXYDatasource;
 
 //Class Measure : activity that pops when the user wants to start taking blood pressure
 public class Measure extends Activity {
 
-	private static final int HISTORY_SIZE = 500;
-
+	private static final int DIALOG_PROCESSING_SIGNAL_ID = 0;
 	boolean saveFile = false;
 	private XYPlot bpMeasureXYPlot;
-	private LinkedList<Number> bpMeasureHistory;
+
 	private MyPlotUpdater plotUpdater;
 	int count = 0;
 	MiceStreamActivityListener miceListener;
@@ -42,16 +50,38 @@ public class Measure extends Activity {
 	boolean maxPressureReached = false;
 	boolean minPressureReached = false;
 	ProgressDialog myProgressDialog;
+	AlertDialog.Builder builder;
+	BloodPressureValues bloodPressureValues;
+	// Need handler for callbacks to the UI thread
+	final Handler mHandler = new Handler();
+	// Create runnable for posting
+	final Runnable runSignalProcessing = new Runnable() {
+		public void run() {
+			startSignalProcessing();
+		}
+	};
+	final Runnable updataBPResultView = new Runnable() {
+		public void run() {
+			int dPressure = (int) bloodPressureValues.getDiastolicBP();
+			int sPressure = (int) bloodPressureValues.getSystolicBP();
+			int pulse = (int) bloodPressureValues.getMeanArterialBP();
+			ValuesView valuesView = (ValuesView) findViewById(R.id.results);
+			valuesView.requestFocus();
+			valuesView.setSPressure(sPressure);
+			valuesView.setDPressure(dPressure);
+			valuesView.setPulseRate(pulse);
+			valuesView.invalidate();
+		}
+	};
 
 	{
-		bpMeasureHistory = new LinkedList<Number>();
 		bpMeasureSeries = new SimpleXYSeries("");
 
 	}
 
-	private class MyPlotUpdater implements Observer {
+	private class MyPlotUpdater implements Observer, Callback {
 		Plot plot;
-		float pressureValue = 0;
+		double pressureValue = 0;
 
 		public MyPlotUpdater(Plot plot) {
 			this.plot = plot;
@@ -68,18 +98,29 @@ public class Measure extends Activity {
 			if (maxPressureReached)
 				if (pressureValue < 20) {
 					minPressureReached = true;
-					o.deleteObservers();
-					startSignalProcessing();
+					// o.deleteObservers();
+					data.setActive(false);
+
+					mHandler.post(runSignalProcessing);
+				} else {
+
+					bpMeasureSeries.setModel(data.getBpMeasure(),
+							SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+					try {
+						plot.postRedraw();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
 				}
 
-			bpMeasureSeries.setModel(data.getBpMeasure(),
-					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-			try {
-				plot.postRedraw();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		}
+
+		@Override
+		public boolean handleMessage(Message arg0) {
+			// TODO Auto-generated method stub
+			return false;
 		}
 
 	}
@@ -124,6 +165,71 @@ public class Measure extends Activity {
 		View HelpButton = findViewById(R.id.button_help);
 		// HelpButton.setOnClickListener(this);
 
+		Button discardButton = (Button) findViewById(R.id.button_discard);
+
+		discardButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+
+				AlertDialog alert = builder.create();
+				alert.show();
+			}
+		});
+
+		builder = new AlertDialog.Builder(this);
+		builder.setMessage("Are you sure you want to discard measure?")
+				.setCancelable(false).setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								Measure.this.finish();
+							}
+						}).setNegativeButton("No",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+
+		Button saveButton = (Button) findViewById(R.id.button_save);
+		saveButton.setEnabled(false);
+
+		saveButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+
+				String fileLocation = "";
+
+				if (saveFile) {
+
+					boolean mExternalStorageAvailable = false;
+					boolean mExternalStorageWriteable = false;
+					String state = Environment.getExternalStorageState();
+
+					if (Environment.MEDIA_MOUNTED.equals(state)) {
+						// We can read and write the media
+						mExternalStorageAvailable = mExternalStorageWriteable = true;
+					} else if (Environment.MEDIA_MOUNTED_READ_ONLY
+							.equals(state)) {
+						// We can only read the media
+						mExternalStorageAvailable = true;
+						mExternalStorageWriteable = false;
+					} else {
+						// Something else is wrong. It may be one of many other
+						// states, but all we need
+						// to know is we can neither read nor write
+						mExternalStorageAvailable = mExternalStorageWriteable = false;
+					}
+					
+					if(mExternalStorageAvailable && mExternalStorageWriteable){
+//						int i=O;
+
+					}
+
+				}
+
+			}
+		});
+
 		// #### End of Set up click listeners for all the buttons
 
 		// initialize our XYPlot reference and real time update code:
@@ -154,35 +260,9 @@ public class Measure extends Activity {
 
 		// hook up the plotUpdater to the data model:
 		data.addObserver(plotUpdater);
-
-		// miceListener = new MiceStreamActivityListener();
-		// miceListener.addObserver(this);
-		// Timer updateTimer = new Timer("real time pressure");
-		// updateTimer.scheduleAtFixedRate(new TimerTask() {
-		// @Override
-		// public void run() {
-		// updateGui();
-		// }
-		// }, 0, 30);
-
-		// #### End of char real time update code
-
-		// kick off the data generating thread:
+		// start observable datasource thread
 		new Thread(data).start();
 	}
-
-	// private void updateGui() {
-	// runOnUiThread(new Runnable() {
-	// @Override
-	// public void run() {
-	//
-	// // bpMeasureHistory.add(100);
-	// bpMeasureSeries.setModel(bpMeasureHistory,
-	// SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-	// bpMeasureXYPlot.redraw();
-	// }
-	// });
-	// }
 
 	// event : click on something
 	public void onClick(View V) {
@@ -215,26 +295,37 @@ public class Measure extends Activity {
 
 	private void startSignalProcessing() {
 
-		myProgressDialog = ProgressDialog.show(Measure.this, "Please wait...",
-				"Doing Extreme Calculations...", true);
+		myProgressDialog = ProgressDialog.show(Measure.this,
+				"Processing Data...", "Determining Blood Pressure...", true);
 
 		new Thread() {
 			public void run() {
 				try {
 					// Do some Fake-Work
-					sleep(400);
+					int l = data.getBpMeasure().size();
+					float[] arrayTime = new float[l];
+					double[] arrayPressure = new double[l];
+					int i = 0;
+					int fs = 100;
+					while (i < l) {
+						arrayPressure[i] = data.getBpMeasure().get(i)
+								.doubleValue();
+						arrayTime[i] = ((float) i / (float) fs);
+						i++;
+					}
 
-					ValuesView valuesView = (ValuesView) findViewById(R.id.results);
-					valuesView.requestFocus();
-					valuesView.setSPressure(180);
-					valuesView.setDPressure(40);
-					valuesView.setPulseRate(80);
-					valuesView.invalidate();
+					TimeSeriesMod signal = new TimeSeriesMod();
+					signal.setPressure(arrayPressure);
+					signal.setTime(arrayTime);
+					bloodPressureValues = new BloodPressureValues();
+					SignalProcessing r = new SignalProcessing();
+					bloodPressureValues = r.signalProcessing(signal, fs);
 
 				} catch (Exception e) {
 				}
 				// Dismiss the Dialog
 				myProgressDialog.dismiss();
+				mHandler.post(updataBPResultView);
 			}
 		}.start();
 

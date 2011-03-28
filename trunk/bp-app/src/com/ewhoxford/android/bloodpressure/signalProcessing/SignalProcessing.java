@@ -14,7 +14,7 @@ public class SignalProcessing {
 	 * @return final blood pressure values
 	 * @see values
 	 */
-	public BloodPressureValues signalProcessing(int[][] digitalSignal, int samplingFrequency){
+	public BloodPressureValues signalProcessing(TimeSeriesMod aux5, int samplingFrequency){
 		
 		// initialize variables
 		BloodPressureValues values = new BloodPressureValues();
@@ -26,14 +26,14 @@ public class SignalProcessing {
 		 *  FILTER 1
 		 *  remove zeros ('crazy jumps') from digital signal
 		 */
-		RmZeros r1 = new RmZeros();
-	    int vals1[][]= r1.rmZeros(digitalSignal); 
-		
-	    /**
-	     * CONVERSION
-	     * convert digital signal to pressure values (in mm Hg)
-	     */
-		TimeSeriesMod aux5 = ConvertTommHg.convertTommHg(vals1, samplingFrequency);
+//		RmZeros r1 = new RmZeros();
+//	    int vals1[][]= r1.rmZeros(digitalSignal); 
+//		
+//	    /**
+//	     * CONVERSION
+//	     * convert digital signal to pressure values (in mm Hg)
+//	     */
+//		TimeSeriesMod aux5 = ConvertTommHg.convertTommHg(vals1, samplingFrequency);
 		
 		/**
 		 * GET CUFF DEFLATION

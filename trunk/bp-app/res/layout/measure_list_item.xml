@@ -29,5 +29,5 @@
     <Button android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/newBPMeasureButton"
-            android:text="add_measure"/>
+            android:text="@string/add_measure"/>
 </LinearLayout>
