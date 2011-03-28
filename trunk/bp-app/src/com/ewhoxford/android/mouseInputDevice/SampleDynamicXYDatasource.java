@@ -4,6 +4,10 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.ewhoxford.android.bloodpressure.signalProcessing.ConvertTommHg;
+import com.ewhoxford.android.bloodpressure.signalProcessing.RmZeros;
+import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
+
 public class SampleDynamicXYDatasource implements Runnable {
 
 	// encapsulates management of the observers watching this datasource for
@@ -19,7 +23,7 @@ public class SampleDynamicXYDatasource implements Runnable {
 	public static final int SIGNAL1 = 0;
 	// private static final int SAMPLE_SIZE = 1;
 
-	private float pressureValue = 0;
+	private double pressureValue = 0;
 	private MyObservable notifier;
 	private int count = 0;
 	private boolean active = true;
@@ -63,8 +67,12 @@ public class SampleDynamicXYDatasource implements Runnable {
 			ReadCSV r = new ReadCSV();
 			int[][] values = r.readCSV();
 			int bpSignalLenght = values.length;
-
-			float[] converted = convert2Pressure(values);
+			RmZeros r1 = new RmZeros();
+		    int vals1[][]= r1.rmZeros(values); 
+			
+			TimeSeriesMod aux5 = ConvertTommHg.convertTommHg(vals1, 100);
+			double[] arrayPressure=aux5.getPressure();
+			//float[] converted = convert2Pressure(values);
 			int i = 0;
 			int j = 0;
 			while (active) {
@@ -73,7 +81,7 @@ public class SampleDynamicXYDatasource implements Runnable {
 				j = 0;
 				while (j <= 1000) {
 					if (i < bpSignalLenght) {
-						pressureValue = converted[i];
+						pressureValue = arrayPressure[i];
 						bpMeasure.add(pressureValue);
 					} else {
 						pressureValue = 0;
@@ -155,7 +163,7 @@ public class SampleDynamicXYDatasource implements Runnable {
 
 	}
 
-	public float getPressureValue() {
+	public double getPressureValue() {
 		return pressureValue;
 	}
 
