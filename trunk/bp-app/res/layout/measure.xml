@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+	<!--
+		<RelativeLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+	-->
+	<!--
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+	-->
+	<!--		android:orientation="vertical">-->
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="vertical" android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+
+		<TextView android:id="@+id/text0" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:text="Acquire blood pressure"
+			android:textStyle="bold" />
+
+
+		<com.androidplot.xy.XYPlot android:id="@+id/mySimpleXYPlot"
+			android:layout_width="fill_parent" android:layout_height="150px"
+			android:layout_marginTop="10px" android:layout_marginLeft="10px"
+			android:layout_marginRight="10px" title="Blood Pressure Signal"
+			android:layout_below="@+id/text0" />
+
+
+		<!--
+			<com.ewhoxford.android.bloodpressure.GraphView
+			android:id="@+id/graph" android:layout_width="fill_parent"
+
+			android:layout_height="135dip" android:layout_marginTop="10dip"
+
+			android:layout_marginBottom="10dip" android:layout_marginLeft="35dip"
+
+			android:layout_marginRight="35dip" android:layout_below="@+id/text0"
+			/>
+		-->
+
+		<com.ewhoxford.android.bloodpressure.ValuesView
+			android:id="@+id/results" android:layout_width="fill_parent"
+			android:layout_height="80dip" android:layout_marginTop="5dip"
+			android:layout_marginBottom="5dip" android:layout_marginLeft="50dip"
+			android:layout_marginRight="50dip" android:layout_below="@+id/mySimpleXYPlot" />
+
+		<TextView android:id="@+id/text1" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:text="Notes:"
+			android:textStyle="bold" />
+		<EditText android:id="@+id/edittext" android:text="fill with Notes"
+			android:layout_below="@+id/results" android:layout_width="match_parent"
+			android:layout_height="wrap_content" />
+
+		<CheckBox android:id="@+id/checkbox" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="create csv file"
+			android:layout_below="@+id/edittext" />
+
+
+		<TableLayout android:id="@+id/table_buttons"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_below="@+id/checkbox" android:stretchColumns="0,1,2">
+			<TableRow android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<Button android:id="@+id/button_help" android:text="Help"></Button>
+				<Button android:id="@+id/button_save" android:text="Save"></Button>
+				<Button android:id="@+id/button_discard" android:text="Discard"></Button>
+			</TableRow>
+
+		</TableLayout>
+
+	</LinearLayout>
+	<!--	</RelativeLayout>-->
+
+</ScrollView>
