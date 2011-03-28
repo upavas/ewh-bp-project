@@ -1,12 +1,15 @@
 package com.ewhoxford.android.mouseInputDevice;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
+import android.os.Handler;
+
 import com.ewhoxford.android.bloodpressure.signalProcessing.ConvertTommHg;
-import com.ewhoxford.android.bloodpressure.signalProcessing.RmZeros;
-import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 
 public class SampleDynamicXYDatasource implements Runnable {
 
@@ -27,6 +30,20 @@ public class SampleDynamicXYDatasource implements Runnable {
 	private MyObservable notifier;
 	private int count = 0;
 	private boolean active = true;
+	int countMiceSamples = 0;
+
+	final Handler mHandler = new Handler();
+	// Create runnable for posting
+	final Runnable runSignalAcquisition = new Runnable() {
+		public void run() {
+			miceReaderRun();
+		}
+	};
+	final Runnable updataBPResultView = new Runnable() {
+		public void run() {
+
+		}
+	};
 
 	private LinkedList<Number> bpMeasure = new LinkedList<Number>();
 
@@ -64,35 +81,41 @@ public class SampleDynamicXYDatasource implements Runnable {
 	public void run() {
 		try {
 
-			ReadCSV r = new ReadCSV();
-			int[][] values = r.readCSV();
-			int bpSignalLenght = values.length;
-			RmZeros r1 = new RmZeros();
-		    int vals1[][]= r1.rmZeros(values); 
-			
-			TimeSeriesMod aux5 = ConvertTommHg.convertTommHg(vals1, 100);
-			double[] arrayPressure=aux5.getPressure();
-			//float[] converted = convert2Pressure(values);
-			int i = 0;
+			new Thread() {
+				public void run() {
+					miceReaderRun();
+				}
+			}.start();
+
 			int j = 0;
+			int currentPosition = 0;
+			boolean update = false;
 			while (active) {
 
-				Thread.sleep(5); // decrease or remove to speed up the refresh
-				j = 0;
-				while (j <= 1000) {
-					if (i < bpSignalLenght) {
-						pressureValue = arrayPressure[i];
-						bpMeasure.add(pressureValue);
-					} else {
-						pressureValue = 0;
-						bpMeasure.add(pressureValue);
+				Thread.sleep(100); // decrease or remove to speed up the
+										// refresh
+				currentPosition = countMiceSamples;
+
+				// if (currentPosition==lastPosition) {
+				// Thread.sleep(20);
+				// currentPosition = countMiceSamples;
+				// }
+				update = false;
+				while (j < currentPosition) {
+					if (bpMeasureHistory.size() != 0) {
+						pressureValue = bpMeasureHistory.get(j).doubleValue();
+						bpMeasure.add(bpMeasureHistory.get(j));
+						update = true;
 					}
+
 					j++;
-					i++;
+
 				}
 				// i = i + 100;
 				count++;
-				notifier.notifyObservers();
+				if (update) {
+					notifier.notifyObservers();
+				}
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -131,38 +154,6 @@ public class SampleDynamicXYDatasource implements Runnable {
 		notifier.deleteObserver(observer);
 	}
 
-	public float[] convert2Pressure(int[][] vals1) {
-		int valsx = 0;
-		int valsy = 0;
-		float aux1 = 0;
-		float aux2 = 0;
-		int l = vals1.length;
-		float[] vals = new float[l];
-
-		int i = 0;
-
-		while (i < l) {
-			valsy = Math.abs(vals1[i][1] - 255);
-			if (vals1[i][0] == 1) {
-				valsx = 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2;
-			} else if (vals1[i][0] == 2) {
-				valsx = 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2;
-			} else if (vals1[i][0] == 3) {
-				valsx = (2 * 2 * 2 * 2 * 2 * 2 * 2 * 2)
-						+ (2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2);
-			} else {
-				valsx = 0;
-			}
-			aux1 = (float) (valsx + valsy) / 1024;
-			aux2 = (float) (aux1 - 0.04);
-			vals[i] = (float) (aux2 * 7.50061683 / 0.018);
-			bpMeasureHistory.add(vals[i]);
-			i++;
-		}
-		return vals;
-
-	}
-
 	public double getPressureValue() {
 		return pressureValue;
 	}
@@ -170,4 +161,59 @@ public class SampleDynamicXYDatasource implements Runnable {
 	public void setPressureValue(float pressureValue) {
 		this.pressureValue = pressureValue;
 	}
+
+	public void miceReaderRun() {
+		File f;
+		f = new File("/dev/input/mice");
+		int yValue = 0;
+		int xValue = 0;
+		if (!f.exists() && f.length() < 0) {
+			System.out.println("The specified file is not exist");
+
+		} else {
+			try {
+				FileInputStream finp = new FileInputStream(f);
+
+				char[] mouseV = { 0, 0, 0 };
+
+				while (active) {
+
+					int i = 0;
+					while (i <= 2) {
+						mouseV[i] = (char) finp.read();
+						i = i + 1;
+					}
+					// System.out.println("" + (int) mouseV[0] + ","
+					// + (int) mouseV[1] + "," + (int) mouseV[2]);
+					i = 0;
+					xValue = (int) (mouseV[1]);
+					yValue = (int) (mouseV[2]);
+
+					// int bpSignalLenght = values.length;
+					// RmZeros r1 = new RmZeros();
+					// int vals1[][]= r1.rmZeros(values);
+
+					double aux = ConvertTommHg.convertTommHg(xValue, yValue);
+
+					if (bpMeasureHistory.size() != 0)
+						if (Math.abs(bpMeasureHistory.getLast().doubleValue()
+								- aux) > 3) {
+							aux = bpMeasureHistory.getLast().doubleValue();
+						}
+
+					bpMeasureHistory.add(aux);
+					countMiceSamples++;
+
+				}
+
+				if (!active) {
+					finp.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace(System.err);
+
+			}
+		}
+	}
+
 }
