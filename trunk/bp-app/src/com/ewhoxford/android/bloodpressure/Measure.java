@@ -13,8 +13,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.os.Handler.Callback;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -95,7 +95,7 @@ public class Measure extends Activity {
 			if (pressureValue > 180)
 				maxPressureReached = true;
 
-			if (maxPressureReached)
+			if (maxPressureReached) {
 				if (pressureValue < 20) {
 					minPressureReached = true;
 					// o.deleteObservers();
@@ -103,17 +103,23 @@ public class Measure extends Activity {
 
 					mHandler.post(runSignalProcessing);
 				} else {
-
-					bpMeasureSeries.setModel(data.getBpMeasure(),
-							SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-					try {
-						plot.postRedraw();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
+					updatePlot();
 				}
+			} else {
+				updatePlot();
+			}
+
+		}
+
+		private void updatePlot() {
+			bpMeasureSeries.setModel(data.getBpMeasure(),
+					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+			try {
+				plot.postRedraw();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 
@@ -179,17 +185,18 @@ public class Measure extends Activity {
 
 		builder = new AlertDialog.Builder(this);
 		builder.setMessage("Are you sure you want to discard measure?")
-				.setCancelable(false).setPositiveButton("Yes",
+				.setCancelable(false)
+				.setPositiveButton("Yes",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								Measure.this.finish();
 							}
-						}).setNegativeButton("No",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						});
+						})
+				.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
 
 		Button saveButton = (Button) findViewById(R.id.button_save);
 		saveButton.setEnabled(false);
@@ -219,9 +226,9 @@ public class Measure extends Activity {
 						// to know is we can neither read nor write
 						mExternalStorageAvailable = mExternalStorageWriteable = false;
 					}
-					
-					if(mExternalStorageAvailable && mExternalStorageWriteable){
-//						int i=O;
+
+					if (mExternalStorageAvailable && mExternalStorageWriteable) {
+						// int i=O;
 
 					}
 
@@ -288,8 +295,8 @@ public class Measure extends Activity {
 		}
 		System.out.printf("At time %d:", ev.getEventTime());
 		for (int p = 0; p < pointerCount; p++) {
-			System.out.printf("  pointer %d: (%f,%f)", ev.getPointerId(p), ev
-					.getX(p), ev.getY(p));
+			System.out.printf("  pointer %d: (%f,%f)", ev.getPointerId(p),
+					ev.getX(p), ev.getY(p));
 		}
 	}
 

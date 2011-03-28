@@ -14,7 +14,7 @@ public class ConvertTommHg {
 	 * @return return converted pressure signal (in mm Hg) and time series (in secs)
 	 * @see valsOut
 	 */
-	public static TimeSeriesMod convertTommHg(int[][] valsIn, int fs){
+	public static TimeSeriesMod convertArrayTommHg(int[][] valsIn, int fs){
 		// initialize variables
 		TimeSeriesMod valsOut = new TimeSeriesMod();
 		double[] arrayPressure = new double[valsIn.length];
@@ -60,6 +60,32 @@ public class ConvertTommHg {
 		valsOut.setTime(arrayTime);
 		
 		return valsOut;
+	}
+
+	public static double convertTommHg(int xValue, int yValue) {
+		yValue = Math.abs(yValue-255);
+		float aux1 = 0, aux2 = 0;
+		double pressureValue = 0;
+		if (xValue==1){
+			xValue = (int) Math.pow(2, 8);
+		}
+		else if (xValue==2){
+			xValue = (int) Math.pow(2, 9);
+		}
+		else if (xValue==3){
+			xValue = (int) (Math.pow(2, 8) + Math.pow(2, 9));
+		}
+		else{
+			xValue = 0;
+		}
+		
+		// convert digital signal to volts 
+		aux1 = (float) (xValue+yValue)/1024;
+		
+		// convert signal from volts to pressure units (mm Hg)
+		aux2 = (float) (aux1-0.04);
+		pressureValue = (double) (aux2*7.50061683/0.018);
+		return pressureValue;
 	}
 
 }
