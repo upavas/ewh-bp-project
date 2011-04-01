@@ -1,7 +1,15 @@
 package com.ewhoxford.android.mouseInputDevice;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
+
+import android.os.Handler;
+
+import com.ewhoxford.android.bloodpressure.signalProcessing.ConvertTommHg;
 
 public class SampleDynamicXYDatasource implements Runnable {
 
@@ -15,16 +23,55 @@ public class SampleDynamicXYDatasource implements Runnable {
 		}
 	}
 
-	private static final int MAX_AMP_SEED = 100;
-	private static final int MIN_AMP_SEED = 10;
-	private static final int AMP_STEP = 5;
 	public static final int SIGNAL1 = 0;
-	public static final int SIGNAL2 = 1;
-	private static final int SAMPLE_SIZE = 1;
+	// private static final int SAMPLE_SIZE = 1;
 
-	private float pressureValue = 0;
+	private double pressureValue = 0;
 	private MyObservable notifier;
-	private int count = 0;;
+	private int count = 0;
+	private boolean active = true;
+	int countMiceSamples = 0;
+
+	final Handler mHandler = new Handler();
+	// Create runnable for posting
+	final Runnable runSignalAcquisition = new Runnable() {
+		public void run() {
+			miceReaderRun();
+		}
+	};
+	final Runnable updataBPResultView = new Runnable() {
+		public void run() {
+
+		}
+	};
+
+	private LinkedList<Number> bpMeasure = new LinkedList<Number>();
+
+	private LinkedList<Number> bpMeasureHistory = new LinkedList<Number>();
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public LinkedList<Number> getBpMeasure() {
+		return bpMeasure;
+	}
+
+	public void setBpMeasure(LinkedList<Number> bpMeasure) {
+		this.bpMeasure = bpMeasure;
+	}
+
+	public LinkedList<Number> getBpMeasureHistory() {
+		return bpMeasureHistory;
+	}
+
+	public void setBpMeasureHistory(LinkedList<Number> bpMeasureHistory) {
+		this.bpMeasureHistory = bpMeasureHistory;
+	}
 
 	{
 		notifier = new MyObservable();
@@ -34,46 +81,41 @@ public class SampleDynamicXYDatasource implements Runnable {
 	public void run() {
 		try {
 
-			ReadCSV r = new ReadCSV();
-			int[][] values = r.readCSV();
-			int bpSignalLenght = values.length;
-			float[] converted = new float[bpSignalLenght];
-
-			int i = 0;
-			int x = 0;
-			while (i <= bpSignalLenght) {
-				x = 0;
-				if (values[i][1] == 1)
-					x = 2 ^ 8;
-			}
-			if (values[i][1] == 1) {
-				x = 2 ^ 9;
-			}
-			if (values[i][1] == 1) {
-				x = 2 ^ 8 + 2 ^ 9;
-			}
-
-			converted[i] = ((((float) values[i][2] + (float) x / 1024F) - 0.04F) / 0.018F * 7.5F);
-
-			boolean isRising = true;
-			i = 0;
-			while (true) {
-
-				Thread.sleep(50); // decrease or remove to speed up the refresh
-
-				if (i > bpSignalLenght) {
-
-				} else
-					pressureValue = converted[i];
-
-				if (isRising) {
-					pressureValue = 0;
-				} else {
-					pressureValue = converted[i];
+			new Thread() {
+				public void run() {
+					miceReaderRun();
 				}
-				i++;
+			}.start();
+
+			int j = 0;
+			int currentPosition = 0;
+			boolean update = false;
+			while (active) {
+
+				Thread.sleep(100); // decrease or remove to speed up the
+										// refresh
+				currentPosition = countMiceSamples;
+
+				// if (currentPosition==lastPosition) {
+				// Thread.sleep(20);
+				// currentPosition = countMiceSamples;
+				// }
+				update = false;
+				while (j < currentPosition) {
+					if (bpMeasureHistory.size() != 0) {
+						pressureValue = bpMeasureHistory.get(j).doubleValue();
+						bpMeasure.add(bpMeasureHistory.get(j));
+						update = true;
+					}
+
+					j++;
+
+				}
+				// i = i + 100;
 				count++;
-				notifier.notifyObservers();
+				if (update) {
+					notifier.notifyObservers();
+				}
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -85,22 +127,20 @@ public class SampleDynamicXYDatasource implements Runnable {
 	}
 
 	public Number getX(int series, int index) {
-		if (index >= SAMPLE_SIZE) {
-			throw new IllegalArgumentException();
-		}
+		// if (index >= SAMPLE_SIZE) {
+		// throw new IllegalArgumentException();
+		// }
 		return index;
 	}
 
 	public Number getY(int series, int index) {
-		if (index >= SAMPLE_SIZE) {
-			throw new IllegalArgumentException();
-		}
-
+		// if (index >= SAMPLE_SIZE) {
+		// throw new IllegalArgumentException();
+		// }
 		switch (series) {
 		case SIGNAL1:
 			return pressureValue;
-		case SIGNAL2:
-			return 0;
+
 		default:
 			throw new IllegalArgumentException();
 		}
@@ -112,6 +152,68 @@ public class SampleDynamicXYDatasource implements Runnable {
 
 	public void removeObserver(Observer observer) {
 		notifier.deleteObserver(observer);
+	}
+
+	public double getPressureValue() {
+		return pressureValue;
+	}
+
+	public void setPressureValue(float pressureValue) {
+		this.pressureValue = pressureValue;
+	}
+
+	public void miceReaderRun() {
+		File f;
+		f = new File("/dev/input/mice");
+		int yValue = 0;
+		int xValue = 0;
+		if (!f.exists() && f.length() < 0) {
+			System.out.println("The specified file is not exist");
+
+		} else {
+			try {
+				FileInputStream finp = new FileInputStream(f);
+
+				char[] mouseV = { 0, 0, 0 };
+
+				while (active) {
+
+					int i = 0;
+					while (i <= 2) {
+						mouseV[i] = (char) finp.read();
+						i = i + 1;
+					}
+					// System.out.println("" + (int) mouseV[0] + ","
+					// + (int) mouseV[1] + "," + (int) mouseV[2]);
+					i = 0;
+					xValue = (int) (mouseV[1]);
+					yValue = (int) (mouseV[2]);
+
+					// int bpSignalLenght = values.length;
+					// RmZeros r1 = new RmZeros();
+					// int vals1[][]= r1.rmZeros(values);
+
+					double aux = ConvertTommHg.convertTommHg(xValue, yValue);
+
+					if (bpMeasureHistory.size() != 0)
+						if (Math.abs(bpMeasureHistory.getLast().doubleValue()
+								- aux) > 3) {
+							aux = bpMeasureHistory.getLast().doubleValue();
+						}
+
+					bpMeasureHistory.add(aux);
+					countMiceSamples++;
+
+				}
+
+				if (!active) {
+					finp.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace(System.err);
+
+			}
+		}
 	}
 
 }

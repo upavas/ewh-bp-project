@@ -5,7 +5,7 @@ import java.io.IOException;
 public class Test4 {
 	public static void main(String[] args) throws IOException {
 		File f;
-		f = new File("/dev/input/mice");
+		f = new File("/dev/input/event10");
 
 		if (!f.exists() && f.length() < 0)
 			System.out.println("The specified file is not exist");
