@@ -17,6 +17,7 @@
 	</application>
 	<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="5" />
 
-
+	<provider android:name="BloodPressureMeasure"
+		android:authorities="com.ewhoxford.android.bloodpressure" />
 
 </manifest> 

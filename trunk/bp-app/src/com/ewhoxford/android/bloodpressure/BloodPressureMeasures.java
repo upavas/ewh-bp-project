@@ -20,13 +20,13 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Convenience definitions for NotePadProvider
+ * Convenience definitions for blood pressure provider
  */
-public final class BPMeasures {
-	public static final String AUTHORITY = "com.ewhoxford.android.BPMeasure";
+public final class BloodPressureMeasures {
+	public static final String AUTHORITY = "com.ewhoxford.android.bloodpressure";
 
 	// This class cannot be instantiated
-	private BPMeasures() {
+	private BloodPressureMeasures() {
 	}
 
 	/**
@@ -46,18 +46,18 @@ public final class BPMeasures {
 		/**
 		 * The MIME type of {@link #CONTENT_URI} providing a directory of notes.
 		 */
-		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.google.note";
+		public static final String CONTENT_TYPE = "vnd.ewhoxford.cursor.dir/vnd.ewhoxford.measure";
 
 		/**
 		 * The MIME type of a {@link #CONTENT_URI} sub-directory of a single
 		 * note.
 		 */
-		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.google.note";
+		public static final String CONTENT_ITEM_TYPE = "vnd.ewhoxford.cursor.item/vnd.ewhoxford.measure";
 
 		/**
 		 * The default sort order for this table
 		 */
-		public static final String DEFAULT_SORT_ORDER = "modified DESC";
+		public static final String DEFAULT_SORT_ORDER = "created DESC";
 
 		/**
 		 * The pulse of blood pressure
@@ -105,7 +105,7 @@ public final class BPMeasures {
 		 * </P>
 		 */
 		public static final String MEASUREMENT_FILE_EXIST = "measurement_file_exist";
-		
+
 		/**
 		 * The measurement syncronized with central server
 		 * <P>
@@ -129,5 +129,17 @@ public final class BPMeasures {
 		 * </P>
 		 */
 		public static final String MODIFIED_DATE = "modified";
+
+		// Column indexes int
+		public static final int PULSE_COLUMN = 1;
+		public static final int SP_COLUMN = 2;
+		public static final int DP_COLUMN = 3;
+		public static final int NOTE_COLUMN = 4;
+		public static final int MEASUREMENT_FILE_COLUMN = 5;
+		public static final int MEASUREMENT_FILE_EXIST_COLUMN = 6;
+		public static final int MEASUREMENT_FILE_SYNC_COLUMN = 7;
+		public static final int CREATED_DATE_COLUMN = 8;
+		public static final int MODIFIED_DATE_COLUMN = 9;
+
 	}
 }

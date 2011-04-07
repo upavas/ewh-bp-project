@@ -1,14 +1,30 @@
 package com.ewhoxford.android.bloodpressure;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.UUID;
 
+import android.content.Context;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
+import android.webkit.MimeTypeMap;
+
+import com.ewhoxford.android.bloodpressure.exception.ExternalStorageNotAvailableException;
+import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
 
 public class FileManager {
 
-	public boolean saveFile() {
+	private static final String DIRECTORY = "com.ewhoxford.android.bloodpressure";
+
+	public static String saveFile(Context context, BloodPressureValue values,
+			double[] arrayPressure, float[] arrayTime)
+			throws ExternalStorageNotAvailableException {
 		boolean mExternalStorageAvailable = false;
 		boolean mExternalStorageWriteable = false;
+		String fileName = "";
 		String state = Environment.getExternalStorageState();
 
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -26,76 +42,102 @@ public class FileManager {
 		}
 
 		if (mExternalStorageAvailable && mExternalStorageWriteable) {
-
+			fileName = createExternalStoragePublicBPMeasureFile(context,
+					values, arrayPressure, arrayTime);
+		} else {
+			throw new ExternalStorageNotAvailableException(context.getClass()
+					.getName());
 		}
 
-		return true;
+		return fileName;
 
 	}
 
-	void createExternalStoragePublicPicture() {
-		// Create a path where we will place our picture in the user's
+	public static String createExternalStoragePublicBPMeasureFile(
+			Context context, BloodPressureValue values, double[] arrayPressure,
+			float[] arrayTime) throws IllegalArgumentException{
+
+		if (arrayPressure.length == 0 || arrayTime.length == 0) {
+			String detailMessage = "illegal argument in input";
+			throw new IllegalArgumentException(detailMessage);
+		}
+
+		// Create a path where we will place our file in the user's
 		// public pictures directory. Note that you should be careful about
 		// what you place here, since the user often manages these files. For
 		// pictures and other media owned by the application, consider
 		// Context.getExternalMediaDir().
-		File path = Environment
-				.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-		File file = new File(path, "DemoPicture.jpg");
+		String uuid = UUID.randomUUID().toString();
 
-		// try {
-		// // Make sure the Pictures directory exists.
-		// path.mkdirs();
+		File path = Environment.getExternalStoragePublicDirectory(DIRECTORY);
+		String fileName = "bp_measure_" + uuid + ".csv";
+		File file = new File(path, fileName);
+
+		try {
+			// Make sure the Pictures directory exists.
+			path.mkdirs();
 
 			// Very simple code to copy a picture from the application's
 			// resource into the external file. Note that this code does
 			// no error checking, and assumes the picture is small (does not
 			// try to copy it in chunks). Note that if external storage is
 			// not currently mounted this will silently fail.
-//			InputStream is = getResources()
-//					.openRawResource(R.drawable.balloons);
-//			OutputStream os = new FileOutputStream(file);
-//			byte[] data = new byte[is.available()];
-//			is.read(data);
-//			os.write(data);
-//			is.close();
-//			os.close();
-//
-//			// Tell the media scanner about the new file so that it is
-//			// immediately available to the user.
-//			MediaScannerConnection.scanFile(this, new String[] { file
-//					.toString() }, null,
-//					new MediaScannerConnection.OnScanCompletedListener() {
-//						public void onScanCompleted(String path, Uri uri) {
-//							Log.i("ExternalStorage", "Scanned " + path + ":");
-//							Log.i("ExternalStorage", "-> uri=" + uri);
-//						}
-//					});
-//		} catch (IOException e) {
-//			// Unable to create file, likely because external storage is
-//			// not currently mounted.
-//			Log.w("ExternalStorage", "Error writing " + file, e);
-//		}
+
+			FileWriter writer = new FileWriter(file);
+			int dPressure = (int) values.getDiastolicBP();
+			int sPressure = (int) values.getSystolicBP();
+			int pulse = (int) values.getMeanArterialBP();
+			writer.append("Systolic Pressure, Dyastolic Pressure,Pulse\n");
+			writer.append(sPressure + "," + dPressure + "," + pulse + "\n");
+			writer.append("time,pressure(mmHg)");
+
+			int i = 0;
+			while (i < arrayPressure.length) {
+
+				writer.append(arrayTime[i] + "," + arrayPressure[i] + "\n");
+				i = i + 1;
+			}
+
+			// generate whatever data you want
+
+			writer.flush();
+			writer.close();
+
+			// // Tell the media scanner about the new file so that it is
+			// // immediately available to the user.
+			MediaScannerConnection.scanFile(context, new String[] { file
+					.toString() }, new String[] { MimeTypeMap
+					.getFileExtensionFromUrl(file.toString()) },
+					new MediaScannerConnection.OnScanCompletedListener() {
+						public void onScanCompleted(String path, Uri uri) {
+							Log.i("ExternalStorage", "Scanned " + path + ":");
+							Log.i("ExternalStorage", "-> uri=" + uri);
+						}
+					});
+		} catch (IOException e) {
+			// Unable to create file, likely because external storage is
+			// not currently mounted.
+			Log.w("ExternalStorage", "Error writing " + file, e);
+		}
+		return fileName;
 	}
 
-	void deleteExternalStoragePublicPicture() {
+	void deleteExternalStoragePublicFile(String fileName) {
 		// Create a path where we will place our picture in the user's
 		// public pictures directory and delete the file. If external
 		// storage is not currently mounted this will fail.
-		File path = Environment
-				.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-		File file = new File(path, "DemoPicture.jpg");
+		File path = Environment.getExternalStoragePublicDirectory(DIRECTORY);
+		File file = new File(path, fileName);
 		file.delete();
 	}
 
-	boolean hasExternalStoragePublicPicture() {
+	boolean hasExternalStoragePublicFile(String fileName) {
 		// Create a path where we will place our picture in the user's
 		// public pictures directory and check if the file exists. If
 		// external storage is not currently mounted this will think the
 		// picture doesn't exist.
-		File path = Environment
-				.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-		File file = new File(path, "DemoPicture.jpg");
+		File path = Environment.getExternalStoragePublicDirectory(DIRECTORY);
+		File file = new File(path, fileName);
 		return file.exists();
 	}
 
