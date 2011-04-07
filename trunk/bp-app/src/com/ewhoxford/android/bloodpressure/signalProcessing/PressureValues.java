@@ -1,5 +1,7 @@
 package com.ewhoxford.android.bloodpressure.signalProcessing;
 
+import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
+
 /**
  * @author user Determines systolic, diastolic and mean arterial blood pressure
  *         values
@@ -14,10 +16,10 @@ public class PressureValues {
 	 * @throws ArrayIsNullException
 	 * @see bloodPressure
 	 */
-	public BloodPressureValues pressureValues(TimeSeriesMod oscillations,
+	public BloodPressureValue pressureValues(TimeSeriesMod oscillations,
 			TimeSeriesMod curve) {
 		// initialize variables
-		BloodPressureValues bloodPressure = new BloodPressureValues();
+		BloodPressureValue bloodPressure = new BloodPressureValue();
 		int defaultSize = 30;
 		double[] maxOscillations = new double[defaultSize];
 		float[] maxTime = new float[defaultSize];

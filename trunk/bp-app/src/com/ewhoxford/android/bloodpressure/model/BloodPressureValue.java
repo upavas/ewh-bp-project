@@ -1,32 +1,32 @@
-package com.ewhoxford.android.bloodpressure.signalProcessing;
+package com.ewhoxford.android.bloodpressure.model;
 
 /**
  * 
- * @author mpimentel
- * Final structure: includes the BP signal, time series, and the values for MAP, SP and DP 
+ * @author mpimentel Final structure: includes the BP signal, time series, and
+ *         the values for MAP, SP and DP
  */
-public class BloodPressureValues {
-	
+public class BloodPressureValue {
+
 	/**
 	 * pressure array - important part of the signal
 	 */
 	double[] pressureSignal;
-	
+
 	/**
 	 * time array (based on the sampling frequency)
 	 */
 	float[] timeSignal;
-	
+
 	/**
 	 * Value of systolic BP
 	 */
 	double systolicBP;
-	
+
 	/**
 	 * Value of diastolic BP
 	 */
 	double diastolicBP;
-	
+
 	/**
 	 * Value of mean arterial pressure
 	 */

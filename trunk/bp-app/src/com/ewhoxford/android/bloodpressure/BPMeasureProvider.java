@@ -29,26 +29,24 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.provider.LiveFolders;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.ewhoxford.android.bloodpressure.BPMeasures.BPMeasure;
+import com.ewhoxford.android.bloodpressure.BloodPressureMeasures.BPMeasure;
 
 /**
- * Provides access to a database of BP Measures. Each BP Measure has an ID, note, SP, DP, Pulse rate,
- *  a creation date and a modified data.
+ * Provides access to a database of BP Measures. Each BP Measure has an ID,
+ * note, SP, DP, Pulse rate, a creation date and a modified data.
  */
 public class BPMeasureProvider extends ContentProvider {
 
 	private static final String TAG = "BPMeasureProvider";
 
-	private static final String DATABASE_NAME = "bp_measures.db";
+	private static final String DATABASE_NAME = "blood_pressure.db";
 	private static final int DATABASE_VERSION = 1;
-	private static final String MEASURES_TABLE_NAME = "measures";
+	private static final String MEASURES_TABLE = "blood_pressure_measure";
 
 	private static HashMap<String, String> sBPMeasuresProjectionMap;
-	private static HashMap<String, String> sLiveFolderProjectionMap;
 
 	private static final int MEASURES = 1;
 	private static final int MEASURE_ID = 2;
@@ -59,20 +57,22 @@ public class BPMeasureProvider extends ContentProvider {
 	/**
 	 * This class helps open, create, and upgrade the database file.
 	 */
-	private static class DatabaseHelper extends SQLiteOpenHelper {
+	private static class BloodPressureDatabaseHelper extends SQLiteOpenHelper {
 
-		DatabaseHelper(Context context) {
+		BloodPressureDatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		}
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("CREATE TABLE " + MEASURES_TABLE_NAME + " ("
-					+ BPMeasure._ID + " INTEGER PRIMARY KEY," + BPMeasure.PULSE
-					+ " INTEGER," + BPMeasure.SP + " INTEGER," + BPMeasure.DP
-					+ " INTEGER," + BPMeasure.NOTE + " INTEGER,"
-					+ BPMeasure.CREATED_DATE + " INTEGER,"
-					+ BPMeasure.MODIFIED_DATE + " INTEGER" + ");");
+			db
+					.execSQL("CREATE TABLE " + MEASURES_TABLE + " ("
+							+ BPMeasure._ID + " INTEGER PRIMARY KEY,"
+							+ BPMeasure.PULSE + " INTEGER," + BPMeasure.SP
+							+ " INTEGER," + BPMeasure.DP + " INTEGER,"
+							+ BPMeasure.NOTE + " INTEGER,"
+							+ BPMeasure.CREATED_DATE + " INTEGER,"
+							+ BPMeasure.MODIFIED_DATE + " INTEGER" + ");");
 		}
 
 		@Override
@@ -84,19 +84,20 @@ public class BPMeasureProvider extends ContentProvider {
 		}
 	}
 
-	private DatabaseHelper mOpenHelper;
+	private BloodPressureDatabaseHelper mBPOpenHelper;
 
 	@Override
 	public boolean onCreate() {
-		mOpenHelper = new DatabaseHelper(getContext());
+		mBPOpenHelper = new BloodPressureDatabaseHelper(getContext());
 		return true;
 	}
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
+
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(MEASURES_TABLE_NAME);
+		qb.setTables(MEASURES_TABLE);
 
 		switch (sUriMatcher.match(uri)) {
 		case MEASURES:
@@ -106,10 +107,6 @@ public class BPMeasureProvider extends ContentProvider {
 		case MEASURE_ID:
 			qb.setProjectionMap(sBPMeasuresProjectionMap);
 			qb.appendWhere(BPMeasure._ID + "=" + uri.getPathSegments().get(1));
-			break;
-
-		case LIVE_FOLDER_NOTES:
-			qb.setProjectionMap(sLiveFolderProjectionMap);
 			break;
 
 		default:
@@ -125,7 +122,7 @@ public class BPMeasureProvider extends ContentProvider {
 		}
 
 		// Get the database and run the query
-		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+		SQLiteDatabase db = mBPOpenHelper.getReadableDatabase();
 		Cursor c = qb.query(db, projection, selection, selectionArgs, null,
 				null, orderBy);
 
@@ -167,41 +164,42 @@ public class BPMeasureProvider extends ContentProvider {
 		Long now = Long.valueOf(System.currentTimeMillis());
 
 		// Make sure that the fields are all set
-		if (values.containsKey(BPMeasures.BPMeasure.CREATED_DATE) == false) {
-			values.put(BPMeasures.BPMeasure.CREATED_DATE, now);
+		if (values.containsKey(BloodPressureMeasures.BPMeasure.CREATED_DATE) == false) {
+			values.put(BloodPressureMeasures.BPMeasure.CREATED_DATE, now);
 		}
 
-		if (values.containsKey(BPMeasures.BPMeasure.MODIFIED_DATE) == false) {
-			values.put(BPMeasures.BPMeasure.MODIFIED_DATE, now);
+		if (values.containsKey(BloodPressureMeasures.BPMeasure.MODIFIED_DATE) == false) {
+			values.put(BloodPressureMeasures.BPMeasure.MODIFIED_DATE, now);
 		}
 
-		if (values.containsKey(BPMeasures.BPMeasure.DP) == false) {
-			values.put(BPMeasures.BPMeasure.DP, 0);
+		if (values.containsKey(BloodPressureMeasures.BPMeasure.DP) == false) {
+			values.put(BloodPressureMeasures.BPMeasure.DP, 0);
 		}
-		if (values.containsKey(BPMeasures.BPMeasure.PULSE) == false) {
+		if (values.containsKey(BloodPressureMeasures.BPMeasure.PULSE) == false) {
 
-			values.put(BPMeasures.BPMeasure.PULSE, 0);
-		}
-
-		if (values.containsKey(BPMeasures.BPMeasure.SP) == false) {
-
-			values.put(BPMeasures.BPMeasure.SP, 0);
+			values.put(BloodPressureMeasures.BPMeasure.PULSE, 0);
 		}
 
-		if (values.containsKey(BPMeasures.BPMeasure.MEASUREMENT_FILE) == false) {
+		if (values.containsKey(BloodPressureMeasures.BPMeasure.SP) == false) {
 
-			values.put(BPMeasures.BPMeasure.MEASUREMENT_FILE, "");
+			values.put(BloodPressureMeasures.BPMeasure.SP, 0);
 		}
 
-		if (values.containsKey(BPMeasures.BPMeasure.NOTE) == false) {
-			values.put(BPMeasures.BPMeasure.NOTE, "");
+		if (values
+				.containsKey(BloodPressureMeasures.BPMeasure.MEASUREMENT_FILE) == false) {
+
+			values.put(BloodPressureMeasures.BPMeasure.MEASUREMENT_FILE, "");
 		}
 
-		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-		long rowId = db.insert(MEASURES_TABLE_NAME, BPMeasure.NOTE, values);
+		if (values.containsKey(BloodPressureMeasures.BPMeasure.NOTE) == false) {
+			values.put(BloodPressureMeasures.BPMeasure.NOTE, "");
+		}
+
+		SQLiteDatabase db = mBPOpenHelper.getWritableDatabase();
+		long rowId = db.insert(MEASURES_TABLE, BPMeasure.NOTE, values);
 		if (rowId > 0) {
 			Uri noteUri = ContentUris.withAppendedId(
-					BPMeasures.BPMeasure.CONTENT_URI, rowId);
+					BloodPressureMeasures.BPMeasure.CONTENT_URI, rowId);
 			getContext().getContentResolver().notifyChange(noteUri, null);
 			return noteUri;
 		}
@@ -211,16 +209,16 @@ public class BPMeasureProvider extends ContentProvider {
 
 	@Override
 	public int delete(Uri uri, String where, String[] whereArgs) {
-		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		SQLiteDatabase db = mBPOpenHelper.getWritableDatabase();
 		int count;
 		switch (sUriMatcher.match(uri)) {
 		case MEASURES:
-			count = db.delete(MEASURES_TABLE_NAME, where, whereArgs);
+			count = db.delete(MEASURES_TABLE, where, whereArgs);
 			break;
 
 		case MEASURE_ID:
 			String noteId = uri.getPathSegments().get(1);
-			count = db.delete(MEASURES_TABLE_NAME,
+			count = db.delete(MEASURES_TABLE,
 					BPMeasure._ID
 							+ "="
 							+ noteId
@@ -239,16 +237,16 @@ public class BPMeasureProvider extends ContentProvider {
 	@Override
 	public int update(Uri uri, ContentValues values, String where,
 			String[] whereArgs) {
-		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		SQLiteDatabase db = mBPOpenHelper.getWritableDatabase();
 		int count;
 		switch (sUriMatcher.match(uri)) {
 		case MEASURES:
-			count = db.update(MEASURES_TABLE_NAME, values, where, whereArgs);
+			count = db.update(MEASURES_TABLE, values, where, whereArgs);
 			break;
 
 		case MEASURE_ID:
 			String noteId = uri.getPathSegments().get(1);
-			count = db.update(MEASURES_TABLE_NAME, values,
+			count = db.update(MEASURES_TABLE, values,
 					BPMeasure._ID
 							+ "="
 							+ noteId
@@ -266,10 +264,10 @@ public class BPMeasureProvider extends ContentProvider {
 
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		sUriMatcher.addURI(BPMeasures.AUTHORITY, "BPMeasure", MEASURES);
-		sUriMatcher.addURI(BPMeasures.AUTHORITY, "BPMeasure/#", MEASURE_ID);
-		sUriMatcher.addURI(BPMeasures.AUTHORITY, "live_folders/BPMeasure",
-				LIVE_FOLDER_NOTES);
+		sUriMatcher.addURI(BloodPressureMeasures.AUTHORITY, "bpmeasure",
+				MEASURES);
+		sUriMatcher.addURI(BloodPressureMeasures.AUTHORITY, "bpmeasure/#",
+				MEASURE_ID);
 
 		sBPMeasuresProjectionMap = new HashMap<String, String>();
 		sBPMeasuresProjectionMap.put(BPMeasure._ID, BPMeasure._ID);
@@ -282,12 +280,5 @@ public class BPMeasureProvider extends ContentProvider {
 		sBPMeasuresProjectionMap.put(BPMeasure.MODIFIED_DATE,
 				BPMeasure.MODIFIED_DATE);
 
-		// Support for Live Folders.
-		sLiveFolderProjectionMap = new HashMap<String, String>();
-		sLiveFolderProjectionMap.put(LiveFolders._ID, BPMeasure._ID + " AS "
-				+ LiveFolders._ID);
-		sLiveFolderProjectionMap.put(LiveFolders.NAME, BPMeasure.NOTE + " AS "
-				+ LiveFolders.NAME);
-		// Add more columns here for more robust Live Folders.
 	}
 }

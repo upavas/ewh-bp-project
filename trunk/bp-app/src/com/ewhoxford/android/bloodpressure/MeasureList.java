@@ -1,17 +1,4 @@
 /*
- * Copyright (C) 2007 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
  */
 
 package com.ewhoxford.android.bloodpressure;
@@ -34,7 +21,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import com.ewhoxford.android.bloodpressure.BPMeasures.BPMeasure;
+import com.ewhoxford.android.bloodpressure.BloodPressureMeasures.BPMeasure;
 
 /**
  * Displays a list of BP measures. Will display notes from the {@link Uri}
@@ -79,34 +66,11 @@ public class MeasureList extends Activity {
 
 		setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
 		setContentView(R.layout.measure_list_item);
-		// If no data was given in the intent (because we were started
-		// as a MAIN activity), then use our default content provider.
-		// Intent intent = getIntent();
-		// if (intent.getData() == null) {
-		// intent.setData(BPMeasure.CONTENT_URI);
-		// }
-
-		// Inform the list we provide context menus for items
-		// getListView().setOnCreateContextMenuListener(this);
-
-		// Perform a managed query. The Activity will handle closing and
-		// requerying the cursor
-		// // when needed.
-		// Cursor cursor = managedQuery(getIntent().getData(), PROJECTION, null,
-		// null, BPMeasure.DEFAULT_SORT_ORDER);
-		//
-		// // Used to map notes entries from the database to views
-		// SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-		// R.layout.measure_list_item, cursor, new String[] {
-		// BPMeasure.CREATED_DATE,
-		// "SP:" + BPMeasure.SP + "DP:" + BPMeasure.DP + "Pulse:"
-		// + BPMeasure.PULSE }, new int[] {
-		// android.R.id.text1, android.R.id.text2 });
-		// setListAdapter(adapter);
 
 		// Obtain handles to UI objects
 		mNewBPMeasureButton = (Button) findViewById(R.id.newBPMeasureButton);
 		mBPMeasureList = (ListView) findViewById(R.id.bpMeasureList);
+
 		mSelectAll = (CheckBox) findViewById(R.id.selectAll);
 
 		// Initialize class properties
@@ -131,7 +95,7 @@ public class MeasureList extends Activity {
 
 		// Populate the contact list
 		populateBPMeasureList();
-
+		// ask for root permission since we need the mice raw values
 		Process p;
 		try {
 			// Preform su to get root privledges
@@ -309,25 +273,19 @@ public class MeasureList extends Activity {
 
 		mBPMeasureList.setAdapter(adapter);
 
-		// Build adapter with contact entries
-		// Cursor cursor = getContacts();
-		// String[] fields = new String[] {
-		// ContactsContract.Data.DISPLAY_NAME
-		// };
-		// SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-		// R.layout.contact_entry, cursor,
-		// fields, new int[] {R.id.contactEntryText});
-		// mContactList.setAdapter(adapter);
 	}
 
 	private Cursor getBPMeasureList() {
 		// Run query
-		Uri uri = BPMeasures.BPMeasure.CONTENT_URI;
+		Uri uri = BloodPressureMeasures.BPMeasure.CONTENT_URI;
 		String[] projection = new String[] {
 
-		BPMeasures.BPMeasure._ID, BPMeasures.BPMeasure.NOTE,
-				BPMeasures.BPMeasure.CREATED_DATE, BPMeasures.BPMeasure.PULSE,
-				BPMeasures.BPMeasure.SP, BPMeasures.BPMeasure.DP,
+		BloodPressureMeasures.BPMeasure._ID,
+				BloodPressureMeasures.BPMeasure.NOTE,
+				BloodPressureMeasures.BPMeasure.CREATED_DATE,
+				BloodPressureMeasures.BPMeasure.PULSE,
+				BloodPressureMeasures.BPMeasure.SP,
+				BloodPressureMeasures.BPMeasure.DP,
 
 		};
 		String selection = null;// ContactsContract.Contacts.IN_VISIBLE_GROUP +

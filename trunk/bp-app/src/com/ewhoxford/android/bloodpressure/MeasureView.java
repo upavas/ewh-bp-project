@@ -2,8 +2,8 @@
 package com.ewhoxford.android.bloodpressure;
 
 //Import resources
-import com.ewhoxford.android.bloodpressure.R;
-import com.ewhoxford.android.bloodpressure.BPMeasures.BPMeasure;
+
+import com.ewhoxford.android.bloodpressure.BloodPressureMeasures.BPMeasure;
 
 // Import Android stuff
 import android.content.Context;

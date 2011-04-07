@@ -1,5 +1,7 @@
 package com.ewhoxford.android.bloodpressure.signalProcessing;
 
+import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
+
 /**
  * 
  * @author mpimentel Compile the entire signal processing code by calling the
@@ -15,11 +17,11 @@ public class SignalProcessing {
 	 * @throws ArrayIsNullException
 	 * @see values
 	 */
-	public BloodPressureValues signalProcessing(TimeSeriesMod aux5,
+	public BloodPressureValue signalProcessing(TimeSeriesMod aux5,
 			int samplingFrequency) {
 
 		// initialize variables
-		BloodPressureValues values = new BloodPressureValues();
+		BloodPressureValue values = new BloodPressureValue();
 		TimeSeriesMod cuffDeflation = new TimeSeriesMod();
 		TimeSeriesMod originalOscillations = new TimeSeriesMod();
 		TimeSeriesMod filteredOscillations = new TimeSeriesMod();
