@@ -28,11 +28,12 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.LineAndPointRenderer;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
+import com.ewhoxford.android.bloodpressure.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.exception.ExternalStorageNotAvailableException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
-import com.ewhoxford.android.mouseInputDevice.SampleDynamicXYDatasource;
+import com.ewhoxford.android.pressureInputDevice.TestDatasource;
 
 //Class Measure : activity that pops when the user wants to start taking blood pressure
 public class Measure extends Activity {
@@ -47,7 +48,7 @@ public class Measure extends Activity {
 	// Observer object that is notified by pressure data stream observable file
 	private MyPlotUpdater plotUpdater;
 	// Observable object that notifies observer that new values were acquired.
-	SampleDynamicXYDatasource data;
+	TestDatasource data;
 	// pressure time series shown in the real time chart
 	private SimpleXYSeries bpMeasureSeries = null;
 	// array with time points
@@ -203,7 +204,7 @@ public class Measure extends Activity {
 							}
 						});
 
-		Button saveButton = (Button) findViewById(R.id.button_save);
+		saveButton = (Button) findViewById(R.id.button_save);
 		saveButton.setEnabled(false);
 
 		saveButton.setOnClickListener(new OnClickListener() {
@@ -241,7 +242,7 @@ public class Measure extends Activity {
 		// initialize our XYPlot reference and real time update code:
 
 		// getInstance and position datasets:
-		data = new SampleDynamicXYDatasource();
+		data = new TestDatasource();
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
 		// "Blood Pressure");
 
@@ -357,36 +358,26 @@ public class Measure extends Activity {
 		ContentValues values = new ContentValues();
 
 		Long time = System.currentTimeMillis();
-		values.put(BloodPressureMeasures.BPMeasure.CREATED_DATE, time);
-		values.put(BloodPressureMeasures.BPMeasure.MODIFIED_DATE, time);
-		values.put(BloodPressureMeasures.BPMeasure.DP, bloodPressureValue
-				.getDiastolicBP());
-		values.put(BloodPressureMeasures.BPMeasure.SP, bloodPressureValue
-				.getSystolicBP());
+		values.put(BPMeasure.CREATED_DATE, time);
+		values.put(BPMeasure.MODIFIED_DATE, time);
+		values.put(BPMeasure.DP, bloodPressureValue.getDiastolicBP());
+		values.put(BPMeasure.SP, bloodPressureValue.getSystolicBP());
 		// correct this value @MARCO
-		values.put(BloodPressureMeasures.BPMeasure.PULSE, bloodPressureValue
-				.getMeanArterialBP());
-		values.put(BloodPressureMeasures.BPMeasure.NOTE, note);
-		values
-				.put(BloodPressureMeasures.BPMeasure.MEASUREMENT_FILE_SYNC,
-						false);
+		values.put(BPMeasure.PULSE, bloodPressureValue.getMeanArterialBP());
+		values.put(BPMeasure.NOTE, note);
+		values.put(BPMeasure.MEASUREMENT_FILE_SYNC, false);
 		if (savedFileName != null) {
 			if (savedFileName.length() == 0) {
-				values.put(
-						BloodPressureMeasures.BPMeasure.MEASUREMENT_FILE_EXIST,
-						false);
+				values.put(BPMeasure.MEASUREMENT_FILE_EXIST, false);
 			} else {
-				values.put(
-						BloodPressureMeasures.BPMeasure.MEASUREMENT_FILE_EXIST,
-						true);
-				values.put(BloodPressureMeasures.BPMeasure.MEASUREMENT_FILE,
-						savedFileName);
+				values.put(BPMeasure.MEASUREMENT_FILE_EXIST, true);
+				values.put(BPMeasure.MEASUREMENT_FILE, savedFileName);
 
 			}
 
 		}
 
-		cr.insert(BloodPressureMeasures.BPMeasure.CONTENT_URI, values);
+		cr.insert(BPMeasure.CONTENT_URI, values);
 	}
 
 }

@@ -4,6 +4,7 @@
 package com.ewhoxford.android.bloodpressure;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,11 +18,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import com.ewhoxford.android.bloodpressure.BloodPressureMeasures.BPMeasure;
+import com.ewhoxford.android.bloodpressure.BloodPressureMeasureTable.BPMeasure;
+import com.ewhoxford.android.bloodpressure.model.BloodPressureMeasureModel;
 
 /**
  * Displays a list of BP measures. Will display notes from the {@link Uri}
@@ -32,7 +32,7 @@ public class MeasureList extends Activity {
 	private static final String TAG = "BloodPressureMeasuresList";
 
 	private Button mNewBPMeasureButton;
-	private ListView mBPMeasureList;
+	private MeasureListView mBPMeasureListView;
 	private boolean mShowInvisible;
 	private CheckBox mSelectAll;
 
@@ -52,24 +52,41 @@ public class MeasureList extends Activity {
 			BPMeasure.CREATED_DATE // 5
 	};
 
-	/** The index of the title column */
+	/** The index of the systolic pressure column */
 	private static final int COLUMN_INDEX_SP = 1;
+	/** The index of the dyastolic pressure column */
 	private static final int COLUMN_INDEX_DP = 2;
+	/** The index of the pulse column */
 	private static final int COLUMN_INDEX_PULSE = 3;
+	/** The index of the note column */
 	private static final int COLUMN_INDEX_NOTE = 4;
-
+	/** The index of the create date pressure column */
 	private static final int COLUMN_INDEX_CREATED_DATE = 5;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		// The user does not need to hold down the key to use menu shortcuts.
 		setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
 		setContentView(R.layout.measure_list_item);
 
+		/*
+		 * If no data is given in the Intent that started this Activity, then
+		 * this Activity was started when the intent filter matched a MAIN
+		 * action. We should use the default provider URI.
+		 */
+		// Gets the intent that started this Activity.
+		Intent intent = getIntent();
+
+		// If there is no data associated with the Intent, sets the data to the
+		// default URI, which
+		// accesses a list of notes.
+		if (intent.getData() == null) {
+			intent.setData(BPMeasure.CONTENT_URI);
+		}
+
 		// Obtain handles to UI objects
 		mNewBPMeasureButton = (Button) findViewById(R.id.newBPMeasureButton);
-		mBPMeasureList = (ListView) findViewById(R.id.bpMeasureList);
 
 		mSelectAll = (CheckBox) findViewById(R.id.selectAll);
 
@@ -92,9 +109,18 @@ public class MeasureList extends Activity {
 				populateBPMeasureList();
 			}
 		});
+		mBPMeasureListView = (MeasureListView) findViewById(R.id.bpMeasureList);
 
-		// Populate the contact list
+		// Populate the bp measures list
 		populateBPMeasureList();
+
+		/*
+		 * Sets the callback for context menu activation for the ListView. The
+		 * listener is set to be this Activity. The effect is that context menus
+		 * are enabled for items in the ListView, and the context menu is
+		 * handled by a method in MeasureList.
+		 */
+		mBPMeasureListView.setOnCreateContextMenuListener(this);
 		// ask for root permission since we need the mice raw values
 		Process p;
 		try {
@@ -264,37 +290,86 @@ public class MeasureList extends Activity {
 		Cursor cursor = getBPMeasureList();
 
 		// Used to map notes entries from the database to views
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-				R.layout.measure_list_item, cursor, new String[] {
-						BPMeasure.CREATED_DATE,
-						"SP:" + BPMeasure.SP + "DP:" + BPMeasure.DP + "Pulse:"
-								+ BPMeasure.PULSE }, new int[] {
-						android.R.id.text1, android.R.id.text2 });
+		// String[] from = new String[] { BPMeasure._ID, BPMeasure.CREATED_DATE,
+		// BPMeasure.SP, BPMeasure.DP, BPMeasure.PULSE, BPMeasure.NOTE };
+		// int[] to = new int[] { R.id.id, R.id.createdDate, R.id.sp, R.id.dp,
+		// R.id.pulse, R.id.notes };
+		//
+		// SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+		// R.layout.measure_list_item, cursor, from, to);
+		ArrayList<BloodPressureMeasureModel> bloodPressureMeasureModelList = getBloodPressureMeasureModel(cursor);
 
-		mBPMeasureList.setAdapter(adapter);
+		BloodPressureAdapter adapter = new BloodPressureAdapter(this,
+				bloodPressureMeasureModelList);
+
+		mBPMeasureListView.setAdapter(adapter);
 
 	}
 
+	/**
+	 * 
+	 * @return blood pressure measurements
+	 */
+
 	private Cursor getBPMeasureList() {
-		// Run query
-		Uri uri = BloodPressureMeasures.BPMeasure.CONTENT_URI;
+
+		Uri uri = getIntent().getData();// Use the default content URI for the
+		// //
+		// provider.
 		String[] projection = new String[] {
 
-		BloodPressureMeasures.BPMeasure._ID,
-				BloodPressureMeasures.BPMeasure.NOTE,
-				BloodPressureMeasures.BPMeasure.CREATED_DATE,
-				BloodPressureMeasures.BPMeasure.PULSE,
-				BloodPressureMeasures.BPMeasure.SP,
-				BloodPressureMeasures.BPMeasure.DP,
+		BPMeasure._ID, BPMeasure.NOTE, BPMeasure.CREATED_DATE, BPMeasure.PULSE,
+				BPMeasure.SP, BPMeasure.DP,
 
-		};
-		String selection = null;// ContactsContract.Contacts.IN_VISIBLE_GROUP +
-		// " = '" +(mShowInvisible ? "0" : "1") + "'";
-		String[] selectionArgs = null;
-		String sortOrder = BPMeasure.DEFAULT_SORT_ORDER;
+		};// Return the measureId
+		// ID,NOTE,Created_date,pulse,sp,dp
 
+		String selection = null;// No where clause, return all records.
+		String[] selectionArgs = null;// No where clause, therefore no where
+		// column
+		// values.
+		String sortOrder = BPMeasure.DEFAULT_SORT_ORDER;// Use the default sort
+		// order.
+		// Run query
 		return managedQuery(uri, projection, selection, selectionArgs,
 				sortOrder);
 	}
 
+	private ArrayList<BloodPressureMeasureModel> getBloodPressureMeasureModel(
+			Cursor cur) {
+		ArrayList<BloodPressureMeasureModel> bpm = new ArrayList<BloodPressureMeasureModel>();
+
+		if (cur.moveToFirst()) {
+
+			String notes;
+			int createdDate;
+			int sp;
+			int dp;
+			int pulse;
+			int id;
+
+			int notesColumn = cur.getColumnIndex(BPMeasure.NOTE);
+			int createdDateColumn = cur.getColumnIndex(BPMeasure.CREATED_DATE);
+			int spColumn = cur.getColumnIndex(BPMeasure.SP);
+			int dpColumn = cur.getColumnIndex(BPMeasure.DP);
+			int pulseColumn = cur.getColumnIndex(BPMeasure.PULSE);
+			int idColumn = cur.getColumnIndex(BPMeasure._ID);
+
+			do {
+				// Get the field values
+				notes = cur.getString(notesColumn);
+				createdDate = Integer
+						.parseInt(cur.getString(createdDateColumn));
+				sp = Integer.parseInt(cur.getString(spColumn));
+				dp = Integer.parseInt(cur.getString(dpColumn));
+				pulse = Integer.parseInt(cur.getString(pulseColumn));
+				id = Integer.parseInt(cur.getString(idColumn));
+				// Do something with the values.
+				bpm.add(new BloodPressureMeasureModel(pulse, sp, dp, notes,
+						createdDate, id));
+			} while (cur.moveToNext());
+
+		}
+		return bpm;
+	}
 }

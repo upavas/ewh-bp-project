@@ -3,7 +3,7 @@ package com.ewhoxford.android.bloodpressure;
 
 //Import resources
 
-import com.ewhoxford.android.bloodpressure.BloodPressureMeasures.BPMeasure;
+import com.ewhoxford.android.bloodpressure.BloodPressureMeasureTable.BPMeasure;
 
 // Import Android stuff
 import android.content.Context;
