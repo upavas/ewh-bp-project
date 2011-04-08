@@ -19,4 +19,5 @@
 <string name="menu_revert">Revert</string>
 <string name="menu_discard">Discard</string>
 <string name="select_all">Select All</string>
+<string name="main_no_items">No items</string>
 </resources>

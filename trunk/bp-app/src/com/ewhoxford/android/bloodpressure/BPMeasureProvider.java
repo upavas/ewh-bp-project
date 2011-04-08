@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2007 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.ewhoxford.android.bloodpressure;
 
 import java.util.HashMap;
@@ -32,7 +16,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.ewhoxford.android.bloodpressure.BloodPressureMeasures.BPMeasure;
+import com.ewhoxford.android.bloodpressure.BloodPressureMeasureTable.BPMeasure;
 
 /**
  * Provides access to a database of BP Measures. Each BP Measure has an ID,
@@ -44,7 +28,7 @@ public class BPMeasureProvider extends ContentProvider {
 
 	private static final String DATABASE_NAME = "blood_pressure.db";
 	private static final int DATABASE_VERSION = 1;
-	private static final String MEASURES_TABLE = "blood_pressure_measure";
+	private static final String MEASURES_TABLE = "bpmeasure";
 
 	private static HashMap<String, String> sBPMeasuresProjectionMap;
 
@@ -65,14 +49,15 @@ public class BPMeasureProvider extends ContentProvider {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			db
-					.execSQL("CREATE TABLE " + MEASURES_TABLE + " ("
-							+ BPMeasure._ID + " INTEGER PRIMARY KEY,"
-							+ BPMeasure.PULSE + " INTEGER," + BPMeasure.SP
-							+ " INTEGER," + BPMeasure.DP + " INTEGER,"
-							+ BPMeasure.NOTE + " INTEGER,"
-							+ BPMeasure.CREATED_DATE + " INTEGER,"
-							+ BPMeasure.MODIFIED_DATE + " INTEGER" + ");");
+			db.execSQL("CREATE TABLE " + MEASURES_TABLE + " (" + BPMeasure._ID
+					+ " INTEGER PRIMARY KEY," + BPMeasure.PULSE + " INTEGER,"
+					+ BPMeasure.SP + " INTEGER," + BPMeasure.DP + " INTEGER,"
+					+ BPMeasure.NOTE + " varchar(400),"
+					+ BPMeasure.CREATED_DATE + " INTEGER,"
+					+ BPMeasure.MODIFIED_DATE + " INTEGER"
+					+ BPMeasure.MEASUREMENT_FILE_EXIST + " BOOLEAN"
+					+ BPMeasure.MEASUREMENT_FILE_SYNC + " BOOLEAN"
+					+ BPMeasure.MEASUREMENT_FILE + " varchar(600)" + ");");
 		}
 
 		@Override
@@ -164,42 +149,41 @@ public class BPMeasureProvider extends ContentProvider {
 		Long now = Long.valueOf(System.currentTimeMillis());
 
 		// Make sure that the fields are all set
-		if (values.containsKey(BloodPressureMeasures.BPMeasure.CREATED_DATE) == false) {
-			values.put(BloodPressureMeasures.BPMeasure.CREATED_DATE, now);
+		if (values.containsKey(BPMeasure.CREATED_DATE) == false) {
+			values.put(BPMeasure.CREATED_DATE, now);
 		}
 
-		if (values.containsKey(BloodPressureMeasures.BPMeasure.MODIFIED_DATE) == false) {
-			values.put(BloodPressureMeasures.BPMeasure.MODIFIED_DATE, now);
+		if (values.containsKey(BPMeasure.MODIFIED_DATE) == false) {
+			values.put(BPMeasure.MODIFIED_DATE, now);
 		}
 
-		if (values.containsKey(BloodPressureMeasures.BPMeasure.DP) == false) {
-			values.put(BloodPressureMeasures.BPMeasure.DP, 0);
+		if (values.containsKey(BPMeasure.DP) == false) {
+			values.put(BPMeasure.DP, 0);
 		}
-		if (values.containsKey(BloodPressureMeasures.BPMeasure.PULSE) == false) {
+		if (values.containsKey(BPMeasure.PULSE) == false) {
 
-			values.put(BloodPressureMeasures.BPMeasure.PULSE, 0);
-		}
-
-		if (values.containsKey(BloodPressureMeasures.BPMeasure.SP) == false) {
-
-			values.put(BloodPressureMeasures.BPMeasure.SP, 0);
+			values.put(BPMeasure.PULSE, 0);
 		}
 
-		if (values
-				.containsKey(BloodPressureMeasures.BPMeasure.MEASUREMENT_FILE) == false) {
+		if (values.containsKey(BPMeasure.SP) == false) {
 
-			values.put(BloodPressureMeasures.BPMeasure.MEASUREMENT_FILE, "");
+			values.put(BPMeasure.SP, 0);
 		}
 
-		if (values.containsKey(BloodPressureMeasures.BPMeasure.NOTE) == false) {
-			values.put(BloodPressureMeasures.BPMeasure.NOTE, "");
+		if (values.containsKey(BPMeasure.MEASUREMENT_FILE) == false) {
+
+			values.put(BPMeasure.MEASUREMENT_FILE, "");
+		}
+
+		if (values.containsKey(BPMeasure.NOTE) == false) {
+			values.put(BPMeasure.NOTE, "");
 		}
 
 		SQLiteDatabase db = mBPOpenHelper.getWritableDatabase();
 		long rowId = db.insert(MEASURES_TABLE, BPMeasure.NOTE, values);
 		if (rowId > 0) {
-			Uri noteUri = ContentUris.withAppendedId(
-					BloodPressureMeasures.BPMeasure.CONTENT_URI, rowId);
+			Uri noteUri = ContentUris.withAppendedId(BPMeasure.CONTENT_URI,
+					rowId);
 			getContext().getContentResolver().notifyChange(noteUri, null);
 			return noteUri;
 		}
@@ -264,9 +248,9 @@ public class BPMeasureProvider extends ContentProvider {
 
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		sUriMatcher.addURI(BloodPressureMeasures.AUTHORITY, "bpmeasure",
+		sUriMatcher.addURI(BloodPressureMeasureTable.AUTHORITY, "bpmeasure",
 				MEASURES);
-		sUriMatcher.addURI(BloodPressureMeasures.AUTHORITY, "bpmeasure/#",
+		sUriMatcher.addURI(BloodPressureMeasureTable.AUTHORITY, "bpmeasure/#",
 				MEASURE_ID);
 
 		sBPMeasuresProjectionMap = new HashMap<String, String>();
