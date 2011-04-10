@@ -342,12 +342,12 @@ public class MeasureList extends Activity {
 		if (cur.moveToFirst()) {
 
 			String notes;
-			int createdDate;
+			long createdDate;
 			int sp;
 			int dp;
 			int pulse;
 			int id;
-
+			float aux;
 			int notesColumn = cur.getColumnIndex(BPMeasure.NOTE);
 			int createdDateColumn = cur.getColumnIndex(BPMeasure.CREATED_DATE);
 			int spColumn = cur.getColumnIndex(BPMeasure.SP);
@@ -358,11 +358,13 @@ public class MeasureList extends Activity {
 			do {
 				// Get the field values
 				notes = cur.getString(notesColumn);
-				createdDate = Integer
-						.parseInt(cur.getString(createdDateColumn));
-				sp = Integer.parseInt(cur.getString(spColumn));
-				dp = Integer.parseInt(cur.getString(dpColumn));
-				pulse = Integer.parseInt(cur.getString(pulseColumn));
+				createdDate = Long.parseLong(cur.getString(createdDateColumn));
+				aux = Float.parseFloat(cur.getString(spColumn));
+				sp = Math.round(aux);
+				aux = Float.parseFloat(cur.getString(dpColumn));
+				dp = Math.round(aux);
+				aux = Float.parseFloat(cur.getString(pulseColumn));
+				pulse = Math.round(aux);
 				id = Integer.parseInt(cur.getString(idColumn));
 				// Do something with the values.
 				bpm.add(new BloodPressureMeasureModel(pulse, sp, dp, notes,

@@ -12,7 +12,7 @@ public class BloodPressureMeasureModel {
 	public int id;
 
 	public BloodPressureMeasureModel(int pulse, int systolicPressure, int dyastolicPressure,
-			String notes, int createdDate, int id) {
+			String notes, long createdDate2, int id) {
 		super();
 		this.systolicPressure = systolicPressure;
 		this.dyastolicPressure = dyastolicPressure;
@@ -20,7 +20,7 @@ public class BloodPressureMeasureModel {
 
 		java.text.DateFormat dateFormat = SimpleDateFormat
 				.getDateInstance(SimpleDateFormat.SHORT);
-		this.createdDate = dateFormat.format(createdDate);
+		this.createdDate = dateFormat.format(createdDate2);
 		this.id = id;
 	}
 

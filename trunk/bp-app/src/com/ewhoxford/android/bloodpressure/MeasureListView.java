@@ -44,7 +44,7 @@ class MeasureListView extends ListView {
 			BloodPressureMeasureModel bloodPressureModel2) {
 		// this.setOrientation(HORIZONTAL);
 		// created id column
-		if (bloodPressureModel != null) {
+		
 			LinearLayout.LayoutParams idParams = new LinearLayout.LayoutParams(
 					20, LayoutParams.WRAP_CONTENT);
 			idParams.setMargins(1, 1, 1, 1);
@@ -110,7 +110,7 @@ class MeasureListView extends ListView {
 			note.setTextSize(14f);
 			note.setTextColor(Color.WHITE);
 			addView(note, noteParams);
-		}
+		
 	}
 
 	public MeasureListView(Context context,

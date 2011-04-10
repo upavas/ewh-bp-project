@@ -49,22 +49,26 @@ public class BPMeasureProvider extends ContentProvider {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("CREATE TABLE " + MEASURES_TABLE + " (" + BPMeasure._ID
-					+ " INTEGER PRIMARY KEY," + BPMeasure.PULSE + " INTEGER,"
-					+ BPMeasure.SP + " INTEGER," + BPMeasure.DP + " INTEGER,"
-					+ BPMeasure.NOTE + " varchar(400),"
+
+			String createDatabase = "CREATE TABLE " + MEASURES_TABLE + " ("
+					+ BPMeasure._ID + " INTEGER PRIMARY KEY," + BPMeasure.PULSE
+					+ " INTEGER," + BPMeasure.SP + " INTEGER," + BPMeasure.DP
+					+ " INTEGER," + BPMeasure.NOTE + " varchar(400),"
 					+ BPMeasure.CREATED_DATE + " INTEGER,"
-					+ BPMeasure.MODIFIED_DATE + " INTEGER"
-					+ BPMeasure.MEASUREMENT_FILE_EXIST + " BOOLEAN"
-					+ BPMeasure.MEASUREMENT_FILE_SYNC + " BOOLEAN"
-					+ BPMeasure.MEASUREMENT_FILE + " varchar(600)" + ");");
+					+ BPMeasure.MODIFIED_DATE + " INTEGER,"
+					+ BPMeasure.MEASUREMENT_FILE_EXIST + " BOOLEAN,"
+					+ BPMeasure.MEASUREMENT_FILE_SYNC + " BOOLEAN,"
+					+ BPMeasure.MEASUREMENT_FILE + " varchar(600)" + ");";
+			System.out.println(createDatabase);
+			db.execSQL(createDatabase);
+			
 		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
 					+ newVersion + ", which will destroy all old data");
-			db.execSQL("DROP TABLE IF EXISTS notes");
+			db.execSQL("DROP TABLE IF EXISTS " + MEASURES_TABLE);
 			onCreate(db);
 		}
 	}
