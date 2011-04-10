@@ -10,7 +10,11 @@ import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.View;
 
-// Class GraphView : a view controller for displaying the blood pressure / time graph
+/**
+ *  Class GraphView : a view controller for displaying the blood pressure / time graph
+ * @author corentin
+ *
+ */
 public class ValuesView extends View {
 	// Attributes
 	private Paint paintRectLeft; // Paint object for background rectangle of the

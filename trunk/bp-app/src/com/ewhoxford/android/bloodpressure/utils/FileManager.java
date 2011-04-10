@@ -1,4 +1,4 @@
-package com.ewhoxford.android.bloodpressure;
+package com.ewhoxford.android.bloodpressure.utils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -14,7 +14,10 @@ import android.webkit.MimeTypeMap;
 
 import com.ewhoxford.android.bloodpressure.exception.ExternalStorageNotAvailableException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
-
+/**
+ * 
+ * @author mauro
+ */
 public class FileManager {
 
 	private static final String DIRECTORY = "com.ewhoxford.android.bloodpressure";
@@ -55,7 +58,7 @@ public class FileManager {
 
 	public static String createExternalStoragePublicBPMeasureFile(
 			Context context, BloodPressureValue values, double[] arrayPressure,
-			float[] arrayTime) throws IllegalArgumentException{
+			float[] arrayTime) throws IllegalArgumentException {
 
 		if (arrayPressure.length == 0 || arrayTime.length == 0) {
 			String detailMessage = "illegal argument in input";

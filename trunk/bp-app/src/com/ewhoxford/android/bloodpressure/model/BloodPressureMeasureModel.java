@@ -1,7 +1,11 @@
 package com.ewhoxford.android.bloodpressure.model;
 
 import java.text.SimpleDateFormat;
-
+/**
+ * 
+ * @author mauro
+ *
+ */
 public class BloodPressureMeasureModel {
 
 	public int systolicPressure;

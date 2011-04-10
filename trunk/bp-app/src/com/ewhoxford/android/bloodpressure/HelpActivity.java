@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 // Class Home : activity that pops at the beginning of the application
-public class Help extends Activity implements OnClickListener {
+public class HelpActivity extends Activity implements OnClickListener {
 	// To be performed on the creation
 	public void onCreate(Bundle savedInstanceState) {
 		// Parent's method
@@ -35,7 +35,7 @@ public class Help extends Activity implements OnClickListener {
 		switch (V.getId()) {
 		// Start button
 		case R.id.button_start:
-			Intent I = new Intent(this, Measure.class);
+			Intent I = new Intent(this, MeasureActivity.class);
 			startActivity(I);
 			break;
 

@@ -6,15 +6,16 @@
 		android:debuggable="true">
 
 
-		<activity android:name=".MeasureList" android:label="@string/app_name">
+		<activity android:name=".MainActivity" android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"></action>
 				<category android:name="android.intent.category.LAUNCHER"></category>
 			</intent-filter>
 		</activity>
-		<activity android:name=".Measure"></activity>
-
-
+		<activity android:name=".MeasureActivity"></activity>
+		<activity android:name=".MeasureListActivity"></activity>
+		<activity android:name=".HelpActivity"></activity>
+		<activity android:name=".MeasureViewActivity"></activity>
 		<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="11" />
 
 		<provider android:name="com.ewhoxford.android.bloodpressure.BPMeasureProvider"
