@@ -28,17 +28,23 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.LineAndPointRenderer;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
-import com.ewhoxford.android.bloodpressure.BloodPressureMeasureTable.BPMeasure;
+import com.ewhoxford.android.bloodpressure.database.BPMeasureProvider;
+import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.exception.ExternalStorageNotAvailableException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
+import com.ewhoxford.android.bloodpressure.utils.FileManager;
 import com.ewhoxford.android.pressureInputDevice.TestDatasource;
 
-//Class Measure : activity that pops when the user wants to start taking blood pressure
-public class Measure extends Activity {
+/**
+ * Class Measure : activity that pops when the user wants to start taking blood pressure
+ * @author mauro
+ *
+ */
+public class MeasureActivity extends Activity {
 
-	Measure measureContext = this;
+	MeasureActivity measureContext = this;
 	// save file option is false
 	boolean saveFile = false;
 	// plot that shows real time data
@@ -195,7 +201,7 @@ public class Measure extends Activity {
 				.setCancelable(false).setPositiveButton("Yes",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								Measure.this.finish();
+								MeasureActivity.this.finish();
 							}
 						}).setNegativeButton("No",
 						new DialogInterface.OnClickListener() {
@@ -302,7 +308,7 @@ public class Measure extends Activity {
 
 	private void startSignalProcessing() {
 
-		myProgressDialog = ProgressDialog.show(Measure.this,
+		myProgressDialog = ProgressDialog.show(MeasureActivity.this,
 				"Processing Data...", "Determining Blood Pressure...", true);
 
 		new Thread() {

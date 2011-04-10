@@ -6,29 +6,31 @@ package com.ewhoxford.android.bloodpressure;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import android.app.Activity;
+import android.app.ListActivity;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
-import com.ewhoxford.android.bloodpressure.BloodPressureMeasureTable.BPMeasure;
+import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureMeasureModel;
 
 /**
  * Displays a list of BP measures. Will display notes from the {@link Uri}
  * provided in the intent if there is one, otherwise defaults to displaying the
  * contents of the {@link NotePadProvider}
+ * 
+ * @author mauro
  */
-public class MeasureList extends Activity {
+public class MeasureListActivity extends ListActivity {
 	private static final String TAG = "BloodPressureMeasuresList";
 
 	private Button mNewBPMeasureButton;
@@ -40,28 +42,6 @@ public class MeasureList extends Activity {
 	public static final int MENU_ITEM_DELETE = Menu.FIRST;
 	public static final int MENU_ITEM_INSERT = Menu.FIRST + 1;
 	private static final int MENU_ITEM_HELP = Menu.FIRST + 2;
-
-	/**
-	 * The columns we are interested in from the database
-	 */
-	private static final String[] PROJECTION = new String[] { BPMeasure._ID, // 0
-			BPMeasure.SP, // 1
-			BPMeasure.DP, // 2
-			BPMeasure.PULSE, // 3
-			BPMeasure.NOTE, // 4
-			BPMeasure.CREATED_DATE // 5
-	};
-
-	/** The index of the systolic pressure column */
-	private static final int COLUMN_INDEX_SP = 1;
-	/** The index of the dyastolic pressure column */
-	private static final int COLUMN_INDEX_DP = 2;
-	/** The index of the pulse column */
-	private static final int COLUMN_INDEX_PULSE = 3;
-	/** The index of the note column */
-	private static final int COLUMN_INDEX_NOTE = 4;
-	/** The index of the create date pressure column */
-	private static final int COLUMN_INDEX_CREATED_DATE = 5;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,32 +65,6 @@ public class MeasureList extends Activity {
 			intent.setData(BPMeasure.CONTENT_URI);
 		}
 
-		// Obtain handles to UI objects
-		mNewBPMeasureButton = (Button) findViewById(R.id.newBPMeasureButton);
-
-		mSelectAll = (CheckBox) findViewById(R.id.selectAll);
-
-		// Initialize class properties
-		mShowInvisible = false;
-		mSelectAll.setChecked(mShowInvisible);
-
-		// Register handler for UI elements
-		mNewBPMeasureButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Log.d(TAG, "mNewBPMeasureButton clicked");
-				launchNewBPMeasure();
-			}
-		});
-		mSelectAll.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				Log.d(TAG, "mShowInvisibleControl changed: " + isChecked);
-				mShowInvisible = isChecked;
-				populateBPMeasureList();
-			}
-		});
-		mBPMeasureListView = (MeasureListView) findViewById(R.id.bpMeasureList);
-
 		// Populate the bp measures list
 		populateBPMeasureList();
 
@@ -120,7 +74,7 @@ public class MeasureList extends Activity {
 		 * are enabled for items in the ListView, and the context menu is
 		 * handled by a method in MeasureList.
 		 */
-		mBPMeasureListView.setOnCreateContextMenuListener(this);
+		// setOnCreateContextMenuListener(this);
 		// ask for root permission since we need the mice raw values
 		Process p;
 		try {
@@ -277,7 +231,7 @@ public class MeasureList extends Activity {
 	// }
 
 	protected void launchNewBPMeasure() {
-		Intent i = new Intent(this, Measure.class);
+		Intent i = new Intent(this, MeasureActivity.class);
 		startActivity(i);
 	}
 
@@ -290,20 +244,14 @@ public class MeasureList extends Activity {
 		Cursor cursor = getBPMeasureList();
 
 		// Used to map notes entries from the database to views
-		// String[] from = new String[] { BPMeasure._ID, BPMeasure.CREATED_DATE,
-		// BPMeasure.SP, BPMeasure.DP, BPMeasure.PULSE, BPMeasure.NOTE };
-		// int[] to = new int[] { R.id.id, R.id.createdDate, R.id.sp, R.id.dp,
-		// R.id.pulse, R.id.notes };
-		//
-		// SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-		// R.layout.measure_list_item, cursor, from, to);
-		ArrayList<BloodPressureMeasureModel> bloodPressureMeasureModelList = getBloodPressureMeasureModel(cursor);
+		String[] from = new String[] { BPMeasure._ID, BPMeasure.CREATED_DATE,
+				BPMeasure.SP, BPMeasure.DP, BPMeasure.PULSE, BPMeasure.NOTE };
+		int[] to = new int[] { R.id.id, R.id.createdDate, R.id.sp, R.id.dp,
+				R.id.pulse, R.id.note };
 
-		BloodPressureAdapter adapter = new BloodPressureAdapter(this,
-				bloodPressureMeasureModelList);
-
-		mBPMeasureListView.setAdapter(adapter);
-
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+				R.layout.measure_list_item, cursor, from, to);
+		setListAdapter(adapter);
 	}
 
 	/**
@@ -319,9 +267,9 @@ public class MeasureList extends Activity {
 		String[] projection = new String[] {
 
 		BPMeasure._ID, BPMeasure.NOTE, BPMeasure.CREATED_DATE, BPMeasure.PULSE,
-				BPMeasure.SP, BPMeasure.DP,
-
-		};// Return the measureId
+				BPMeasure.SP, BPMeasure.DP, BPMeasure.MEASUREMENT_FILE_SYNC };// Return
+		// the
+		// measureId
 		// ID,NOTE,Created_date,pulse,sp,dp
 
 		String selection = null;// No where clause, return all records.
@@ -373,5 +321,22 @@ public class MeasureList extends Activity {
 
 		}
 		return bpm;
+	}
+
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		Uri uri = ContentUris.withAppendedId(getIntent().getData(), id);
+		String action = getIntent().getAction();
+		if (Intent.ACTION_PICK.equals(action)
+				|| Intent.ACTION_GET_CONTENT.equals(action)) {
+			// The caller is waiting for us to return a note selected by
+			// the user. The have clicked on one, so return it now.
+			setResult(RESULT_OK, new Intent().setData(uri));
+			finish();
+		} else {
+			// Launch activity to view/edit the currently selected item
+			startActivity(new Intent(Intent.ACTION_EDIT, uri));
+		}
+
 	}
 }

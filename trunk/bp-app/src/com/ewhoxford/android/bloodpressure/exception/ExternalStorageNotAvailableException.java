@@ -5,7 +5,7 @@ import android.util.Log;
 public class ExternalStorageNotAvailableException extends Exception {
 
 	/**
-	 * 
+	  * @author mauro
 	 */
 	private static final long serialVersionUID = 1L;
 	

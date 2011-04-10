@@ -8,7 +8,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ewhoxford.android.bloodpressure.model.BloodPressureMeasureModel;
-
+/**
+ * 
+ * @author mauro
+ *
+ */
 class MeasureListView extends ListView {
 
 	BloodPressureMeasureModel bloodPressureModel;

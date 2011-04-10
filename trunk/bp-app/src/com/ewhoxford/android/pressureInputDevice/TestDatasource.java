@@ -12,6 +12,11 @@ import android.os.Handler;
 import com.ewhoxford.android.bloodpressure.signalProcessing.ConvertTommHg;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 
+/**
+ * 
+ * @author mauro
+ * 
+ */
 public class TestDatasource implements Runnable {
 
 	// encapsulates management of the observers watching this datasource for
@@ -32,7 +37,7 @@ public class TestDatasource implements Runnable {
 	private int count = 0;
 	private boolean active = true;
 	int countMiceSamples = 0;
-	int linearFilterThreshold=20;
+	int linearFilterThreshold = 20;
 	final Handler mHandler = new Handler();
 	// Create runnable for posting
 	final Runnable runSignalAcquisition = new Runnable() {
@@ -102,9 +107,9 @@ public class TestDatasource implements Runnable {
 				while (j < 1000) {
 
 					pressureValue = pressureValuesFloat[count];
-					//signal processing problem correction 
+					// signal processing problem correction
 					if (bpMeasure.size() != 0)
-						if ( Math.abs(bpMeasure.getLast().doubleValue()
+						if (Math.abs(bpMeasure.getLast().doubleValue()
 								- pressureValue) > linearFilterThreshold) {
 							pressureValue = bpMeasure.getLast().doubleValue();
 						}

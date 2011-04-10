@@ -1,6 +1,6 @@
 
 
-package com.ewhoxford.android.bloodpressure;
+package com.ewhoxford.android.bloodpressure.database;
 
 import android.content.ContentResolver;
 import android.net.Uri;
@@ -8,6 +8,7 @@ import android.provider.BaseColumns;
 
 /**
  * Convenience definitions for blood pressure provider
+* @author mauro
  */
 public final class BloodPressureMeasureTable {
 	public static final String AUTHORITY = "com.ewhoxford.android.bloodpressure.bpmeasureprovider";

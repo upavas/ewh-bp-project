@@ -1,6 +1,7 @@
 package com.ewhoxford.android.pressureInputDevice;
 
 import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -10,7 +11,11 @@ import java.util.Observer;
 import android.os.Handler;
 
 import com.ewhoxford.android.bloodpressure.signalProcessing.ConvertTommHg;
-
+/**
+ * 
+ * @author mauro
+ *
+ */
 public class SampleDynamicXYDatasource implements Runnable {
 
 	// encapsulates management of the observers watching this datasource for

@@ -1,4 +1,4 @@
-package com.ewhoxford.android.bloodpressure;
+package com.ewhoxford.android.bloodpressure.database;
 
 import java.util.HashMap;
 
@@ -16,11 +16,12 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.ewhoxford.android.bloodpressure.BloodPressureMeasureTable.BPMeasure;
+import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 
 /**
  * Provides access to a database of BP Measures. Each BP Measure has an ID,
  * note, SP, DP, Pulse rate, a creation date and a modified data.
+  * @author mauro
  */
 public class BPMeasureProvider extends ContentProvider {
 
