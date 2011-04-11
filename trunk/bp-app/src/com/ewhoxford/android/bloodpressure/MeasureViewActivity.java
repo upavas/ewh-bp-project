@@ -145,7 +145,7 @@ public class MeasureViewActivity extends Activity {
 		mCursor = managedQuery(mUri, PROJECTION, null, null, null);
 
 		// If an instance of this activity had previously stopped, we can
-		// get the original text it started with.
+		// get the original text iMEASUREMENT_FILE_SYNCt started with.
 		if (savedInstanceState != null) {
 			mOriginalContent = savedInstanceState.getString(ORIGINAL_CONTENT);
 		}
@@ -223,7 +223,6 @@ public class MeasureViewActivity extends Activity {
 					// Bump the modification time to now.
 					// values.put(Notes.MODIFIED_DATE,
 					// System.currentTimeMillis());
-
 					// If we are creating a new note, then we want to also
 					// create
 					// an initial title for it.

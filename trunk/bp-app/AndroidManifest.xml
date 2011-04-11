@@ -18,7 +18,7 @@
 		<activity android:name=".MeasureViewActivity"></activity>
 		<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="11" />
 
-		<provider android:name="com.ewhoxford.android.bloodpressure.BPMeasureProvider"
-			android:authorities="com.ewhoxford.android.bloodpressure.bpmeasureprovider" />
+		<provider android:name="com.ewhoxford.android.bloodpressure.database.BPMeasureProvider"
+			android:authorities="com.ewhoxford.android.bloodpressure.database.bpmeasureprovider" />
 	</application>
 </manifest> 
