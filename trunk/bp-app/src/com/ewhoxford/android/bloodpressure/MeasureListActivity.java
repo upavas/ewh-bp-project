@@ -4,7 +4,8 @@
 package com.ewhoxford.android.bloodpressure;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.app.ListActivity;
 import android.content.ContentUris;
@@ -12,14 +13,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
-import com.ewhoxford.android.bloodpressure.model.BloodPressureMeasureModel;
 
 /**
  * Displays a list of BP measures. Will display notes from the {@link Uri}
@@ -28,7 +30,8 @@ import com.ewhoxford.android.bloodpressure.model.BloodPressureMeasureModel;
  * 
  * @author mauro
  */
-public class MeasureListActivity extends ListActivity {
+public class MeasureListActivity extends ListActivity implements
+		SimpleCursorAdapter.ViewBinder {
 	private static final String TAG = "BloodPressureMeasuresList";
 
 	// Menu item ids
@@ -41,7 +44,7 @@ public class MeasureListActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		// The user does not need to hold down the key to use menu shortcuts.
 		setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
-		//setContentView(R.layout.measure_list_item);
+		// setContentView(R.layout.measure_list_item);
 
 		/*
 		 * If no data is given in the Intent that started this Activity, then
@@ -238,14 +241,17 @@ public class MeasureListActivity extends ListActivity {
 
 		// Used to map notes entries from the database to views
 		String[] from = new String[] { BPMeasure._ID, BPMeasure.CREATED_DATE,
-				BPMeasure.SP, BPMeasure.DP, BPMeasure.PULSE, BPMeasure.NOTE };
+				BPMeasure.SP, BPMeasure.DP, BPMeasure.PULSE };
 		int[] to = new int[] { R.id.id, R.id.createdDate, R.id.sp, R.id.dp,
-				R.id.pulse, R.id.note };
+				R.id.pulse };
 
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
 				R.layout.measure_list_item, cursor, from, to);
 
+		adapter.setViewBinder(this);
+
 		setListAdapter(adapter);
+
 	}
 
 	/**
@@ -277,46 +283,6 @@ public class MeasureListActivity extends ListActivity {
 				sortOrder);
 	}
 
-	private ArrayList<BloodPressureMeasureModel> getBloodPressureMeasureModel(
-			Cursor cur) {
-		ArrayList<BloodPressureMeasureModel> bpm = new ArrayList<BloodPressureMeasureModel>();
-
-		if (cur.moveToFirst()) {
-
-			String notes;
-			long createdDate;
-			int sp;
-			int dp;
-			int pulse;
-			int id;
-			float aux;
-			int notesColumn = cur.getColumnIndex(BPMeasure.NOTE);
-			int createdDateColumn = cur.getColumnIndex(BPMeasure.CREATED_DATE);
-			int spColumn = cur.getColumnIndex(BPMeasure.SP);
-			int dpColumn = cur.getColumnIndex(BPMeasure.DP);
-			int pulseColumn = cur.getColumnIndex(BPMeasure.PULSE);
-			int idColumn = cur.getColumnIndex(BPMeasure._ID);
-
-			do {
-				// Get the field values
-				notes = cur.getString(notesColumn);
-				createdDate = Long.parseLong(cur.getString(createdDateColumn));
-				aux = Float.parseFloat(cur.getString(spColumn));
-				sp = Math.round(aux);
-				aux = Float.parseFloat(cur.getString(dpColumn));
-				dp = Math.round(aux);
-				aux = Float.parseFloat(cur.getString(pulseColumn));
-				pulse = Math.round(aux);
-				id = Integer.parseInt(cur.getString(idColumn));
-				// Do something with the values.
-				bpm.add(new BloodPressureMeasureModel(pulse, sp, dp, notes,
-						createdDate, id));
-			} while (cur.moveToNext());
-
-		}
-		return bpm;
-	}
-
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Uri uri = ContentUris.withAppendedId(getIntent().getData(), id);
@@ -332,6 +298,44 @@ public class MeasureListActivity extends ListActivity {
 			startActivity(new Intent(Intent.ACTION_EDIT, uri));
 		}
 
+	}
+
+	@Override
+	public boolean setViewValue(View v, Cursor cur, int columnIndex) {
+		try {
+
+			if (v instanceof TextView) {
+				((TextView) v).setText(cur.getString(columnIndex));
+				switch (columnIndex) {
+				case 2:
+					// Log.i(TAG,
+					// "Setting procedure name in SavedProcedureList text");
+					long dateStr = new Long(cur.getString(columnIndex));
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+					Date resultdate = new Date(dateStr);
+					System.out.println(sdf.format(resultdate));
+					((TextView) v).setText(sdf.format(resultdate));
+					break;
+				case 4:
+					// Log.i(TAG,
+					// "Setting patient id and name in SavedProcedureList text");
+					float aux = Float.parseFloat(cur.getString(columnIndex));
+					int sp = Math.round(aux);
+					((TextView) v).setText(Integer.toString(sp));
+					break;
+				case 5:
+					float aux1 = Float.parseFloat(cur.getString(columnIndex));
+					int dp = Math.round(aux1);
+					((TextView) v).setText(Integer.toString(dp));
+					break;
+				}
+			}
+		} catch (Exception e) {
+			Log.e(TAG, "Exception in setting the text in the list: "
+					+ e.toString());
+			return false;
+		}
+		return true;
 	}
 
 }
