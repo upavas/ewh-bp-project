@@ -11,7 +11,7 @@ import android.provider.BaseColumns;
 * @author mauro
  */
 public final class BloodPressureMeasureTable {
-	public static final String AUTHORITY = "com.ewhoxford.android.bloodpressure.bpmeasureprovider";
+	public static final String AUTHORITY = "com.ewhoxford.android.bloodpressure.database.bpmeasureprovider";
 
 	// This class cannot be instantiated
 	private BloodPressureMeasureTable() {

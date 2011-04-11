@@ -32,10 +32,10 @@ import com.ewhoxford.android.bloodpressure.database.BPMeasureProvider;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.exception.ExternalStorageNotAvailableException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
+import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDatasource;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 import com.ewhoxford.android.bloodpressure.utils.FileManager;
-import com.ewhoxford.android.pressureInputDevice.TestDatasource;
 
 /**
  * Class Measure : activity that pops when the user wants to start taking blood pressure
@@ -221,22 +221,23 @@ public class MeasureActivity extends Activity {
 				if (notesText.getText().length() != 0) {
 					notes = notesText.getText().toString();
 				}
+				Long time = System.currentTimeMillis();
 				if (checkBox.isChecked()) {
 
 					try {
 						savedFileName = FileManager.saveFile(measureContext,
-								bloodPressureValue, arrayPressure, arrayTime);
+								bloodPressureValue, arrayPressure, arrayTime, time);
 					} catch (ExternalStorageNotAvailableException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} finally {
 						addNewMeasureAndFile(savedFileName, bloodPressureValue,
-								notes);
+								notes,time);
 					}
 
 				} else {
 					addNewMeasureAndFile(savedFileName, bloodPressureValue,
-							notes);
+							notes,time);
 				}
 
 			}
@@ -316,8 +317,8 @@ public class MeasureActivity extends Activity {
 
 				// Do some Fake-Work
 				int l = data.getBpMeasure().size();
-				float[] arrayTime = new float[l];
-				double[] arrayPressure = new double[l];
+				arrayTime = new float[l];
+				arrayPressure = new double[l];
 				int i = 0;
 				int fs = 100;
 				while (i < l) {
@@ -357,13 +358,13 @@ public class MeasureActivity extends Activity {
 	 * @param note
 	 */
 	private void addNewMeasureAndFile(String savedFileName,
-			BloodPressureValue bloodPressureValue, String note) {
+			BloodPressureValue bloodPressureValue, String note,long time) {
 
 		ContentResolver cr = getContentResolver();
 
 		ContentValues values = new ContentValues();
 
-		Long time = System.currentTimeMillis();
+		
 		values.put(BPMeasure.CREATED_DATE, time);
 		values.put(BPMeasure.MODIFIED_DATE, time);
 		values.put(BPMeasure.DP, bloodPressureValue.getDiastolicBP());

@@ -15,8 +15,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -33,11 +31,6 @@ import com.ewhoxford.android.bloodpressure.model.BloodPressureMeasureModel;
 public class MeasureListActivity extends ListActivity {
 	private static final String TAG = "BloodPressureMeasuresList";
 
-	private Button mNewBPMeasureButton;
-	private MeasureListView mBPMeasureListView;
-	private boolean mShowInvisible;
-	private CheckBox mSelectAll;
-
 	// Menu item ids
 	public static final int MENU_ITEM_DELETE = Menu.FIRST;
 	public static final int MENU_ITEM_INSERT = Menu.FIRST + 1;
@@ -48,7 +41,7 @@ public class MeasureListActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		// The user does not need to hold down the key to use menu shortcuts.
 		setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
-		setContentView(R.layout.measure_list_item);
+		//setContentView(R.layout.measure_list_item);
 
 		/*
 		 * If no data is given in the Intent that started this Activity, then
@@ -251,6 +244,7 @@ public class MeasureListActivity extends ListActivity {
 
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
 				R.layout.measure_list_item, cursor, from, to);
+
 		setListAdapter(adapter);
 	}
 
@@ -267,7 +261,7 @@ public class MeasureListActivity extends ListActivity {
 		String[] projection = new String[] {
 
 		BPMeasure._ID, BPMeasure.NOTE, BPMeasure.CREATED_DATE, BPMeasure.PULSE,
-				BPMeasure.SP, BPMeasure.DP, BPMeasure.MEASUREMENT_FILE_SYNC };// Return
+				BPMeasure.SP, BPMeasure.DP, BPMeasure.NOTE };// Return
 		// the
 		// measureId
 		// ID,NOTE,Created_date,pulse,sp,dp
@@ -339,4 +333,5 @@ public class MeasureListActivity extends ListActivity {
 		}
 
 	}
+
 }

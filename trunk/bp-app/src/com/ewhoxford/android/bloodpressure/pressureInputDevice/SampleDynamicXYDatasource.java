@@ -1,5 +1,4 @@
-package com.ewhoxford.android.pressureInputDevice;
-
+package com.ewhoxford.android.bloodpressure.pressureInputDevice;
 import java.io.File;
 
 import java.io.FileInputStream;

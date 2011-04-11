@@ -3,7 +3,6 @@ package com.ewhoxford.android.bloodpressure.utils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.UUID;
 
 import android.content.Context;
 import android.media.MediaScannerConnection;
@@ -23,7 +22,7 @@ public class FileManager {
 	private static final String DIRECTORY = "com.ewhoxford.android.bloodpressure";
 
 	public static String saveFile(Context context, BloodPressureValue values,
-			double[] arrayPressure, float[] arrayTime)
+			double[] arrayPressure, float[] arrayTime, long createdDate)
 			throws ExternalStorageNotAvailableException {
 		boolean mExternalStorageAvailable = false;
 		boolean mExternalStorageWriteable = false;
@@ -46,7 +45,7 @@ public class FileManager {
 
 		if (mExternalStorageAvailable && mExternalStorageWriteable) {
 			fileName = createExternalStoragePublicBPMeasureFile(context,
-					values, arrayPressure, arrayTime);
+					values, arrayPressure, arrayTime, createdDate);
 		} else {
 			throw new ExternalStorageNotAvailableException(context.getClass()
 					.getName());
@@ -58,7 +57,7 @@ public class FileManager {
 
 	public static String createExternalStoragePublicBPMeasureFile(
 			Context context, BloodPressureValue values, double[] arrayPressure,
-			float[] arrayTime) throws IllegalArgumentException {
+			float[] arrayTime, long createdDate) throws IllegalArgumentException {
 
 		if (arrayPressure.length == 0 || arrayTime.length == 0) {
 			String detailMessage = "illegal argument in input";
@@ -70,10 +69,10 @@ public class FileManager {
 		// what you place here, since the user often manages these files. For
 		// pictures and other media owned by the application, consider
 		// Context.getExternalMediaDir().
-		String uuid = UUID.randomUUID().toString();
+		//String uuid = UUID.randomUUID().toString();
 
 		File path = Environment.getExternalStoragePublicDirectory(DIRECTORY);
-		String fileName = "bp_measure_" + uuid + ".csv";
+		String fileName = "bp_measure_" + createdDate + ".csv";
 		File file = new File(path, fileName);
 
 		try {
