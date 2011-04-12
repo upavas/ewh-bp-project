@@ -20,7 +20,7 @@ import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
  */
 public class FileManager {
 
-	private static final String DIRECTORY = "com.ewhoxford.android.bloodpressure";
+	public static final String DIRECTORY = "com.ewhoxford.android.bloodpressure";
 
 	public static String saveFile(Context context, BloodPressureValue values,
 			double[] arrayPressure, float[] arrayTime, long createdDate)

@@ -415,7 +415,8 @@ public class MeasureActivity extends Activity {
 		values.put(BPMeasure.MODIFIED_DATE, time);
 		values.put(BPMeasure.DP, bloodPressureValue.getDiastolicBP());
 		values.put(BPMeasure.SP, bloodPressureValue.getSystolicBP());
-		// correct this value @MARCO
+		// TODO correct this value @MARCO, 
+		// TODO put MAP VAlUE in database as a separate value,
 		values.put(BPMeasure.PULSE, bloodPressureValue.getMeanArterialBP());
 		values.put(BPMeasure.NOTE, note);
 		values.put(BPMeasure.MEASUREMENT_FILE_SYNC, false);
