@@ -1,36 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="wrap_content"
-	android:padding="6dip" android:orientation="horizontal">
+	android:orientation="vertical" android:layout_width="match_parent"
+	android:layout_height="match_parent" android:paddingLeft="8dp"
+	android:paddingRight="8dp">
 
-	<TextView android:text="" android:id="@+id/id"
-		android:gravity="center" android:layout_width="wrap_content"
-		android:layout_height="fill_parent" android:focusable="false"
-		android:focusableInTouchMode="false" />
-	<TextView android:text="" android:layout_width="wrap_content"
-		android:layout_height="fill_parent" android:id="@+id/createdDate"
-		android:focusable="false" android:focusableInTouchMode="false"
-		android:gravity="center" />
-	<LinearLayout android:orientation="vertical"
-		android:layout_width="0dip" android:layout_weight="1"
-		android:layout_height="fill_parent">
-		<TextView android:text="" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_weight="1"
-			android:id="@+id/sp" android:ellipsize="marquee" android:focusable="false"
-			android:focusableInTouchMode="false" />
-		<TextView android:text="" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_weight="1"
-			android:id="@+id/dp" android:ellipsize="marquee" android:focusable="false"
-			android:focusableInTouchMode="false" />
-		<TextView android:text="" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_weight="1"
-			android:id="@+id/pulse" android:ellipsize="marquee"
-			android:focusable="false" android:focusableInTouchMode="false" />
-	</LinearLayout>
-	<TextView android:text="" android:layout_width="wrap_content"
-		android:layout_height="fill_parent" android:id="@+id/note"
+	<ListView android:id="@id/android:list" android:layout_width="match_parent"
+		android:layout_height="match_parent" android:layout_weight="1"
+		android:drawSelectorOnTop="false" />
 
-		android:focusable="false" android:focusableInTouchMode="false" />
+	<Button android:id="@+id/new_measure_button"
+		android:layout_width="240px" android:layout_height="wrap_content"
+		android:text="New Blood Pressure Measure" />
 
 </LinearLayout>
+ 

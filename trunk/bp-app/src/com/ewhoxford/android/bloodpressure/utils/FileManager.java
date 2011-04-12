@@ -13,6 +13,7 @@ import android.webkit.MimeTypeMap;
 
 import com.ewhoxford.android.bloodpressure.exception.ExternalStorageNotAvailableException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
+
 /**
  * 
  * @author mauro
@@ -24,11 +25,25 @@ public class FileManager {
 	public static String saveFile(Context context, BloodPressureValue values,
 			double[] arrayPressure, float[] arrayTime, long createdDate)
 			throws ExternalStorageNotAvailableException {
+
+		String fileName = "";
+		if (checkExternalStorage()) {
+			fileName = createExternalStoragePublicBPMeasureFile(context,
+					values, arrayPressure, arrayTime, createdDate);
+		} else {
+			throw new ExternalStorageNotAvailableException(context.getClass()
+					.getName());
+		}
+
+		return fileName;
+
+	}
+
+	public static boolean checkExternalStorage() {
+
+		String state = Environment.getExternalStorageState();
 		boolean mExternalStorageAvailable = false;
 		boolean mExternalStorageWriteable = false;
-		String fileName = "";
-		String state = Environment.getExternalStorageState();
-
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
 			// We can read and write the media
 			mExternalStorageAvailable = mExternalStorageWriteable = true;
@@ -44,20 +59,17 @@ public class FileManager {
 		}
 
 		if (mExternalStorageAvailable && mExternalStorageWriteable) {
-			fileName = createExternalStoragePublicBPMeasureFile(context,
-					values, arrayPressure, arrayTime, createdDate);
+			return true;
 		} else {
-			throw new ExternalStorageNotAvailableException(context.getClass()
-					.getName());
+			return false;
 		}
-
-		return fileName;
 
 	}
 
 	public static String createExternalStoragePublicBPMeasureFile(
 			Context context, BloodPressureValue values, double[] arrayPressure,
-			float[] arrayTime, long createdDate) throws IllegalArgumentException {
+			float[] arrayTime, long createdDate)
+			throws IllegalArgumentException {
 
 		if (arrayPressure.length == 0 || arrayTime.length == 0) {
 			String detailMessage = "illegal argument in input";
@@ -69,7 +81,7 @@ public class FileManager {
 		// what you place here, since the user often manages these files. For
 		// pictures and other media owned by the application, consider
 		// Context.getExternalMediaDir().
-		//String uuid = UUID.randomUUID().toString();
+		// String uuid = UUID.randomUUID().toString();
 
 		File path = Environment.getExternalStoragePublicDirectory(DIRECTORY);
 		String fileName = "bp_measure_" + createdDate + ".csv";

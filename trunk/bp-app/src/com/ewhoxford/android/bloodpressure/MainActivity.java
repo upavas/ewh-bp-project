@@ -32,11 +32,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		View openProcedure = findViewById(R.id.new_measure_button);
-		openProcedure.setOnClickListener(this);
+		View newMeasure = findViewById(R.id.new_measure_button);
+		newMeasure.setOnClickListener(this);
 
-		View viewTransfers = findViewById(R.id.measure_list);
-		viewTransfers.setOnClickListener(this);
+		View measureList = findViewById(R.id.measure_list);
+		measureList.setOnClickListener(this);
 
 	}
 

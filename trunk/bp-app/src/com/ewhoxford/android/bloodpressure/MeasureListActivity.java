@@ -9,6 +9,7 @@ import java.util.Date;
 
 import android.app.ListActivity;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,6 +18,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -38,13 +41,14 @@ public class MeasureListActivity extends ListActivity implements
 	public static final int MENU_ITEM_DELETE = Menu.FIRST;
 	public static final int MENU_ITEM_INSERT = Menu.FIRST + 1;
 	private static final int MENU_ITEM_HELP = Menu.FIRST + 2;
+	Context measureListContext = this;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// The user does not need to hold down the key to use menu shortcuts.
 		setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
-		// setContentView(R.layout.measure_list_item);
+		setContentView(R.layout.measure_list_item);
 
 		/*
 		 * If no data is given in the Intent that started this Activity, then
@@ -60,6 +64,17 @@ public class MeasureListActivity extends ListActivity implements
 		if (intent.getData() == null) {
 			intent.setData(BPMeasure.CONTENT_URI);
 		}
+
+		Button newMeasure = (Button) findViewById(R.id.new_measure_button);
+		newMeasure.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(measureListContext,
+						MeasureActivity.class);
+				startActivity(i);
+			}
+		});
 
 		// Populate the bp measures list
 		populateBPMeasureList();
@@ -246,7 +261,7 @@ public class MeasureListActivity extends ListActivity implements
 				R.id.pulse };
 
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-				R.layout.measure_list_item, cursor, from, to);
+				R.layout.measure_list_row, cursor, from, to);
 
 		adapter.setViewBinder(this);
 
@@ -314,20 +329,27 @@ public class MeasureListActivity extends ListActivity implements
 					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 					Date resultdate = new Date(dateStr);
 					System.out.println(sdf.format(resultdate));
-					((TextView) v).setText(sdf.format(resultdate));
+					//TODO correct this space problem between columns
+					((TextView) v).setText("   "+sdf.format(resultdate)+"   ");
 					break;
 				case 4:
 					// Log.i(TAG,
 					// "Setting patient id and name in SavedProcedureList text");
 					float aux = Float.parseFloat(cur.getString(columnIndex));
 					int sp = Math.round(aux);
-					((TextView) v).setText(Integer.toString(sp));
+					((TextView) v).setText("SYS:" + Integer.toString(sp));
 					break;
 				case 5:
 					float aux1 = Float.parseFloat(cur.getString(columnIndex));
 					int dp = Math.round(aux1);
-					((TextView) v).setText(Integer.toString(dp));
+					((TextView) v).setText("DYA:" + Integer.toString(dp));
 					break;
+				case 3:
+					float aux11 = Float.parseFloat(cur.getString(columnIndex));
+					int pulse = Math.round(aux11);
+					((TextView) v).setText("PUL:" + Integer.toString(pulse));
+					break;
+
 				}
 			}
 		} catch (Exception e) {
