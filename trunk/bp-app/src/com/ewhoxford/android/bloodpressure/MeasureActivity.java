@@ -11,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,15 +33,18 @@ import com.ewhoxford.android.bloodpressure.database.BPMeasureProvider;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.exception.ExternalStorageNotAvailableException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
+import com.ewhoxford.android.bloodpressure.pressureInputDevice.SampleDynamicXYDatasource;
 import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDatasource;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 import com.ewhoxford.android.bloodpressure.utils.FileManager;
 
 /**
- * Class Measure : activity that pops when the user wants to start taking blood pressure
+ * Class Measure : activity that pops when the user wants to start taking blood
+ * pressure
+ * 
  * @author mauro
- *
+ * 
  */
 public class MeasureActivity extends Activity {
 
@@ -67,8 +71,10 @@ public class MeasureActivity extends Activity {
 	boolean minPressureReached = false;
 	// signal processing progress dialog
 	ProgressDialog myProgressDialog;
-	// discard measure alert dialgo
+	// discard measure alert dialog
 	AlertDialog.Builder builder;
+	// discard measure alert dialog
+	AlertDialog.Builder saveAlert;
 	// Structure that holds blood pressure values result
 	BloodPressureValue bloodPressureValue;
 	// Need handler for callbacks to the UI thread
@@ -181,8 +187,16 @@ public class MeasureActivity extends Activity {
 		checkBox = (CheckBox) findViewById(R.id.checkbox);
 
 		// Help button
-		View HelpButton = findViewById(R.id.button_help);
-		// HelpButton.setOnClickListener(this);
+		Button helpButton = (Button) findViewById(R.id.button_help);
+		helpButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(measureContext, HelpActivity.class);
+				startActivity(i);
+
+			}
+		});
 
 		Button discardButton = (Button) findViewById(R.id.button_discard);
 
@@ -215,34 +229,67 @@ public class MeasureActivity extends Activity {
 
 		saveButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				BPMeasureProvider mProvider = new BPMeasureProvider();
-				String savedFileName = "";
-				String notes = "";
-				if (notesText.getText().length() != 0) {
-					notes = notesText.getText().toString();
-				}
-				Long time = System.currentTimeMillis();
+
+				AlertDialog alert = saveAlert.create();
+
 				if (checkBox.isChecked()) {
-
-					try {
-						savedFileName = FileManager.saveFile(measureContext,
-								bloodPressureValue, arrayPressure, arrayTime, time);
-					} catch (ExternalStorageNotAvailableException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} finally {
-						addNewMeasureAndFile(savedFileName, bloodPressureValue,
-								notes,time);
+					if (FileManager.checkExternalStorage()) {
+						alert
+								.setMessage("Create csv file and save to database ?");
+					} else {
+						alert.setMessage("Save to database ?");
 					}
-
 				} else {
-					addNewMeasureAndFile(savedFileName, bloodPressureValue,
-							notes,time);
+					alert.setMessage("Save to database ?");
 				}
-
+				alert.show();
 			}
 
 		});
+		saveAlert = new AlertDialog.Builder(this);
+		saveAlert.setCancelable(false).setPositiveButton("Yes",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+
+						BPMeasureProvider mProvider = new BPMeasureProvider();
+						String savedFileName = "";
+						String notes = "";
+
+						if (notesText.getText().length() != 0) {
+							notes = notesText.getText().toString();
+						}
+
+						Long time = System.currentTimeMillis();
+
+						if (checkBox.isChecked()) {
+
+							try {
+								savedFileName = FileManager.saveFile(
+										measureContext, bloodPressureValue,
+										arrayPressure, arrayTime, time);
+							} catch (ExternalStorageNotAvailableException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} finally {
+								addNewMeasureAndFile(savedFileName,
+										bloodPressureValue, notes, time);
+							}
+
+						} else {
+							addNewMeasureAndFile(savedFileName,
+									bloodPressureValue, notes, time);
+						}
+						Intent i = new Intent(measureContext,
+								MeasureListActivity.class);
+						startActivity(i);
+
+					}
+				}).setNegativeButton("No",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
 
 		// #### End of Set up click listeners for all the buttons
 
@@ -358,13 +405,12 @@ public class MeasureActivity extends Activity {
 	 * @param note
 	 */
 	private void addNewMeasureAndFile(String savedFileName,
-			BloodPressureValue bloodPressureValue, String note,long time) {
+			BloodPressureValue bloodPressureValue, String note, long time) {
 
 		ContentResolver cr = getContentResolver();
 
 		ContentValues values = new ContentValues();
 
-		
 		values.put(BPMeasure.CREATED_DATE, time);
 		values.put(BPMeasure.MODIFIED_DATE, time);
 		values.put(BPMeasure.DP, bloodPressureValue.getDiastolicBP());
