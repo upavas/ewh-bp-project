@@ -3,38 +3,32 @@ package com.ewhoxford.android.bloodpressure;
 
 //Import resources
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
-import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.LineAndPointRenderer;
-import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.SimpleXYSeries.ArrayFormat;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
-import com.ewhoxford.android.bloodpressure.utils.FileManager;
-import com.ewhoxford.android.bloodpressure.utils.ReadCSV;
 
 /**
  * A generic activity for editing a bp measure in a database. This can be used
@@ -55,6 +49,8 @@ public class MeasureViewActivity extends Activity {
 			BPMeasure.DP, // 3
 			BPMeasure.PULSE, // 4
 			BPMeasure.NOTE, // 5
+			BPMeasure.MEASUREMENT_FILE_EXIST, // 6
+			BPMeasure.MODIFIED_DATE,// 1
 	};
 	/** The index of the note column */
 	private static final int COLUMN_INDEX_NOTE = 5;
@@ -86,9 +82,12 @@ public class MeasureViewActivity extends Activity {
 	AlertDialog.Builder builder;
 	// discard measure alert dialog
 	AlertDialog.Builder saveAlert;
+	// delete measure alert dialog
+	AlertDialog.Builder deleteAlert;
 	// Checkbox to save measure csv file
 	CheckBox checkBox;
 	// user notes
+	TextView textView;
 
 	private int mState;
 	private boolean mNoteOnly = false;
@@ -120,12 +119,14 @@ public class MeasureViewActivity extends Activity {
 		// Set the layout for this activity. You can find it in
 		// res/layout/note_editor.xml
 		setContentView(R.layout.measure_view);
-
 		// The text view for our note, identified by its ID in the XML file.
 		mText = (EditText) findViewById(R.id.edittext);
+		// The text view for our note, identified by its ID in the XML file.
+		textView = (TextView) findViewById(R.id.id_date);
 
 		// initialize checkbox variable
 		checkBox = (CheckBox) findViewById(R.id.checkbox);
+		checkBox.setEnabled(false);
 
 		// Help button
 		Button deleteButton = (Button) findViewById(R.id.button_delete);
@@ -135,8 +136,22 @@ public class MeasureViewActivity extends Activity {
 			public void onClick(View v) {
 				deleteMeasure();
 
+				AlertDialog alert = deleteAlert.create();
+				alert.show();
 			}
 		});
+
+		deleteAlert = new AlertDialog.Builder(this);
+		deleteAlert.setMessage("Measure deleted");
+		deleteAlert.setCancelable(false).setPositiveButton("Ok",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+						Intent i = new Intent(measureContext,
+								MeasureListActivity.class);
+						startActivity(i);
+					}
+				});
 
 		Button discardButton = (Button) findViewById(R.id.button_discard);
 
@@ -165,10 +180,12 @@ public class MeasureViewActivity extends Activity {
 						});
 
 		saveButton = (Button) findViewById(R.id.button_save);
-		saveButton.setEnabled(false);
 
 		saveButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+
+				Long time = System.currentTimeMillis();
+				updateNote(mText.getText().toString(), time);
 
 				AlertDialog alert = saveAlert.create();
 				alert.show();
@@ -176,22 +193,14 @@ public class MeasureViewActivity extends Activity {
 
 		});
 		saveAlert = new AlertDialog.Builder(this);
-		saveAlert.setMessage("save changes?");
-		saveAlert.setCancelable(false).setPositiveButton("Yes",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-
-						Long time = System.currentTimeMillis();
-						update(mText.getText().toString(), time);
-						Intent i = new Intent(measureContext,
-								MeasureListActivity.class);
-						startActivity(i);
-
-					}
-				}).setNegativeButton("No",
+		saveAlert.setMessage("Changes Saved");
+		saveAlert.setCancelable(false).setPositiveButton("Ok",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						dialog.cancel();
+						Intent i = new Intent(measureContext,
+								MeasureListActivity.class);
+						startActivity(i);
 					}
 				});
 
@@ -204,14 +213,17 @@ public class MeasureViewActivity extends Activity {
 
 			String notes;
 			long createdDate;
+			long modified;
 			int sp;
 			int dp;
 			int pulse;
-			int id;
+			int id = 0;
 			float aux;
 			int notesColumn = mCursor.getColumnIndex(BPMeasure.NOTE);
 			int createdDateColumn = mCursor
 					.getColumnIndex(BPMeasure.CREATED_DATE);
+			int modifiedDateColumn = mCursor
+					.getColumnIndex(BPMeasure.MODIFIED_DATE);
 			int spColumn = mCursor.getColumnIndex(BPMeasure.SP);
 			int dpColumn = mCursor.getColumnIndex(BPMeasure.DP);
 			int pulseColumn = mCursor.getColumnIndex(BPMeasure.PULSE);
@@ -221,6 +233,7 @@ public class MeasureViewActivity extends Activity {
 			int fileNameColumn = mCursor
 					.getColumnIndex(BPMeasure.MEASUREMENT_FILE);
 			// Get the field values
+			id = mCursor.getInt(idColumn);
 			notes = mCursor.getString(notesColumn);
 			aux = Float.parseFloat(mCursor.getString(spColumn));
 			sp = Math.round(aux);
@@ -228,9 +241,18 @@ public class MeasureViewActivity extends Activity {
 			dp = Math.round(aux);
 			aux = Float.parseFloat(mCursor.getString(pulseColumn));
 			pulse = Math.round(aux);
+			createdDate = new Long(mCursor.getString(createdDateColumn));
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm");
+			Date createdResultdate = new Date(createdDate);
+			modified = new Long(mCursor.getString(modifiedDateColumn));
+			Date modifiedResultdate = new Date(modified);
 
 			// Display notes and blood pressure algorithm result in the
 			// Measure layout
+			String headerString = "measure id: " + id + "\n";
+			headerString += "created: " + sdf.format(createdResultdate) + "\n";
+			headerString += "modified: " + sdf.format(modifiedResultdate);
+			textView.setText(headerString);
 			mText.setText(notes);
 			ValuesView valuesView = (ValuesView) findViewById(R.id.results);
 			valuesView.requestFocus();
@@ -239,49 +261,11 @@ public class MeasureViewActivity extends Activity {
 			valuesView.setPulseRate(pulse);
 			valuesView.invalidate();
 
-			boolean fileExists = Boolean.parseBoolean(mCursor
-					.getString(fileExistsColumn));
-			if (fileExists) {
-
-				String fileName = mCursor.getString(fileNameColumn);
-				if (fileName != null) {
-
-					// initialize our XYPlot reference and real time update
-					// code:
-
-					// getInstance and position datasets:
-					float[][] bloodPressureArray = ReadCSV.readCSV(
-							FileManager.DIRECTORY, fileName);
-
-					int l = bloodPressureArray.length;
-
-					List<Number> pressureValues = new ArrayList<Number>();
-					int i = 0;
-					while (i < l) {
-						pressureValues.add(bloodPressureArray[i][1]);
-					}
-					SimpleXYSeries series = new SimpleXYSeries("Pressure");
-					series.setModel(pressureValues, ArrayFormat.Y_VALS_ONLY);
-
-					bpMeasureXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
-
-					// freeze the range boundaries:
-					bpMeasureXYPlot.setRangeBoundaries(0, 300,
-							XYPlot.BoundaryMode.FIXED);
-					bpMeasureXYPlot.setDomainBoundaries(0, l,
-							XYPlot.BoundaryMode.FIXED);
-					bpMeasureXYPlot.addSeries(series,
-							LineAndPointRenderer.class,
-							new LineAndPointFormatter(Color.rgb(100, 100, 200),
-									Color.BLACK));
-					bpMeasureXYPlot.setDomainStepValue(3);
-					bpMeasureXYPlot.setTicksPerRangeLabel(3);
-					bpMeasureXYPlot.setDomainLabel("Time (s)");
-					bpMeasureXYPlot.getDomainLabelWidget().pack();
-					bpMeasureXYPlot.setRangeLabel("Pressure(mmHg)");
-					bpMeasureXYPlot.getRangeLabelWidget().pack();
-					bpMeasureXYPlot.disableAllMarkup();
-				}
+			String fileExists = mCursor.getString(fileExistsColumn);
+			if (fileExists.equals("1")) {
+				checkBox.setChecked(true);
+			} else {
+				checkBox.setChecked(false);
 			}
 
 		}
@@ -335,116 +319,6 @@ public class MeasureViewActivity extends Activity {
 		outState.putString(ORIGINAL_CONTENT, mOriginalContent);
 	}
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-
-		// The user is going somewhere else, so make sure their current
-		// changes are safely saved away in the provider. We don't need
-		// to do this if only editing.
-		if (mCursor != null) {
-			String text = mText.getText().toString();
-			int length = text.length();
-
-			// If this activity is finished, and there is no text, then we
-			// do something a little special: simply delete the note entry.
-			// Note that we do this both for editing and inserting... it
-			// would be reasonable to only do it when inserting.
-			if (isFinishing() && (length == 0) && !mNoteOnly) {
-				setResult(RESULT_CANCELED);
-				deleteMeasure();
-
-				// Get out updates into the provider.
-			} else {
-				ContentValues values = new ContentValues();
-
-				// This stuff is only done when working with a full-fledged
-				// note.
-				if (!mNoteOnly) {
-					// Bump the modification time to now.
-					// values.put(Notes.MODIFIED_DATE,
-					// System.currentTimeMillis());
-					// If we are creating a new note, then we want to also
-					// create
-					// an initial title for it.
-					if (mState == STATE_INSERT) {
-						String title = text.substring(0, Math.min(30, length));
-						if (length > 30) {
-							int lastSpace = title.lastIndexOf(' ');
-							if (lastSpace > 0) {
-								title = title.substring(0, lastSpace);
-							}
-						}
-						// values.put(Notes.TITLE, title);
-					}
-				}
-
-				// Write our text back into the provider.
-				// values.put(Notes.NOTE, text);
-
-				// Commit all of our changes to persistent storage. When the
-				// update completes
-				// the content provider will notify the cursor of the change,
-				// which will
-				// cause the UI to be updated.
-				getContentResolver().update(mUri, values, null, null);
-			}
-		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-
-		// Build the menus that are shown when editing.
-		if (mState == STATE_EDIT) {
-			menu.add(0, REVERT_ID, 0, R.string.menu_revert).setShortcut('0',
-					'r').setIcon(android.R.drawable.ic_menu_revert);
-			if (!mNoteOnly) {
-				menu.add(0, DELETE_ID, 0, R.string.menu_delete).setShortcut(
-						'1', 'd').setIcon(android.R.drawable.ic_menu_delete);
-			}
-
-			// Build the menus that are shown when inserting.
-		} else {
-			menu.add(0, DISCARD_ID, 0, R.string.menu_discard).setShortcut('0',
-					'd').setIcon(android.R.drawable.ic_menu_delete);
-		}
-
-		// If we are working on a full note, then append to the
-		// menu items for any other activities that can do stuff with it
-		// as well. This does a query on the system for any activities that
-		// implement the ALTERNATIVE_ACTION for our data, adding a menu item
-		// for each one that is found.
-		if (!mNoteOnly) {
-			Intent intent = new Intent(null, getIntent().getData());
-			intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
-			menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE, 0, 0,
-					new ComponentName(this, MeasureActivity.class), null,
-					intent, 0, null);
-		}
-
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle all of the possible menu actions.
-		switch (item.getItemId()) {
-		case DELETE_ID:
-			deleteMeasure();
-			finish();
-			break;
-		case DISCARD_ID:
-			cancelUpdate();
-			break;
-		case REVERT_ID:
-			cancelUpdate();
-			break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
 	/**
 	 * Take care of canceling work on a note. Deletes the note if we had created
 	 * it, otherwise reverts to the original text.
@@ -481,13 +355,12 @@ public class MeasureViewActivity extends Activity {
 	 * @param time
 	 * @param note
 	 */
-	private void update(String note, long time) {
+	private void updateNote(String note, long time) {
 
 		ContentResolver cr = getContentResolver();
 		ContentValues values = new ContentValues();
 		values.put(BPMeasure.MODIFIED_DATE, time);
 		values.put(BPMeasure.NOTE, note);
-
 		cr.update(mUri, values, null, null);
 	}
 

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 /**
  * Main Blood pressure activity. When the app is launched, this activity runs,
@@ -37,6 +39,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 		View measureList = findViewById(R.id.measure_list);
 		measureList.setOnClickListener(this);
+		// Help button
+		Button helpButton = (Button) findViewById(R.id.button_help);
+		helpButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(context, HelpActivity.class);
+				startActivity(i);
+
+			}
+		});
 
 	}
 

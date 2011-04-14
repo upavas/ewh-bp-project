@@ -114,7 +114,7 @@ public class FileManager {
 			int dPressure = (int) values.getDiastolicBP();
 			int sPressure = (int) values.getSystolicBP();
 			int pulse = (int) values.getMeanArterialBP();
-			writer.append("Systolic Pressure, Dyastolic Pressure,Pulse, note\n");
+			writer.append("Systolic_Pressure, Dyastolic_Pressure,Pulse, note\n");
 			writer.append(sPressure + "," + dPressure + "," + pulse +"," + note+ "\n");
 			writer.append("time,pressure(mmHg)\n");
 

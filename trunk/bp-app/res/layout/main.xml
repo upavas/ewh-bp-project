@@ -9,5 +9,7 @@
 		android:text="New Blood Pressure Measure" />
 	<Button android:id="@+id/measure_list" android:layout_width="240px"
 		android:layout_height="wrap_content" android:text="View Saved Measurements" />
+	<Button android:id="@+id/button_help" android:layout_width="240px"
+		android:layout_height="wrap_content" android:text="Help" />
 </LinearLayout>
 
