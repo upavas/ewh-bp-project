@@ -1,7 +1,7 @@
 clear all
 close all
 
-x2=csvread('marco_050311_1.csv');
+x2=csvread('mauro_test_folio_1.csv');
 
 y_p1_o=abs(x2(:,3)-255);
 x_p1=x2(:,2);
