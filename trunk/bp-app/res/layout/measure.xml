@@ -16,9 +16,9 @@
 		android:orientation="vertical" android:layout_width="fill_parent"
 		android:layout_height="fill_parent">
 
-		<TextView android:id="@+id/text0" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:text="Acquire blood pressure"
-			android:textStyle="bold" />
+		<TextView android:id="@+id/text_message" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:text="Close valve!Pump!Pump!Pump!"
+			android:textStyle="bold" android:textColor="@color/measure_user_pump"/>
 
 
 		<com.androidplot.xy.XYPlot android:id="@+id/mySimpleXYPlot"

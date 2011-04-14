@@ -21,13 +21,6 @@
 			android:textStyle="bold" />
 
 
-		<com.androidplot.xy.XYPlot android:id="@+id/mySimpleXYPlot"
-			android:layout_width="fill_parent" android:layout_height="150px"
-			android:layout_marginTop="10px" android:layout_marginLeft="10px"
-			android:layout_marginRight="10px" title="Blood Pressure Signal"
-			android:layout_below="@+id/text0" />
-
-
 		<!--
 			<com.ewhoxford.android.bloodpressure.GraphView
 			android:id="@+id/graph" android:layout_width="fill_parent"

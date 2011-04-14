@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:padding="6dip" android:orientation="horizontal">
+
+	<TextView android:text="Id" android:id="@+id/id_h"
+		android:layout_width="wrap_content" android:layout_height="fill_parent"
+		android:focusable="false" android:focusableInTouchMode="false"
+		android:gravity="center" />
+	<TextView android:text="Created" android:layout_width="wrap_content"
+		android:layout_height="fill_parent" android:id="@+id/createdDate_h"
+		android:focusable="false" android:focusableInTouchMode="false"
+		android:gravity="center" />
+	<TextView android:text="systolic" android:layout_width="wrap_content"
+		android:layout_height="fill_parent" android:layout_weight="1"
+		android:id="@+id/sp_h" android:ellipsize="marquee" android:focusable="false"
+		android:focusableInTouchMode="false" android:gravity="center" />
+	<TextView android:text="dyastolic" android:layout_width="wrap_content"
+		android:layout_height="fill_parent" android:layout_weight="1"
+		android:id="@+id/dp_h" android:ellipsize="marquee" android:focusable="false"
+		android:focusableInTouchMode="false" />
+	<TextView android:text="pulse" android:layout_width="wrap_content"
+		android:layout_height="fill_parent" android:layout_weight="1"
+		android:id="@+id/pulse_h" android:ellipsize="marquee"
+		android:focusable="false" android:focusableInTouchMode="false"
+		android:gravity="center" />
+	<!--	<TextView android:text="" android:layout_width="wrap_content"-->
+	<!--		android:layout_height="fill_parent" android:id="@+id/note"-->
+	<!--
+		android:focusable="false" android:focusableInTouchMode="false" />
+	-->
+
+</LinearLayout>

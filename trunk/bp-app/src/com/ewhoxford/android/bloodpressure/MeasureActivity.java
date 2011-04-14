@@ -17,12 +17,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Handler.Callback;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.androidplot.Plot;
 import com.androidplot.xy.LineAndPointFormatter;
@@ -31,7 +31,6 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.ewhoxford.android.bloodpressure.database.BPMeasureProvider;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
-import com.ewhoxford.android.bloodpressure.exception.ExternalStorageNotAvailableException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
 import com.ewhoxford.android.bloodpressure.pressureInputDevice.SampleDynamicXYDatasource;
 import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDatasource;
@@ -48,9 +47,9 @@ import com.ewhoxford.android.bloodpressure.utils.FileManager;
  */
 public class MeasureActivity extends Activity {
 
-	MeasureActivity measureContext = this;
+	private MeasureActivity measureContext = this;
 	// save file option is false
-	boolean saveFile = false;
+	private boolean saveFile = false;
 	// plot that shows real time data
 	private XYPlot bpMeasureXYPlot;
 	// save measure button
@@ -58,31 +57,31 @@ public class MeasureActivity extends Activity {
 	// Observer object that is notified by pressure data stream observable file
 	private MyPlotUpdater plotUpdater;
 	// Observable object that notifies observer that new values were acquired.
-	TestDatasource data;
+	private SampleDynamicXYDatasource data;
 	// pressure time series shown in the real time chart
 	private SimpleXYSeries bpMeasureSeries = null;
 	// array with time points
-	float[] arrayTime;
+	private float[] arrayTime;
 	// array with pressure points
-	double[] arrayPressure;
+	private double[] arrayPressure;
 	// auxiliary variable to control measurement.
-	boolean maxPressureReached = false;
+	private boolean maxPressureReached = false;
 	// auxiliary variable to control measurement.
-	boolean minPressureReached = false;
+	private boolean minPressureReached = false;
 	// signal processing progress dialog
-	ProgressDialog myProgressDialog;
+	private ProgressDialog myProgressDialog;
 	// discard measure alert dialog
-	AlertDialog.Builder builder;
+	private AlertDialog.Builder builder;
 	// discard measure alert dialog
-	AlertDialog.Builder saveAlert;
+	private AlertDialog.Builder saveAlert;
 	// Structure that holds blood pressure values result
-	BloodPressureValue bloodPressureValue;
+	private BloodPressureValue bloodPressureValue;
 	// Need handler for callbacks to the UI thread
-	final Handler mHandler = new Handler();
+	private final Handler mHandler = new Handler();
 	// Checkbox to save measure csv file
-	CheckBox checkBox;
+	private CheckBox checkBox;
 	// user notes
-	EditText notesText;
+	private EditText notesText;
 
 	// Create runnable for signal processing
 	final Runnable runSignalProcessing = new Runnable() {
@@ -116,6 +115,17 @@ public class MeasureActivity extends Activity {
 
 	}
 
+	// Create runnable for chaging messages while pressure is being acquired
+	final Runnable changeTextMessage = new Runnable() {
+		public void run() {
+			TextView textMessage = (TextView) findViewById(R.id.text_message);
+			textMessage
+					.setText("Stop pump!Open valve, depressure slowly at constante rate!");
+			textMessage.setTextColor(Color.RED);
+			textMessage.postInvalidate();
+		}
+	};
+
 	private class MyPlotUpdater implements Observer, Callback {
 		Plot plot;
 		double pressureValue = 0;
@@ -129,8 +139,10 @@ public class MeasureActivity extends Activity {
 
 			pressureValue = data.getPressureValue();
 			// check if operator has reached reasonable cuff pressure
-			if (pressureValue > 180)
+			if (pressureValue > 180) {
 				maxPressureReached = true;
+				mHandler.post(changeTextMessage);
+			}
 
 			if (maxPressureReached) {
 				// if max pressure reached, check if measurement is now over
@@ -229,65 +241,58 @@ public class MeasureActivity extends Activity {
 
 		saveButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				BPMeasureProvider mProvider = new BPMeasureProvider();
+				String savedFileName = "";
+				String notes = "";
 
+				if (notesText.getText().length() != 0) {
+					notes = notesText.getText().toString();
+				}
+
+				Long time = System.currentTimeMillis();
+
+				if (checkBox.isChecked()) {
+
+					try {
+						savedFileName = FileManager.saveFile(measureContext,
+								bloodPressureValue, arrayPressure, arrayTime,
+								time, notes);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} finally {
+						addNewMeasureAndFile(savedFileName, bloodPressureValue,
+								notes, time);
+					}
+
+				} else {
+					addNewMeasureAndFile(savedFileName, bloodPressureValue,
+							notes, time);
+				}
 				AlertDialog alert = saveAlert.create();
 
 				if (checkBox.isChecked()) {
 					if (FileManager.checkExternalStorage()) {
 						alert
-								.setMessage("Create csv file and save to database ?");
+								.setMessage("Data saved to csv file and to database");
 					} else {
-						alert.setMessage("Save to database ?");
+						alert.setMessage("Data saved to database");
 					}
 				} else {
-					alert.setMessage("Save to database ?");
+					alert.setMessage("Data save to database");
 				}
 				alert.show();
 			}
 
 		});
 		saveAlert = new AlertDialog.Builder(this);
-		saveAlert.setCancelable(false).setPositiveButton("Yes",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-
-						BPMeasureProvider mProvider = new BPMeasureProvider();
-						String savedFileName = "";
-						String notes = "";
-
-						if (notesText.getText().length() != 0) {
-							notes = notesText.getText().toString();
-						}
-
-						Long time = System.currentTimeMillis();
-
-						if (checkBox.isChecked()) {
-
-							try {
-								savedFileName = FileManager.saveFile(
-										measureContext, bloodPressureValue,
-										arrayPressure, arrayTime, time);
-							} catch (ExternalStorageNotAvailableException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} finally {
-								addNewMeasureAndFile(savedFileName,
-										bloodPressureValue, notes, time);
-							}
-
-						} else {
-							addNewMeasureAndFile(savedFileName,
-									bloodPressureValue, notes, time);
-						}
-						Intent i = new Intent(measureContext,
-								MeasureListActivity.class);
-						startActivity(i);
-
-					}
-				}).setNegativeButton("No",
+		saveAlert.setCancelable(false).setPositiveButton("OK",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						dialog.cancel();
+						Intent i = new Intent(measureContext,
+								MeasureListActivity.class);
+						startActivity(i);
 					}
 				});
 
@@ -296,7 +301,7 @@ public class MeasureActivity extends Activity {
 		// initialize our XYPlot reference and real time update code:
 
 		// getInstance and position datasets:
-		data = new TestDatasource();
+		data = new SampleDynamicXYDatasource();
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
 		// "Blood Pressure");
 
@@ -337,23 +342,9 @@ public class MeasureActivity extends Activity {
 		}
 	}
 
-	void printSamples(MotionEvent ev) {
-		final int historySize = ev.getHistorySize();
-		final int pointerCount = ev.getPointerCount();
-		for (int h = 0; h < historySize; h++) {
-			System.out.printf("At time %d:", ev.getHistoricalEventTime(h));
-			for (int p = 0; p < pointerCount; p++) {
-				System.out.printf("  pointer %d: (%f,%f)", ev.getPointerId(p),
-						ev.getHistoricalX(p, h), ev.getHistoricalY(p, h));
-			}
-		}
-		System.out.printf("At time %d:", ev.getEventTime());
-		for (int p = 0; p < pointerCount; p++) {
-			System.out.printf("  pointer %d: (%f,%f)", ev.getPointerId(p), ev
-					.getX(p), ev.getY(p));
-		}
-	}
-
+	/**
+	 * Determination of BP and pulse algorithm
+	 */
 	private void startSignalProcessing() {
 
 		myProgressDialog = ProgressDialog.show(MeasureActivity.this,
@@ -415,7 +406,7 @@ public class MeasureActivity extends Activity {
 		values.put(BPMeasure.MODIFIED_DATE, time);
 		values.put(BPMeasure.DP, bloodPressureValue.getDiastolicBP());
 		values.put(BPMeasure.SP, bloodPressureValue.getSystolicBP());
-		// TODO correct this value @MARCO, 
+		// TODO correct this value @MARCO,
 		// TODO put MAP VAlUE in database as a separate value,
 		values.put(BPMeasure.PULSE, bloodPressureValue.getMeanArterialBP());
 		values.put(BPMeasure.NOTE, note);
