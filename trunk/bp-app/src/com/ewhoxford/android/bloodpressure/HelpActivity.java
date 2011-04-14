@@ -7,9 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-
-// Class Home : activity that pops at the beginning of the application
-public class HelpActivity extends Activity implements OnClickListener {
+/**
+ *App help page
+ */
+ public class HelpActivity extends Activity implements OnClickListener {
 	// To be performed on the creation
 	public void onCreate(Bundle savedInstanceState) {
 		// Parent's method

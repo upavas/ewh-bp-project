@@ -70,11 +70,19 @@ public class MeasureListActivity extends ListActivity implements
 
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(measureListContext,
-						MeasureActivity.class);
+				Intent i = new Intent(measureListContext, MeasureActivity.class);
 				startActivity(i);
 			}
 		});
+
+//		ListView headerListView = (ListView) findViewById(R.id.header1);
+//		// Used to map notes entries from the database to views
+//		String[] from = new String[] {};
+//		int[] to = new int[] {};
+//
+//		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+//				R.layout.measure_list_header_row, null, from, to);
+//		headerListView.setAdapter(adapter);
 
 		// Populate the bp measures list
 		populateBPMeasureList();
@@ -98,36 +106,7 @@ public class MeasureListActivity extends ListActivity implements
 
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
 
-		// This is our one standard application action -- inserting a
-		// new note into the list.
-		menu.add(0, MENU_ITEM_INSERT, 0, R.string.add_measure).setShortcut('3',
-				'a').setIcon(android.R.drawable.ic_menu_add);
-
-		// view help
-		menu.add(0, MENU_ITEM_HELP, 0, R.string.help).setShortcut('3', 'a')
-				.setIcon(android.R.drawable.ic_dialog_info);
-		// Generate any additional actions that can be performed on the
-		// overall list. In a normal install, there are no additional
-		// actions found here, but this allows other applications to extend
-		// our menu with their own actions.
-		// Intent intent = new Intent(null, Measure.class);
-		// intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
-		// menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE, 0, 0,
-		// new ComponentName(this, MeasureList.class), null, intent, 0,
-		// null);
-		// Intent intent2 = new Intent(null, Help.class);
-		// intent2.addCategory(Intent.CATEGORY_ALTERNATIVE);
-		//		
-		// menu.addIntentOptions(Menu.CATEGORY_ALTERNATIVE, 0, 0,
-		// new ComponentName(this, MeasureList.class), null, intent2, 0,
-		// null);
-
-		return true;
-	}
 
 	// @Override
 	// public boolean onPrepareOptionsMenu(Menu menu) {
@@ -166,17 +145,6 @@ public class MeasureListActivity extends ListActivity implements
 	// return true;
 	// }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_ITEM_INSERT:
-			// Launch activity to insert a new item
-			startActivity(new Intent(Intent.ACTION_INSERT, getIntent()
-					.getData()));
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
 
 	// @Override
 	// public void onCreateContextMenu(ContextMenu menu, View view,
@@ -326,28 +294,29 @@ public class MeasureListActivity extends ListActivity implements
 					// Log.i(TAG,
 					// "Setting procedure name in SavedProcedureList text");
 					long dateStr = new Long(cur.getString(columnIndex));
-					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm");
 					Date resultdate = new Date(dateStr);
-					System.out.println(sdf.format(resultdate));
-					//TODO correct this space problem between columns
-					((TextView) v).setText("   "+sdf.format(resultdate)+"   ");
+			
+					// TODO correct this space problem between columns
+					((TextView) v).setText("   " + sdf.format(resultdate)
+							+ "   ");
 					break;
 				case 4:
 					// Log.i(TAG,
 					// "Setting patient id and name in SavedProcedureList text");
 					float aux = Float.parseFloat(cur.getString(columnIndex));
 					int sp = Math.round(aux);
-					((TextView) v).setText("SYS:" + Integer.toString(sp));
+					((TextView) v).setText(Integer.toString(sp));
 					break;
 				case 5:
 					float aux1 = Float.parseFloat(cur.getString(columnIndex));
 					int dp = Math.round(aux1);
-					((TextView) v).setText("DYA:" + Integer.toString(dp));
+					((TextView) v).setText(Integer.toString(dp));
 					break;
 				case 3:
 					float aux11 = Float.parseFloat(cur.getString(columnIndex));
 					int pulse = Math.round(aux11);
-					((TextView) v).setText("PUL:" + Integer.toString(pulse));
+					((TextView) v).setText(Integer.toString(pulse));
 					break;
 
 				}

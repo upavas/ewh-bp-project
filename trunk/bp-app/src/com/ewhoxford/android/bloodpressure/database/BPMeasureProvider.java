@@ -268,6 +268,13 @@ public class BPMeasureProvider extends ContentProvider {
 				BPMeasure.CREATED_DATE);
 		sBPMeasuresProjectionMap.put(BPMeasure.MODIFIED_DATE,
 				BPMeasure.MODIFIED_DATE);
+		sBPMeasuresProjectionMap.put(BPMeasure.MEASUREMENT_FILE,
+				BPMeasure.MEASUREMENT_FILE);
+		sBPMeasuresProjectionMap.put(BPMeasure.MEASUREMENT_FILE_EXIST,
+				BPMeasure.MEASUREMENT_FILE_EXIST);
+		sBPMeasuresProjectionMap.put(BPMeasure.MEASUREMENT_FILE_SYNC,
+				BPMeasure.MEASUREMENT_FILE_SYNC);
+
 
 	}
 }
