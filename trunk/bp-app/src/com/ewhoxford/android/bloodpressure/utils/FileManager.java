@@ -20,16 +20,34 @@ import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
  */
 public class FileManager {
 
-	public static final String DIRECTORY = "com.ewhoxford.android.bloodpressure";
+	public static final String DIRECTORY = "com_ewhoxford_android_bloodpressure";
 
 	public static String saveFile(Context context, BloodPressureValue values,
-			double[] arrayPressure, float[] arrayTime, long createdDate)
+			double[] arrayPressure, float[] arrayTime, long createdDate, String note)
 			throws ExternalStorageNotAvailableException {
 
 		String fileName = "";
-		if (checkExternalStorage()) {
+
+		String state = Environment.getExternalStorageState();
+		boolean mExternalStorageAvailable = false;
+		boolean mExternalStorageWriteable = false;
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			// We can read and write the media
+			mExternalStorageAvailable = mExternalStorageWriteable = true;
+		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+			// We can only read the media
+			mExternalStorageAvailable = true;
+			mExternalStorageWriteable = false;
+		} else {
+			// Something else is wrong. It may be one of many other
+			// states, but all we need
+			// to know is we can neither read nor write
+			mExternalStorageAvailable = mExternalStorageWriteable = false;
+		}
+
+		if (mExternalStorageAvailable && mExternalStorageWriteable) {
 			fileName = createExternalStoragePublicBPMeasureFile(context,
-					values, arrayPressure, arrayTime, createdDate);
+					values, arrayPressure, arrayTime, createdDate, note);
 		} else {
 			throw new ExternalStorageNotAvailableException(context.getClass()
 					.getName());
@@ -68,7 +86,7 @@ public class FileManager {
 
 	public static String createExternalStoragePublicBPMeasureFile(
 			Context context, BloodPressureValue values, double[] arrayPressure,
-			float[] arrayTime, long createdDate)
+			float[] arrayTime, long createdDate,String note)
 			throws IllegalArgumentException {
 
 		if (arrayPressure.length == 0 || arrayTime.length == 0) {
@@ -90,20 +108,15 @@ public class FileManager {
 		try {
 			// Make sure the Pictures directory exists.
 			path.mkdirs();
-
-			// Very simple code to copy a picture from the application's
-			// resource into the external file. Note that this code does
-			// no error checking, and assumes the picture is small (does not
-			// try to copy it in chunks). Note that if external storage is
-			// not currently mounted this will silently fail.
+			
 
 			FileWriter writer = new FileWriter(file);
 			int dPressure = (int) values.getDiastolicBP();
 			int sPressure = (int) values.getSystolicBP();
 			int pulse = (int) values.getMeanArterialBP();
-			writer.append("Systolic Pressure, Dyastolic Pressure,Pulse\n");
-			writer.append(sPressure + "," + dPressure + "," + pulse + "\n");
-			writer.append("time,pressure(mmHg)");
+			writer.append("Systolic Pressure, Dyastolic Pressure,Pulse, note\n");
+			writer.append(sPressure + "," + dPressure + "," + pulse +"," + note+ "\n");
+			writer.append("time,pressure(mmHg)\n");
 
 			int i = 0;
 			while (i < arrayPressure.length) {

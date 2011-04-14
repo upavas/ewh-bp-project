@@ -1,6 +1,6 @@
 package com.ewhoxford.android.bloodpressure.pressureInputDevice;
-import java.io.File;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -10,10 +10,11 @@ import java.util.Observer;
 import android.os.Handler;
 
 import com.ewhoxford.android.bloodpressure.signalProcessing.ConvertTommHg;
+
 /**
  * 
  * @author mauro
- *
+ * 
  */
 public class SampleDynamicXYDatasource implements Runnable {
 
@@ -30,11 +31,14 @@ public class SampleDynamicXYDatasource implements Runnable {
 	public static final int SIGNAL1 = 0;
 	// private static final int SAMPLE_SIZE = 1;
 
+	private static final int MAX_SIZE = 12000;
+
 	private double pressureValue = 0;
 	private MyObservable notifier;
 	private int count = 0;
 	private boolean active = true;
 	int countMiceSamples = 0;
+	int linearFilterThreshold = 10;
 
 	final Handler mHandler = new Handler();
 	// Create runnable for posting
@@ -97,7 +101,7 @@ public class SampleDynamicXYDatasource implements Runnable {
 			while (active) {
 
 				Thread.sleep(100); // decrease or remove to speed up the
-										// refresh
+				// refresh
 				currentPosition = countMiceSamples;
 
 				// if (currentPosition==lastPosition) {
@@ -108,6 +112,10 @@ public class SampleDynamicXYDatasource implements Runnable {
 				while (j < currentPosition) {
 					if (bpMeasureHistory.size() != 0) {
 						pressureValue = bpMeasureHistory.get(j).doubleValue();
+						//maintain array with max size=12000 points
+						if (bpMeasure.size() > MAX_SIZE) {
+							bpMeasure.removeFirst();
+						}
 						bpMeasure.add(bpMeasureHistory.get(j));
 						update = true;
 					}
@@ -201,7 +209,7 @@ public class SampleDynamicXYDatasource implements Runnable {
 
 					if (bpMeasureHistory.size() != 0)
 						if (Math.abs(bpMeasureHistory.getLast().doubleValue()
-								- aux) > 3) {
+								- aux) > linearFilterThreshold) {
 							aux = bpMeasureHistory.getLast().doubleValue();
 						}
 
