@@ -1,5 +1,7 @@
 package com.ewhoxford.android.bloodpressure;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -50,6 +52,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 			}
 		});
+		
+		Process p;
+		try {
+			// Preform su to get root privledges
+			p = Runtime.getRuntime().exec("su");
+		} catch (IOException e) {
+			// TODO Code to run in input/output exception
+			System.out.println("not root");
+		}
 
 	}
 
