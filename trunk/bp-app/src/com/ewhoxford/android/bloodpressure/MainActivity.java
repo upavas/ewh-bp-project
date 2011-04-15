@@ -78,8 +78,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 
-		menu.add(0, OPTION_SETTINGS, 1, "Settings");
-		menu.add(0, OPTION_SYNC, 2, "Sync");
+//		menu.add(0, OPTION_SETTINGS, 1, "Settings");
+//		menu.add(0, OPTION_SYNC, 2, "Sync");
+	
 		return true;
 	}
 
