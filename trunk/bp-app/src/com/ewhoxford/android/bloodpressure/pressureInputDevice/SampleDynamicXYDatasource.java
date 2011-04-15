@@ -38,7 +38,7 @@ public class SampleDynamicXYDatasource implements Runnable {
 	private int count = 0;
 	private boolean active = true;
 	int countMiceSamples = 0;
-	int linearFilterThreshold = 10;
+	int linearFilterThreshold = 40;
 
 	final Handler mHandler = new Handler();
 	// Create runnable for posting
