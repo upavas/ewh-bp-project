@@ -84,10 +84,10 @@ public class MeasureViewActivity extends Activity {
 	AlertDialog.Builder saveAlert;
 	// delete measure alert dialog
 	AlertDialog.Builder deleteAlert;
-	// Checkbox to save measure csv file
-	CheckBox checkBox;
 	// user notes
 	TextView textView;
+	// has csv file answer
+	TextView csvFileAnswerTextView;
 
 	private int mState;
 	private boolean mNoteOnly = false;
@@ -125,8 +125,8 @@ public class MeasureViewActivity extends Activity {
 		textView = (TextView) findViewById(R.id.id_date);
 
 		// initialize checkbox variable
-		checkBox = (CheckBox) findViewById(R.id.checkbox);
-		checkBox.setEnabled(false);
+		csvFileAnswerTextView = (TextView)findViewById(R.id.answer_csv);
+
 
 		// Help button
 		Button deleteButton = (Button) findViewById(R.id.button_delete);
@@ -249,9 +249,9 @@ public class MeasureViewActivity extends Activity {
 
 			// Display notes and blood pressure algorithm result in the
 			// Measure layout
-			String headerString = "measure id: " + id + "\n";
-			headerString += "created: " + sdf.format(createdResultdate) + "\n";
-			headerString += "modified: " + sdf.format(modifiedResultdate);
+			String headerString = "Number:   " + id + "\n";
+			headerString += "Created:   " + sdf.format(createdResultdate) + "\n";
+			headerString += "Modified: " + sdf.format(modifiedResultdate);
 			textView.setText(headerString);
 			mText.setText(notes);
 			ValuesView valuesView = (ValuesView) findViewById(R.id.results);
@@ -263,10 +263,8 @@ public class MeasureViewActivity extends Activity {
 
 			String fileExists = mCursor.getString(fileExistsColumn);
 			if (fileExists.equals("1")) {
-				checkBox.setChecked(true);
-			} else {
-				checkBox.setChecked(false);
-			}
+				csvFileAnswerTextView.setText("Has csv file: Yes");
+			} 
 
 		}
 		// If an instance of this activity had previously stopped, we can

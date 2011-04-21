@@ -15,9 +15,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
@@ -49,8 +50,7 @@ public class MeasureListActivity extends ListActivity implements
 		// The user does not need to hold down the key to use menu shortcuts.
 		setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
 		setContentView(R.layout.measure_list_item);
-
-		/*
+			/*
 		 * If no data is given in the Intent that started this Activity, then
 		 * this Activity was started when the intent filter matched a MAIN
 		 * action. We should use the default provider URI.
@@ -75,14 +75,14 @@ public class MeasureListActivity extends ListActivity implements
 			}
 		});
 
-//		ListView headerListView = (ListView) findViewById(R.id.header1);
-//		// Used to map notes entries from the database to views
-//		String[] from = new String[] {};
-//		int[] to = new int[] {};
-//
-//		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-//				R.layout.measure_list_header_row, null, from, to);
-//		headerListView.setAdapter(adapter);
+		// ListView headerListView = (ListView) findViewById(R.id.header1);
+		// // Used to map notes entries from the database to views
+		// String[] from = new String[] {};
+		// int[] to = new int[] {};
+		//
+		// SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+		// R.layout.measure_list_header_row, null, from, to);
+		// headerListView.setAdapter(adapter);
 
 		// Populate the bp measures list
 		populateBPMeasureList();
@@ -105,8 +105,6 @@ public class MeasureListActivity extends ListActivity implements
 		}
 
 	}
-
-
 
 	// @Override
 	// public boolean onPrepareOptionsMenu(Menu menu) {
@@ -144,7 +142,6 @@ public class MeasureListActivity extends ListActivity implements
 	//
 	// return true;
 	// }
-
 
 	// @Override
 	// public void onCreateContextMenu(ContextMenu menu, View view,
@@ -294,9 +291,10 @@ public class MeasureListActivity extends ListActivity implements
 					// Log.i(TAG,
 					// "Setting procedure name in SavedProcedureList text");
 					long dateStr = new Long(cur.getString(columnIndex));
-					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm");
+					SimpleDateFormat sdf = new SimpleDateFormat(
+							"dd/MM/yy HH:mm");
 					Date resultdate = new Date(dateStr);
-			
+
 					// TODO correct this space problem between columns
 					((TextView) v).setText("   " + sdf.format(resultdate)
 							+ "   ");

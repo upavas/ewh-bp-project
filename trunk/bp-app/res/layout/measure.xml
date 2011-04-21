@@ -18,7 +18,7 @@
 
 		<TextView android:id="@+id/text_message" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:text="Close valve!Pump!Pump!Pump!"
-			android:textStyle="bold" android:textColor="@color/measure_user_pump"/>
+			android:textStyle="bold" android:textColor="@color/measure_user_pump" android:textSize="15px"/>
 
 
 		<com.androidplot.xy.XYPlot android:id="@+id/mySimpleXYPlot"
