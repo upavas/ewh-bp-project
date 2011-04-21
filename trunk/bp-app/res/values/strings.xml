@@ -22,5 +22,6 @@
 <string name="main_no_items">No items</string>
 
     <string name="resolve_edit">Edit Blood Pressure Measure</string>
+     <string name="empty_measure_list">No Blood Pressure Measures</string>
 
 </resources>

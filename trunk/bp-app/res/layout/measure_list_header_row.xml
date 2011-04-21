@@ -2,26 +2,28 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="wrap_content"
-	android:padding="6dip" android:orientation="horizontal">
+	 android:orientation="horizontal"
+	 android:padding="5dip"
+	android:id="@+id/header_layout_root">
 
-	<TextView android:text="id" android:id="@+id/id_h"
+	<TextView android:text="NR" android:id="@+id/id_h"
 		android:layout_width="wrap_content" android:layout_height="fill_parent"
 		android:focusable="false" android:focusableInTouchMode="false"
-		android:gravity="center" android:layout_weight="1" android:ellipsize="marquee" />
-	<TextView android:text="created" android:layout_width="wrap_content"
+		android:gravity="center" android:layout_weight="2" android:ellipsize="marquee" />
+	<TextView android:text="DATE      TIME" android:layout_width="wrap_content"
 		android:layout_height="fill_parent" android:id="@+id/createdDate_h"
 		android:focusable="false" android:focusableInTouchMode="false"
-		android:gravity="center" android:layout_weight="3" android:ellipsize="marquee" />
-	<TextView android:text="systolic" android:layout_width="wrap_content"
-		android:layout_height="fill_parent" android:layout_weight="1"
+		android:gravity="center" android:layout_weight="2" android:ellipsize="marquee" />
+	<TextView android:text="SYS" android:layout_width="wrap_content"
+		android:layout_height="fill_parent" android:layout_weight="2"
 		android:id="@+id/sp_h" android:ellipsize="marquee" android:focusable="false"
 		android:focusableInTouchMode="false" android:gravity="center" />
-	<TextView android:text="dyastolic" android:layout_width="wrap_content"
-		android:layout_height="fill_parent" android:layout_weight="1"
+	<TextView android:text="DIA" android:layout_width="wrap_content"
+		android:layout_height="fill_parent" android:layout_weight="2"
 		android:id="@+id/dp_h" android:ellipsize="marquee" android:focusable="false"
 		android:focusableInTouchMode="false" />
-	<TextView android:text="pulse" android:layout_width="wrap_content"
-		android:layout_height="fill_parent" android:layout_weight="1"
+	<TextView android:text="PUL" android:layout_width="wrap_content"
+		android:layout_height="fill_parent" android:layout_weight="2"
 		android:id="@+id/pulse_h" android:ellipsize="marquee"
 		android:focusable="false" android:focusableInTouchMode="false"
 		android:gravity="center" />
