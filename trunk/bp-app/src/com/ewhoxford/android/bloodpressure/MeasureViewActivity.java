@@ -13,17 +13,14 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -125,8 +122,7 @@ public class MeasureViewActivity extends Activity {
 		textView = (TextView) findViewById(R.id.id_date);
 
 		// initialize checkbox variable
-		csvFileAnswerTextView = (TextView)findViewById(R.id.answer_csv);
-
+		csvFileAnswerTextView = (TextView) findViewById(R.id.answer_csv);
 
 		// Help button
 		Button deleteButton = (Button) findViewById(R.id.button_delete);
@@ -250,7 +246,8 @@ public class MeasureViewActivity extends Activity {
 			// Display notes and blood pressure algorithm result in the
 			// Measure layout
 			String headerString = "Number:   " + id + "\n";
-			headerString += "Created:   " + sdf.format(createdResultdate) + "\n";
+			headerString += "Created:   " + sdf.format(createdResultdate)
+					+ "\n";
 			headerString += "Modified: " + sdf.format(modifiedResultdate);
 			textView.setText(headerString);
 			mText.setText(notes);
@@ -264,7 +261,7 @@ public class MeasureViewActivity extends Activity {
 			String fileExists = mCursor.getString(fileExistsColumn);
 			if (fileExists.equals("1")) {
 				csvFileAnswerTextView.setText("Has csv file: Yes");
-			} 
+			}
 
 		}
 		// If an instance of this activity had previously stopped, we can
