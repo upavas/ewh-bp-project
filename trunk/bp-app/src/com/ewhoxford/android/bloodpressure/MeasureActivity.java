@@ -33,6 +33,7 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
+import com.ewhoxford.android.bloodpressure.pressureInputDevice.SampleDynamicXYDatasource;
 import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDatasource;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
@@ -55,7 +56,7 @@ public class MeasureActivity extends Activity {
 	// Observer object that is notified by pressure data stream observable file
 	private MyPlotUpdater plotUpdater;
 	// Observable object that notifies observer that new values were acquired.
-	private TestDatasource data;
+	private SampleDynamicXYDatasource data;
 	// pressure time series shown in the real time chart
 	private SimpleXYSeries bpMeasureSeries = null;
 	// array with time points
@@ -301,7 +302,7 @@ public class MeasureActivity extends Activity {
 		// initialize our XYPlot reference and real time update code:
 
 		// getInstance and position datasets:
-		data = new TestDatasource();
+		data = new SampleDynamicXYDatasource();
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
 		// "Blood Pressure");
 
