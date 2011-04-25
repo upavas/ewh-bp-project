@@ -17,8 +17,8 @@
 		android:layout_height="fill_parent">
 
 		<TextView android:id="@+id/text_message" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:text="Close valve!Pump!Pump!Pump!"
-			android:textStyle="bold" android:textColor="@color/measure_user_pump" android:textSize="15px"/>
+			android:layout_height="wrap_content" android:text="Close valve! PUMP! PUMP! PUMP!"
+			android:textStyle="bold" android:layout_gravity="center_horizontal" android:textColor="@color/measure_user_pump" android:textSize="16px"/>
 
 
 		<com.androidplot.xy.XYPlot android:id="@+id/mySimpleXYPlot"

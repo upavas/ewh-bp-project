@@ -2,6 +2,8 @@
 package com.ewhoxford.android.bloodpressure;
 
 //Import resources
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -29,10 +31,8 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.LineAndPointRenderer;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
-import com.ewhoxford.android.bloodpressure.database.BPMeasureProvider;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
-import com.ewhoxford.android.bloodpressure.pressureInputDevice.SampleDynamicXYDatasource;
 import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDatasource;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
@@ -48,8 +48,6 @@ import com.ewhoxford.android.bloodpressure.utils.FileManager;
 public class MeasureActivity extends Activity {
 
 	private MeasureActivity measureContext = this;
-	// save file option is false
-	private boolean saveFile = false;
 	// plot that shows real time data
 	private XYPlot bpMeasureXYPlot;
 	// save measure button
@@ -57,7 +55,7 @@ public class MeasureActivity extends Activity {
 	// Observer object that is notified by pressure data stream observable file
 	private MyPlotUpdater plotUpdater;
 	// Observable object that notifies observer that new values were acquired.
-	private SampleDynamicXYDatasource data;
+	private TestDatasource data;
 	// pressure time series shown in the real time chart
 	private SimpleXYSeries bpMeasureSeries = null;
 	// array with time points
@@ -66,8 +64,6 @@ public class MeasureActivity extends Activity {
 	private double[] arrayPressure;
 	// auxiliary variable to control measurement.
 	private boolean maxPressureReached = false;
-	// auxiliary variable to control measurement.
-	private boolean minPressureReached = false;
 	// signal processing progress dialog
 	private ProgressDialog myProgressDialog;
 	// discard measure alert dialog
@@ -82,6 +78,12 @@ public class MeasureActivity extends Activity {
 	private CheckBox checkBox;
 	// user notes
 	private EditText notesText;
+	// number of points in X axis
+	private int boundaryNumberOfPoints = 12000;
+	// max pressure value for measure
+	private int maxPressureValueForMeasure = 200;
+	// signal frequency
+	int signalFreq = 100;
 
 	// Create runnable for signal processing
 	final Runnable runSignalProcessing = new Runnable() {
@@ -120,8 +122,8 @@ public class MeasureActivity extends Activity {
 		public void run() {
 			TextView textMessage = (TextView) findViewById(R.id.text_message);
 			textMessage
-					.setText("Stop pump!Open valve, depressure slowly at constante rate!");
-			textMessage.setTextColor(Color.RED);
+					.setText("STOP PUMPING! Open valve, depressure slowly at constante rate!");
+			textMessage.setTextColor(Color.YELLOW);
 			textMessage.postInvalidate();
 		}
 	};
@@ -138,8 +140,9 @@ public class MeasureActivity extends Activity {
 		public void update(Observable o, Object arg) {
 
 			pressureValue = data.getPressureValue();
+
 			// check if operator has reached reasonable cuff pressure
-			if (pressureValue > 180) {
+			if (pressureValue > maxPressureValueForMeasure) {
 				maxPressureReached = true;
 				mHandler.post(changeTextMessage);
 			}
@@ -147,8 +150,6 @@ public class MeasureActivity extends Activity {
 			if (maxPressureReached) {
 				// if max pressure reached, check if measurement is now over
 				if (pressureValue < 20) {
-					// this will probably be erased.
-					minPressureReached = true;
 					// o.deleteObservers();
 					data.setActive(false);
 					// measurement is over, we are prepared to determine blood
@@ -241,7 +242,6 @@ public class MeasureActivity extends Activity {
 
 		saveButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				BPMeasureProvider mProvider = new BPMeasureProvider();
 				String savedFileName = "";
 				String notes = "";
 
@@ -301,7 +301,7 @@ public class MeasureActivity extends Activity {
 		// initialize our XYPlot reference and real time update code:
 
 		// getInstance and position datasets:
-		data = new SampleDynamicXYDatasource();
+		data = new TestDatasource();
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
 		// "Blood Pressure");
 
@@ -310,20 +310,30 @@ public class MeasureActivity extends Activity {
 		plotUpdater = new MyPlotUpdater(bpMeasureXYPlot);
 		// freeze the range boundaries:
 		bpMeasureXYPlot.setRangeBoundaries(0, 300, XYPlot.BoundaryMode.FIXED);
-		bpMeasureXYPlot
-				.setDomainBoundaries(0, 12000, XYPlot.BoundaryMode.FIXED);
+
+		bpMeasureXYPlot.setDomainBoundaries(0, boundaryNumberOfPoints,
+				XYPlot.BoundaryMode.FIXED);
 		bpMeasureXYPlot
 				.addSeries(bpMeasureSeries, LineAndPointRenderer.class,
 						new LineAndPointFormatter(Color.rgb(100, 100, 200),
 								Color.BLACK));
+
+		List<Number> pressureListArray = new ArrayList<Number>();
+		for (int i = 0; i < boundaryNumberOfPoints; i++) {
+			pressureListArray.add(maxPressureValueForMeasure);
+		}
+
+		SimpleXYSeries pressureLimit = new SimpleXYSeries(pressureListArray,
+				SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "");
+		bpMeasureXYPlot.addSeries(pressureLimit, LineAndPointRenderer.class,
+				new LineAndPointFormatter(Color.rgb(100, 100, 200), Color.RED));
 		bpMeasureXYPlot.setDomainStepValue(3);
 		bpMeasureXYPlot.setTicksPerRangeLabel(3);
-		bpMeasureXYPlot.setDomainLabel("Time (s)");
+		bpMeasureXYPlot.setDomainLabel("Points acquired");
 		bpMeasureXYPlot.getDomainLabelWidget().pack();
-		bpMeasureXYPlot.setRangeLabel("Pressure(mmHg)");
+		bpMeasureXYPlot.setRangeLabel("Pressure (mmHg)");
 		bpMeasureXYPlot.getRangeLabelWidget().pack();
 		bpMeasureXYPlot.disableAllMarkup();
-
 		// hook up the plotUpdater to the data model:
 		data.addObserver(plotUpdater);
 		// start observable datasource thread

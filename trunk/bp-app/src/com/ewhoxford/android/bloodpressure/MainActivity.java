@@ -22,13 +22,6 @@ import android.widget.Button;
 public class MainActivity extends Activity implements View.OnClickListener {
 	public static final String TAG = MainActivity.class.toString();
 
-	// Option menu codes
-	private static final int OPTION_SETTINGS = 1;
-	private static final int OPTION_SYNC = 2;
-
-	// Activity request codes
-	public static final int SETTINGS = 6;
-
 	private MainActivity context = this;
 
 	@Override
@@ -128,18 +121,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		}.start();
 	}
 
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case OPTION_SETTINGS:
-			Intent i = new Intent(Intent.ACTION_PICK);
-			i.setClass(this, Settings.class);
-			startActivityForResult(i, SETTINGS);
-			return true;
-		case OPTION_SYNC:
-			doUpdateBloodPressureDatabase();
-			return true;
-		}
-
-		return false;
-	}
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case OPTION_SETTINGS:
+//			Intent i = new Intent(Intent.ACTION_PICK);
+//			i.setClass(this, Settings.class);
+//			startActivityForResult(i, SETTINGS);
+//			return true;
+//		case OPTION_SYNC:
+//			doUpdateBloodPressureDatabase();
+//			return true;
+//		}
+//
+//		return false;
+//	}
 }
