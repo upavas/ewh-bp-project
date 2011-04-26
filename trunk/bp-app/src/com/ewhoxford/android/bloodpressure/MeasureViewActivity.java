@@ -17,14 +17,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.androidplot.xy.XYPlot;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 
 /**
@@ -55,20 +53,11 @@ public class MeasureViewActivity extends Activity {
 	// This is our state data that is stored when freezing.
 	private static final String ORIGINAL_CONTENT = "origContent";
 
-	// Identifiers for our menu items.
-	private static final int REVERT_ID = Menu.FIRST;
-	private static final int DISCARD_ID = Menu.FIRST + 1;
-	private static final int DELETE_ID = Menu.FIRST + 2;
-
 	// The different distinct states the activity can be run in.
 	private static final int STATE_EDIT = 0;
 	private static final int STATE_INSERT = 1;
 
 	MeasureViewActivity measureContext = this;
-	// save file option is false
-	boolean saveFile = false;
-	// plot that shows real time data
-	private XYPlot bpMeasureXYPlot;
 	// save measure button
 	private Button saveButton;
 	// delete measure button
@@ -87,7 +76,6 @@ public class MeasureViewActivity extends Activity {
 	TextView csvFileAnswerTextView;
 
 	private int mState;
-	private boolean mNoteOnly = false;
 	private Uri mUri;
 	private Cursor mCursor;
 	private EditText mText;
@@ -130,24 +118,28 @@ public class MeasureViewActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				deleteMeasure();
-
 				AlertDialog alert = deleteAlert.create();
 				alert.show();
 			}
 		});
 
 		deleteAlert = new AlertDialog.Builder(this);
-		deleteAlert.setMessage("Measure deleted");
-		deleteAlert.setCancelable(false).setPositiveButton("Ok",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						dialog.cancel();
-						Intent i = new Intent(measureContext,
-								MeasureListActivity.class);
-						startActivity(i);
-					}
-				});
+		deleteAlert.setMessage("Are you sure you want to delete measure?")
+				.setCancelable(false).setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								deleteMeasure();
+								dialog.cancel();
+								Intent i = new Intent(measureContext,
+										MeasureListActivity.class);
+								startActivity(i);
+							}
+						}).setNegativeButton("No",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
 
 		Button discardButton = (Button) findViewById(R.id.button_discard);
 
@@ -226,8 +218,7 @@ public class MeasureViewActivity extends Activity {
 			int idColumn = mCursor.getColumnIndex(BPMeasure._ID);
 			int fileExistsColumn = mCursor
 					.getColumnIndex(BPMeasure.MEASUREMENT_FILE_EXIST);
-			int fileNameColumn = mCursor
-					.getColumnIndex(BPMeasure.MEASUREMENT_FILE);
+
 			// Get the field values
 			id = mCursor.getInt(idColumn);
 			notes = mCursor.getString(notesColumn);
