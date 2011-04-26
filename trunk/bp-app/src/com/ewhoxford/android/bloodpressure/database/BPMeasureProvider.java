@@ -200,6 +200,7 @@ public class BPMeasureProvider extends ContentProvider {
 	public int delete(Uri uri, String where, String[] whereArgs) {
 		SQLiteDatabase db = mBPOpenHelper.getWritableDatabase();
 		int count;
+		//TODO: delete files.
 		switch (sUriMatcher.match(uri)) {
 		case MEASURES:
 			count = db.delete(MEASURES_TABLE, where, whereArgs);
