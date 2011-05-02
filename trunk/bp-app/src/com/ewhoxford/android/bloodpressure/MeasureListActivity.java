@@ -15,10 +15,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
@@ -50,7 +48,7 @@ public class MeasureListActivity extends ListActivity implements
 		// The user does not need to hold down the key to use menu shortcuts.
 		setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
 		setContentView(R.layout.measure_list_item);
-			/*
+		/*
 		 * If no data is given in the Intent that started this Activity, then
 		 * this Activity was started when the intent filter matched a MAIN
 		 * action. We should use the default provider URI.
@@ -296,8 +294,7 @@ public class MeasureListActivity extends ListActivity implements
 					Date resultdate = new Date(dateStr);
 
 					// TODO correct this space problem between columns
-					((TextView) v).setText("   " + sdf.format(resultdate)
-							+ "   ");
+					((TextView) v).setText(sdf.format(resultdate));
 					break;
 				case 4:
 					// Log.i(TAG,

@@ -33,7 +33,6 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
-import com.ewhoxford.android.bloodpressure.pressureInputDevice.SampleDynamicXYDatasource;
 import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDatasource;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
@@ -56,7 +55,7 @@ public class MeasureActivity extends Activity {
 	// Observer object that is notified by pressure data stream observable file
 	private MyPlotUpdater plotUpdater;
 	// Observable object that notifies observer that new values were acquired.
-	private SampleDynamicXYDatasource data;
+	private TestDatasource data;
 	// pressure time series shown in the real time chart
 	private SimpleXYSeries bpMeasureSeries = null;
 	// array with time points
@@ -122,8 +121,7 @@ public class MeasureActivity extends Activity {
 	final Runnable changeTextMessage = new Runnable() {
 		public void run() {
 			TextView textMessage = (TextView) findViewById(R.id.text_message);
-			textMessage
-					.setText("STOP PUMPING! Open valve, depressure slowly at constante rate!");
+			textMessage.setText(R.string.stop_pump);
 			textMessage.setTextColor(Color.YELLOW);
 			textMessage.postInvalidate();
 		}
@@ -225,13 +223,14 @@ public class MeasureActivity extends Activity {
 		});
 
 		builder = new AlertDialog.Builder(this);
-		builder.setMessage("Are you sure you want to discard measure?")
-				.setCancelable(false).setPositiveButton("Yes",
+		builder.setMessage(R.string.alert_dialog_discard_measure)
+				.setCancelable(false).setPositiveButton(
+						R.string.alert_dialog_yes,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								MeasureActivity.this.finish();
 							}
-						}).setNegativeButton("No",
+						}).setNegativeButton(R.string.alert_dialog_no,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();
@@ -275,12 +274,16 @@ public class MeasureActivity extends Activity {
 				if (checkBox.isChecked()) {
 					if (FileManager.checkExternalStorage()) {
 						alert
-								.setMessage("Data saved to csv file and to database");
+								.setMessage(getResources()
+										.getText(
+												R.string.alert_dialog_data_saved_file_and_database));
 					} else {
-						alert.setMessage("Data saved to database");
+						alert.setMessage(getResources().getText(
+								R.string.alert_dialog_data_saved_to_database));
 					}
 				} else {
-					alert.setMessage("Data save to database");
+					alert.setMessage(getResources().getText(
+							R.string.alert_dialog_data_saved_to_database));
 				}
 				alert.show();
 			}
@@ -302,7 +305,7 @@ public class MeasureActivity extends Activity {
 		// initialize our XYPlot reference and real time update code:
 
 		// getInstance and position datasets:
-		data = new SampleDynamicXYDatasource();
+		data = new TestDatasource();
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
 		// "Blood Pressure");
 
@@ -330,9 +333,11 @@ public class MeasureActivity extends Activity {
 				new LineAndPointFormatter(Color.rgb(100, 100, 200), Color.RED));
 		bpMeasureXYPlot.setDomainStepValue(3);
 		bpMeasureXYPlot.setTicksPerRangeLabel(3);
-		bpMeasureXYPlot.setDomainLabel("Points acquired");
+		bpMeasureXYPlot.setDomainLabel(getResources().getText(
+				R.string.pressure_x_legend).toString());
 		bpMeasureXYPlot.getDomainLabelWidget().pack();
-		bpMeasureXYPlot.setRangeLabel("Pressure (mmHg)");
+		bpMeasureXYPlot.setRangeLabel(getResources().getText(
+				R.string.pressure_y_legend).toString());
 		bpMeasureXYPlot.getRangeLabelWidget().pack();
 		bpMeasureXYPlot.disableAllMarkup();
 		// hook up the plotUpdater to the data model:
@@ -359,7 +364,9 @@ public class MeasureActivity extends Activity {
 	private void startSignalProcessing() {
 
 		myProgressDialog = ProgressDialog.show(MeasureActivity.this,
-				"Processing Data...", "Determining Blood Pressure...", true);
+				getResources().getText(R.string.alert_dialog_processing_data),
+				getResources().getText(R.string.alert_dialog_determine_bp),
+				true);
 
 		new Thread() {
 			public void run() {

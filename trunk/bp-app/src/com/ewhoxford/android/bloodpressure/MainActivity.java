@@ -35,7 +35,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		View measureList = findViewById(R.id.measure_list);
 		measureList.setOnClickListener(this);
 		// Help button
-		Button helpButton = (Button) findViewById(R.id.button_help);
+		Button helpButton = (Button) findViewById(R.id.help_button);
 		helpButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -96,6 +96,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			progressDialog = null;
 		}
 		progressDialog = new ProgressDialog(context);
+		//TODO substitute this string for 1 string in values folder (localization)
 		progressDialog.setMessage("Updating Blood Pressure database.");
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progressDialog.show();
