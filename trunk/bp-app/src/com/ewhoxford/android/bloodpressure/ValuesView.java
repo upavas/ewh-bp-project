@@ -116,9 +116,9 @@ public class ValuesView extends View {
 		fm = paintFontLeft.getFontMetrics();
 		y = h / 6 - (fm.ascent + fm.descent) / 2;
 
-		canvas.drawText("DIA", 5, y, paintFontLeft);
-		canvas.drawText("SYS", 5, h / 3 + y, paintFontLeft);
-		canvas.drawText("PUL", 5, 2 * h / 3 + y, paintFontLeft);
+		canvas.drawText(getResources().getText(R.string.dia).toString(), 5, y, paintFontLeft);
+		canvas.drawText(getResources().getText(R.string.sys).toString(), 5, h / 3 + y, paintFontLeft);
+		canvas.drawText(getResources().getText(R.string.pulse).toString(), 5, 2 * h / 3 + y, paintFontLeft);
 
 		// Draw the text in the right rectangle
 		paintFontRight.setTextSize(h / 3 * 0.75f);

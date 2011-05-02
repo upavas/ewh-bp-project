@@ -124,8 +124,10 @@ public class MeasureViewActivity extends Activity {
 		});
 
 		deleteAlert = new AlertDialog.Builder(this);
-		deleteAlert.setMessage("Are you sure you want to delete measure?")
-				.setCancelable(false).setPositiveButton("Yes",
+		deleteAlert.setMessage(
+				getResources().getText(R.string.alert_dialog_delete_measure))
+				.setCancelable(false).setPositiveButton(
+						getResources().getText(R.string.alert_dialog_yes),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								deleteMeasure();
@@ -134,7 +136,8 @@ public class MeasureViewActivity extends Activity {
 										MeasureListActivity.class);
 								startActivity(i);
 							}
-						}).setNegativeButton("No",
+						}).setNegativeButton(
+						getResources().getText(R.string.alert_dialog_no),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();
@@ -154,13 +157,16 @@ public class MeasureViewActivity extends Activity {
 		});
 
 		builder = new AlertDialog.Builder(this);
-		builder.setMessage("Are you sure you want to discard changes?")
-				.setCancelable(false).setPositiveButton("Yes",
+		builder.setMessage(
+				getResources().getText(R.string.alert_dialog_discard_measure))
+				.setCancelable(false).setPositiveButton(
+						getResources().getText(R.string.alert_dialog_yes),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								cancelUpdate();
 							}
-						}).setNegativeButton("No",
+						}).setNegativeButton(
+						getResources().getText(R.string.alert_dialog_no),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();
@@ -181,8 +187,8 @@ public class MeasureViewActivity extends Activity {
 
 		});
 		saveAlert = new AlertDialog.Builder(this);
-		saveAlert.setMessage("Changes Saved");
-		saveAlert.setCancelable(false).setPositiveButton("Ok",
+		saveAlert.setMessage(getResources().getText(R.string.alert_dialog_changes_saved));
+		saveAlert.setCancelable(false).setPositiveButton("OK",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						dialog.cancel();
@@ -236,10 +242,12 @@ public class MeasureViewActivity extends Activity {
 
 			// Display notes and blood pressure algorithm result in the
 			// Measure layout
-			String headerString = "Number:   " + id + "\n";
-			headerString += "Created:   " + sdf.format(createdResultdate)
-					+ "\n";
-			headerString += "Modified: " + sdf.format(modifiedResultdate);
+			String headerString = getResources().getText(R.string.number)
+					+ ":   " + id + "\n";
+			headerString += getResources().getText(R.string.created_date)
+					+ "   " + sdf.format(createdResultdate) + "\n";
+			headerString += getResources().getText(R.string.modified_date)
+					+ " " + sdf.format(modifiedResultdate);
 			textView.setText(headerString);
 			mText.setText(notes);
 			ValuesView valuesView = (ValuesView) findViewById(R.id.results);
@@ -251,7 +259,7 @@ public class MeasureViewActivity extends Activity {
 
 			String fileExists = mCursor.getString(fileExistsColumn);
 			if (fileExists.equals("1")) {
-				csvFileAnswerTextView.setText("Has csv file: Yes");
+				csvFileAnswerTextView.setText(R.string.has_csv_file_yes);
 			}
 
 		}

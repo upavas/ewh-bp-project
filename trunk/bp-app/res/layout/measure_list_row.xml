@@ -2,9 +2,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="wrap_content"
-	android:padding="5dip"
-	android:orientation="horizontal">
-
+	android:padding="5dip" android:orientation="horizontal">
 	<TextView android:text="" android:id="@+id/id"
 		android:layout_width="wrap_content" android:layout_height="fill_parent"
 		android:focusable="false" android:focusableInTouchMode="false"
@@ -25,10 +23,4 @@
 		android:layout_height="fill_parent" android:layout_weight="2"
 		android:id="@+id/pulse" android:ellipsize="marquee" android:focusable="false"
 		android:focusableInTouchMode="false" android:gravity="center" />
-	<!--	<TextView android:text="" android:layout_width="wrap_content"-->
-	<!--		android:layout_height="fill_parent" android:id="@+id/note"-->
-	<!--
-		android:focusable="false" android:focusableInTouchMode="false" />
-	-->
-
 </LinearLayout>

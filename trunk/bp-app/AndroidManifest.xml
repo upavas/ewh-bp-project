@@ -38,7 +38,7 @@
 				This filter says that we can view or edit the data of a single blood
 				pressure measure
 			-->
-			<intent-filter android:label="@string/resolve_edit">
+			<intent-filter android:label="EDIT">
 				<action android:name="android.intent.action.VIEW" />
 				<action android:name="android.intent.action.EDIT" />
 				<action android:name="com.android.notepad.action.EDIT_NOTE" />
