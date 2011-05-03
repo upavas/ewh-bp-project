@@ -1,80 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">Presion Sanguinea</string>
-	<string name="measure_title">Measure</string>
+	<string name="app_name">Presíon Arterial</string>
+	<string name="measure_title">Medida</string>
 
 	<string name="help_title">Instrucciones</string>
 
-	<string name="help_subtitle1">What you need</string>
+	<string name="help_subtitle1">Lo que necesita</string>
 
-	<string name="help_needed">- Cuff without manometer\n
-		- BP device\n
-		- Android
-		phone\n
-		- USB cable</string>
+	<string name="help_needed">- Brazalete inflable sin manómetro\n
+		- Dispositivo de medición\n
+		- Teléfono Android\n
+		- Cable USB </string>
 	<string name="help_before">
-		Before taking readings\n
-		- Do not drink caffeine
-		or\n
-		smoke for at least 30min\n
-		- Remove tight fitting clothes\n
-		from
-		your arm
+		Antes de tomar medidas\n
+		- Evite consumir cafeína
+		o\n
+		fumar por al menos 30min\n
+		- Remueva ropa apretada\n
+		de su brazo
+		
 	</string>
 	<string name="help_reading">
-		Taking readings\n
-		- Rest your arm on a table\n
-		at the
-		level of your heart
+		Tomando las medidas\n
+		- Apoye su brazo al nivel\n
+		del corazón
    </string>
 
 	<string name="help_record">
-		Recording readings\n
-		- Push save button after the
-		reading\n
-		- bp_measure_timeInMilliseconds.csv will have the data
+		Grabando las medidas\n
+		- Presione el botón "Guardar" al finalizar
+		la medición\n
+		- La data se almacenará en bp_measure_timeInMilliseconds.csv
 	</string>
 
-	<string name="new_measure_button">New Blood Pressure Measure</string>
-	<string name="view_measure_button">View Saved Measurements</string>
-	<string name="help_button">Help</string>
-	<string name="delete_button">Delete</string>
-	<string name="discard_button">Discard</string>
-	<string name="measure_list_no_items">No items</string>
-	<string name="empty_measure_list">No Blood Pressure Measures</string>
-	<string name="save_button">Save</string>
+	<string name="new_measure_button">Nueva Medición de Presión Arterial</string>
+	<string name="view_measure_button">Ver Medidas Guardadas</string>
+	<string name="help_button">Ayuda</string>
+	<string name="delete_button">Borrar</string>
+	<string name="discard_button">Descartar</string>
+	<string name="measure_list_no_items">No hay items</string>
+	<string name="empty_measure_list">No hay medidas guardadas</string>
+	<string name="save_button">Guardar</string>
 
 	<!--measure list	-->
 	<string name="number">Nr</string>
-	<string name="date_time">DATE TIME</string>
-	<string name="sys">SYS</string>
+	<string name="date_time">FECHA HORA</string>
+	<string name="sys">SIS</string>
 	<string name="dia">DIA</string>
-	<string name="pulse">HR </string>
+	<string name="pulse">FC </string>
 
 	<!--measure view page -->
-	<string name="view_measure_header">View Blood Pressure Measure</string>
-	<string name="has_csv_file_no">Has csv file: No</string>
-	<string name="has_csv_file_yes">Has csv file: Yes</string>
-	<string name="alert_dialog_delete_measure">"Are you sure you want to delete measure?</string>
-	<string name="modified_date">Modified:</string>
-	<string name="created_date">Created:</string>
-	<string name="alert_dialog_changes_saved">Changes Saved</string>
+	<string name="view_measure_header">Ver Medidas de Presión Arterial</string>
+	<string name="has_csv_file_no">Tiene archivo csv: No</string>
+	<string name="has_csv_file_yes">Tiene archivo csv: Sí</string>
+	<string name="alert_dialog_delete_measure">Está seguro seguro que desea borrar la medida?</string>
+	<string name="modified_date">Modificado:</string>
+	<string name="created_date">Creado:</string>
+	<string name="alert_dialog_changes_saved">Cambios Guardados</string>
 	<!-- measure -->
-	<string name="pump">Cerrar Valvula! Bombear! Bombear! Bombear!</string>
-	<string name="stop_pump">"STOP PUMPING! Open valve, depressure slowly at
-		constante rate!"</string>
-	<string name="create_csv_file">create csv file</string>
-	<string name="notes">Notes:</string>
-	<string name="alert_dialog_discard_measure">Are you sure you want to discard measure?</string>
+	<string name="pump">Cerrar Válvula y Bombear! Bombear! Bombear!</string>
+	<string name="stop_pump">"Deténgase! Abra la válvula y despresurice de forma 
+		lenta y constante"</string>
+	<string name="create_csv_file">Crear archivo csv</string>
+	<string name="notes">Notas:</string>
+	<string name="alert_dialog_discard_measure">Está seguro que desea descartar la medida?</string>
 	<string name="alert_dialog_no">No</string>
-	<string name="alert_dialog_yes">Yes</string>
-	<string name="alert_dialog_data_saved_file_and_database">Data saved to csv file and to database</string>
-	<string name="alert_dialog_data_saved_to_database">Data saved to database</string>
-	<string name="pressure_x_legend">Time (s)</string>
-	<string name="pressure_y_legend">Pressure (mmHg)</string>
-	<string name="alert_dialog_processing_data">Processing Data...</string>
-	<string name="alert_dialog_determine_bp">Determining Blood Pressure...</string>
-	<string name="alert_dialog_discard_changes">Are you sure you want to discard changes?
+	<string name="alert_dialog_yes">Sí</string>
+	<string name="alert_dialog_data_saved_file_and_database">Data guardada en archivo csv y en la base de datos</string>
+	<string name="alert_dialog_data_saved_to_database">Data guardada en la base de datos</string>
+	<string name="pressure_x_legend">Tiempo (s)</string>
+	<string name="pressure_y_legend">Presión (mmHg)</string>
+	<string name="alert_dialog_processing_data">Procesando Data...</string>
+	<string name="alert_dialog_determine_bp">Determinando Presíon Arterial...</string>
+	<string name="alert_dialog_discard_changes">Está seguro que desea descartar cambios?
 	</string>
 
 </resources>
