@@ -305,7 +305,7 @@ public class MeasureActivity extends Activity {
 		// initialize our XYPlot reference and real time update code:
 
 		// getInstance and position datasets:
-		data = new TestDatasource();
+		data = new TestDatasource(this);
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
 		// "Blood Pressure");
 

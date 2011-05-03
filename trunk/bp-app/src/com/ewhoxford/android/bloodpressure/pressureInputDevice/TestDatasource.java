@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
+import android.app.Activity;
 import android.os.Handler;
 
 import com.ewhoxford.android.bloodpressure.MeasureActivity;
@@ -29,6 +30,12 @@ public class TestDatasource implements Runnable {
 			setChanged();
 			super.notifyObservers();
 		}
+	}
+
+	Activity activity;
+
+	public TestDatasource(Activity activity) {
+		this.activity = activity;
 	}
 
 	public static final int SIGNAL1 = 0;
@@ -97,7 +104,7 @@ public class TestDatasource implements Runnable {
 			// }
 			// }.start();
 			ReadCSV r = new ReadCSV();
-			int[][] pressureValues = r.readCSV();
+			int[][] pressureValues = r.readCSV(activity);
 			int l = pressureValues.length;
 			TimeSeriesMod pressureValuesMod = ConvertTommHg.convertArrayTommHg(
 					pressureValues, 100);

@@ -5,7 +5,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.StringTokenizer;
+
+import android.app.Activity;
+
+import com.ewhoxford.android.bloodpressure.R;
 
 /**
  * class to read a csv pressure file and test the application
@@ -15,18 +21,18 @@ import java.util.StringTokenizer;
  */
 public class ReadCSV {
 
-	public int[][] readCSV() {
+	public int[][] readCSV(Activity activity) {
 
 		// int[] x= new int[20000];
 		// int[] y=new int[20000];
 
 		int[][] numbers = new int[10000][2];
 
-		File file = new File("sdcard/bp-joao-1.csv");
-
+		InputStream is = activity.getResources().openRawResource(R.raw.bp);
 		BufferedReader bufRdr;
+
 		try {
-			bufRdr = new BufferedReader(new FileReader(file));
+			bufRdr = new BufferedReader(new InputStreamReader(is));
 
 			String line = null;
 			int row = 0;

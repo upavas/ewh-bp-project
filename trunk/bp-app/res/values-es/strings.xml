@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">Presíon Arterial</string>
+	<string name="app_name">Presión Arterial</string>
 	<string name="measure_title">Medida</string>
 
 	<string name="help_title">Instrucciones</string>
@@ -53,7 +53,7 @@
 	<string name="view_measure_header">Ver Medidas de Presión Arterial</string>
 	<string name="has_csv_file_no">Tiene archivo csv: No</string>
 	<string name="has_csv_file_yes">Tiene archivo csv: Sí</string>
-	<string name="alert_dialog_delete_measure">Está seguro seguro que desea borrar la medida?</string>
+	<string name="alert_dialog_delete_measure">Está seguro que desea borrar la medida?</string>
 	<string name="modified_date">Modificado:</string>
 	<string name="created_date">Creado:</string>
 	<string name="alert_dialog_changes_saved">Cambios Guardados</string>

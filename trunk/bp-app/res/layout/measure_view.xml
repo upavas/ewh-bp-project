@@ -40,7 +40,7 @@
 			android:layout_marginRight="50dip" android:layout_below="@+id/mySimpleXYPlot" />
 
 		<TextView android:id="@+id/notes_view" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:text="Notes:"
+			android:layout_height="wrap_content" android:text="@string/notes"
 			android:textStyle="bold" android:textSize="15px" />
 		<EditText android:id="@+id/edittext" android:layout_below="@+id/results"
 			android:layout_width="match_parent" android:layout_height="wrap_content" />

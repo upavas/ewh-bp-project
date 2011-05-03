@@ -61,8 +61,7 @@
 	<string name="alert_dialog_changes_saved">Alteração efectuada</string>
 	<!-- measure -->
 	<string name="pump">Fechar Valvula! Bombear! Bombear! Bombear!</string>
-	<string name="stop_pump">"PARAR de Bombear! Abrir valvula, despressurizar
-		devagar a um ritmo constante!"</string>
+	<string name="stop_pump">"PARAR de Bombear! Abrir valvula, despressurizar devagar a um ritmo constante!"</string>
 	<string name="create_csv_file">criar ficheiro csv</string>
 	<string name="notes">Notas:</string>
 	<string name="alert_dialog_discard_measure">Tem a certeza que quer rejeitar medida?</string>
