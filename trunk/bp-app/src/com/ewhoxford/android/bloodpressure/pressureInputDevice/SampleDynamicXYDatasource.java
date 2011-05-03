@@ -9,6 +9,7 @@ import java.util.Observer;
 
 import android.os.Handler;
 
+import com.ewhoxford.android.bloodpressure.MeasureActivity;
 import com.ewhoxford.android.bloodpressure.signalProcessing.ConvertTommHg;
 
 /**
@@ -31,7 +32,7 @@ public class SampleDynamicXYDatasource implements Runnable {
 	public static final int SIGNAL1 = 0;
 	// private static final int SAMPLE_SIZE = 1;
 
-	private static final int MAX_SIZE = 12000;
+	private static final int MAX_SIZE = MeasureActivity.BOUNDARY_NUMBER_OF_POINTS;
 
 	private double pressureValue = 0;
 	private MyObservable notifier;

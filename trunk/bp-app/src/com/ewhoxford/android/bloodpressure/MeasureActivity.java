@@ -79,7 +79,7 @@ public class MeasureActivity extends Activity {
 	// user notes
 	private EditText notesText;
 	// number of points in X axis
-	private int boundaryNumberOfPoints = 12000;
+	public static int BOUNDARY_NUMBER_OF_POINTS = 100;
 	// max pressure value for measure
 	private int maxPressureValueForMeasure = 200;
 	// signal frequency
@@ -315,7 +315,7 @@ public class MeasureActivity extends Activity {
 		// freeze the range boundaries:
 		bpMeasureXYPlot.setRangeBoundaries(0, 300, XYPlot.BoundaryMode.FIXED);
 
-		bpMeasureXYPlot.setDomainBoundaries(0, boundaryNumberOfPoints,
+		bpMeasureXYPlot.setDomainBoundaries(0, BOUNDARY_NUMBER_OF_POINTS,
 				XYPlot.BoundaryMode.FIXED);
 		bpMeasureXYPlot
 				.addSeries(bpMeasureSeries, LineAndPointRenderer.class,
@@ -323,7 +323,7 @@ public class MeasureActivity extends Activity {
 								Color.BLACK));
 
 		List<Number> pressureListArray = new ArrayList<Number>();
-		for (int i = 0; i < boundaryNumberOfPoints; i++) {
+		for (int i = 0; i < BOUNDARY_NUMBER_OF_POINTS; i++) {
 			pressureListArray.add(maxPressureValueForMeasure);
 		}
 
@@ -371,14 +371,14 @@ public class MeasureActivity extends Activity {
 		new Thread() {
 			public void run() {
 
-				// Do some Fake-Work
-				int l = data.getBpMeasure().size();
+				int l = data.getBpMeasureHistory().size();
 				arrayTime = new float[l];
 				arrayPressure = new double[l];
 				int i = 0;
 				int fs = 100;
 				while (i < l) {
-					arrayPressure[i] = data.getBpMeasure().get(i).doubleValue();
+					arrayPressure[i] = data.getBpMeasureHistory().get(i)
+							.doubleValue();
 					arrayTime[i] = ((float) i / (float) fs);
 					i++;
 				}
