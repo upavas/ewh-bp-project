@@ -44,7 +44,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 			}
 		});
-
+		
 		Process p;
 		try {
 			// Preform su to get root privledges
@@ -81,9 +81,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 
-		// menu.add(0, OPTION_SETTINGS, 1, "Settings");
-		// menu.add(0, OPTION_SYNC, 2, "Sync");
-
+//		menu.add(0, OPTION_SETTINGS, 1, "Settings");
+//		menu.add(0, OPTION_SYNC, 2, "Sync");
+	
 		return true;
 	}
 
@@ -95,8 +95,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			progressDialog = null;
 		}
 		progressDialog = new ProgressDialog(context);
-		// TODO substitute this string for 1 string in values folder
-		// (localization)
+		//TODO substitute this string for 1 string in values folder (localization)
 		progressDialog.setMessage("Updating Blood Pressure database.");
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progressDialog.show();
@@ -122,18 +121,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		}.start();
 	}
 
-	// public boolean onOptionsItemSelected(MenuItem item) {
-	// switch (item.getItemId()) {
-	// case OPTION_SETTINGS:
-	// Intent i = new Intent(Intent.ACTION_PICK);
-	// i.setClass(this, Settings.class);
-	// startActivityForResult(i, SETTINGS);
-	// return true;
-	// case OPTION_SYNC:
-	// doUpdateBloodPressureDatabase();
-	// return true;
-	// }
-	//
-	// return false;
-	// }
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case OPTION_SETTINGS:
+//			Intent i = new Intent(Intent.ACTION_PICK);
+//			i.setClass(this, Settings.class);
+//			startActivityForResult(i, SETTINGS);
+//			return true;
+//		case OPTION_SYNC:
+//			doUpdateBloodPressureDatabase();
+//			return true;
+//		}
+//
+//		return false;
+//	}
 }
