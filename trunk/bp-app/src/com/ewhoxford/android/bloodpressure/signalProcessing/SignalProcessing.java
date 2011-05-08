@@ -49,8 +49,8 @@ public class SignalProcessing {
 		/**
 		 * CURVE FITTING get oscillations by applying exponential LSF
 		 */
-		ExpFitting r3 = new ExpFitting();
-		originalOscillations = r3.expFitting(cuffDeflation);
+		Detrend r3 = new Detrend();
+		originalOscillations = r3.detrend(cuffDeflation);
 
 		/**
 		 * APPLY BAND-PASS FILTER get filtered signal by applying a Butterworth
