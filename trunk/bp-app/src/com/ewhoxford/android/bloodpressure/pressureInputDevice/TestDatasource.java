@@ -10,6 +10,7 @@ import java.util.Observer;
 import android.app.Activity;
 import android.os.Handler;
 
+import com.ewhoxford.android.bloodpressure.MeasureActivity;
 import com.ewhoxford.android.bloodpressure.signalProcessing.ConvertTommHg;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 import com.ewhoxford.android.bloodpressure.utils.ReadCSV;
@@ -30,15 +31,16 @@ public class TestDatasource implements Runnable {
 			super.notifyObservers();
 		}
 	}
-
-	Activity activity;
-
-	public TestDatasource(Activity activity) {
-		this.activity = activity;
+	
+	public TestDatasource(Activity activity){
+		this.activity=activity;
 	}
+	
 
 	public static final int SIGNAL1 = 0;
 	// private static final int SAMPLE_SIZE = 1;
+
+	private static final int MAX_SIZE = MeasureActivity.BOUNDARY_NUMBER_OF_POINTS;
 
 	private double pressureValue = 0;
 	private MyObservable notifier;
@@ -46,6 +48,7 @@ public class TestDatasource implements Runnable {
 	private boolean active = true;
 	int countMiceSamples = 0;
 	int linearFilterThreshold = 20;
+	private Activity activity;
 	final Handler mHandler = new Handler();
 	// Create runnable for posting
 	final Runnable runSignalAcquisition = new Runnable() {
@@ -101,28 +104,45 @@ public class TestDatasource implements Runnable {
 			// }
 			// }.start();
 			ReadCSV r = new ReadCSV();
+		
 			int[][] pressureValues = r.readCSV(activity);
 			int l = pressureValues.length;
 			TimeSeriesMod pressureValuesMod = ConvertTommHg.convertArrayTommHg(
 					pressureValues, 100);
 			double[] pressureValuesFloat = pressureValuesMod.getPressure();
+			int k = 1;
+			while (k < l) {
+				if (bpMeasureHistory.size() != 0) {
+					if (Math.abs(bpMeasureHistory.getLast().doubleValue()
+							- pressureValuesFloat[k]) > linearFilterThreshold) {
+						bpMeasureHistory.add(bpMeasureHistory.getLast()
+								.doubleValue());
+					} else {
+						bpMeasureHistory.add(pressureValuesFloat[k]);
+					}
+				} else {
+					bpMeasureHistory.add(pressureValuesFloat[k]);
+				}
+				k = k + 1;
+			}
 
 			while (active) {
 
-				Thread.sleep(5);
+				Thread.sleep(500);
 
 				int j = 1;
-				while (j < 1000) {
+				while (j < 101) {
 
-					pressureValue = pressureValuesFloat[count];
 					// signal processing problem correction
-					if (bpMeasure.size() != 0)
-						if (Math.abs(bpMeasure.getLast().doubleValue()
-								- pressureValue) > linearFilterThreshold) {
-							pressureValue = bpMeasure.getLast().doubleValue();
-						}
-					bpMeasure.add(pressureValue);
 
+					if (j == 100) {
+						if (bpMeasure.size() > MAX_SIZE) {
+							bpMeasure.removeFirst();
+						}
+						pressureValue = pressureValuesFloat[count];
+
+						bpMeasure.add(pressureValue);
+					}
 					j++;
 					count++;
 				}
@@ -210,7 +230,7 @@ public class TestDatasource implements Runnable {
 
 					if (bpMeasureHistory.size() != 0)
 						if (Math.abs(bpMeasureHistory.getLast().doubleValue()
-								- aux) > 3) {
+								- aux) > 20) {
 							aux = bpMeasureHistory.getLast().doubleValue();
 						}
 
