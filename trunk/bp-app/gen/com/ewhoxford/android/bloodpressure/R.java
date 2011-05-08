@@ -121,12 +121,14 @@ public final class R {
 measure list	
 measure list        
 measure list	
+measure list	
          */
         public static final int number=0x7f060010;
         public static final int pressure_x_legend=0x7f060025;
         public static final int pressure_y_legend=0x7f060026;
         public static final int pulse=0x7f060014;
         /**  measure 
+ measure 
  measure 
  measure 
  measure 
@@ -137,6 +139,7 @@ measure list
         public static final int sys=0x7f060012;
         public static final int view_measure_button=0x7f060009;
         /** measure view page 
+measure view page 
 measure view page 
 measure view page 
 measure view page 
