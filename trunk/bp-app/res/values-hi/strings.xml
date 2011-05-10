@@ -23,13 +23,17 @@
 	<string name="measure_list_no_items"> कोई डाटा सेव नहीं है </string>
 	<string name="empty_measure_list"> कोई रक्तचाप (ब्लड प्रेशर) नाप सेव नहीं है  </string>
 	<string name="save_button"> सेव </string>
-	 <!-- measure list-->
+	<!-- 
+measure list	
+  -->
 	<string name="number"> नंबर  </string>
 	<string name="date_time"> तारीख समय</string>
 	<string name="sys"> सिस्टोलिक रक्तचाप (ब्लड प्रेशर)  </string>
 	<string name="dia"> दिअस्तोलिक रक्तचाप (ब्लड प्रेशर)  </string>
 	<string name="pulse"> हृदय दर</string>
-	<!-- measure view page -->
+	<!-- 
+measure view page 
+  -->
 	<string name="view_measure_header"> रक्तचाप (ब्लड प्रेशर) नाप दिखाए  </string>
 	<string name="has_csv_file_no"> से.एस.वे फाइल (csv file) नहीं है </string>
 	<string name="has_csv_file_yes"> से.एस.वे फाइल (csv file) है </string>
@@ -37,7 +41,9 @@
 	<string name="modified_date"> सुधार तारीख:</string>
 	<string name="created_date">नाप की तारीख: </string>
 	<string name="alert_dialog_changes_saved"> परिवर्तन सहेजे </string>
-	<!-- measure  -->
+	<!-- 
+ measure 
+  -->
 	<string name="pump"> कपाट (वल्वे) बंद कर के पिचकारी (पुमप) चलाये
 	</string>
 	<string name="stop_pump">" पिचकारी चलाना रोके, कपाट खोले और धेरे से कफ्फ में
@@ -57,4 +63,5 @@
 	</string>
 	<string name="alert_dialog_discard_changes"> क्या इन परिवर्तनों को मिटाना सही है?</string>
 </resources>
+
 
