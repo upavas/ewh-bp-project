@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string name="app_name">रक्त दबाव</string>
+        <string name="measure_title">उपाय</string>
+
+        <string name="help_title">निर्देश</string>
+
+        <string name="help_subtitle1">आवश्यकता</string>
+
+        <string name="help_needed">- दबाव नापने का यंत्र के बिना गिरफ्तार\n
+                - रक्त दाब उपकरण\n
+                - फोन
+                Android\n
+                - केबल USB</string>
+        <string name="help_before">
+                  रीडिंग लेने से पहले\n
+                - कम से कम 30 मिनट के लिए कैफीन या सिगरेट पीना न करें\n
+                       - तंग ढाले कपड़े निकालें अपने हाथ से\n
+ </string>
+        <string name="help_reading">
+                रीडिंग लेना\n
+                - अपने दिल के स्तर पर एक मेज पर अपने हाथ आराम करें\n
+</string>
+
+        <string name="help_record">
+                 माप दर्ज\n
+                - प्रेस बटन को बचाने के बाद माप लेने
+      - माप होगा bp_measure_timeInMilliseconds.csv मान
+        </string>
+
+        <string name="new_measure_button">नई रक्त दबाव उपाय</string>
+        <string name="view_measure_button">दृश्य मापन रक्षित</string>
+        <string name="help_button">मदद</string>
+        <string name="delete_button">हटाएँ</string>
+        <string name="discard_button">छोड़ना</string>
+        <string name="measure_list_no_items">कोई आइटम नहीं</string>
+        <string name="empty_measure_list">नहीं रक्त दबाव के उपाय</string>
+        <string name="save_button">सहेजें</string>
+
+        <!--measure list        -->
+        <string name="number">संख्या:</string>
+        <string name="date_time">समय, तारीख</string>
+        <string name="sys">प्रकुंचन</string>
+        <string name="dia">अनुशिथिलन</string>
+        <string name="pulse">हृदय की दर</string>
+
+        <!--measure view page -->
+        <string name="view_measure_header">देखें रक्त दबाव को मापने के</string>
+        <string name="has_csv_file_no">Csv में संग्रहीत जानकारी है: नहीं </string>
+        <string name="has_csv_file_yes">Csv में संग्रहीत जानकारी है: हाँ</string>
+        <string name="alert_dialog_delete_measure">क्या आप सुनिश्चित हैं कि आप माप हटाना चाहते हैं?</string>
+        <string name="modified_date">संशोधित तिथि </string>
+        <string name="created_date">तिथि बनाया </string>
+        <string name="alert_dialog_changes_saved">Changes Saved</string>
+        <!-- measure -->
+        <string name="pump">वाल्व बंद करो! ! स्पंदित होना  ! स्पंदित होना  ! स्पंदित होना  !</string>
+        <string name="stop_pump">&quot;कार्रवाई पम्पिंग रोक वाल्व खोल दें! और दबाव को कम एक स्थिर दर पर धीरे - धीरे!&quot; </string>
+        <string name="create_csv_file">एक CSV फ़ाइल में लिखें  </string>
+        <string name="notes">टिप्पणी</string>
+        <string name="alert_dialog_discard_measure">क्या आप सचमुच को मापने के लिए फेंकना चाहेंगे? </string>
+        <string name="alert_dialog_no">नहीं</string>
+        <string name="alert_dialog_yes">हां</string>
+        <string name="alert_dialog_data_saved_file_and_database">माप CSV फ़ाइल में और डेटाबेस में संग्रहीत है</string>
+        <string name="alert_dialog_data_saved_to_database">आँकड़े डेटाबेस को बचाया</string>
+        <string name="pressure_x_legend">समय</string>
+        <string name="pressure_y_legend">दबाव</string>
+        <string name="alert_dialog_processing_data">डेटा संसाधित किया जा रहा है ...</string>
+        <string name="alert_dialog_determine_bp">रक्तचाप की गणना की जा रही है...</string>
+        <string name="alert_dialog_discard_changes">क्या आप वास्तव लिए संशोधनों को रद्द करना चाहते हैं?</string>
+
+</resources>
