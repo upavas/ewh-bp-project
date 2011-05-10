@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Pressão Arterial</string>
+	<string name="measure_title">Medir Pressão Arterial</string>
+
+	<string name="help_title">Instrucções</string>
+
+	<string name="help_subtitle">O que e necessario</string>
+
+	<string name="help_needed">- Braçadeira do esfigmomanometro sem o manometro\n
+		- BP Box \n
+		- Dispositivo com android\n
+		- cabo USB</string>
+	<string name="help_before">
+		Antes de tirar a pressão arterial\n
+		- Não beba cafe
+		ou\n
+		fume por 30min\n
+		- Remover roupas apertadas \n
+		do braço seu braço
+	</string>
+
+	<string name="help_reading">
+		Tirando a Pressão Arterial\n
+		- Descansar o braço na
+		mesa\n
+		ao nivel do coração
+		</string>
+
+	<string name="help_record">
+		Gravar medidas\n
+		- Carregue no botão Guardar depois
+		da medida\n
+		- Se cliclar na checkbox para guardar o ficheiro, sera
+		criado um ficheiro bp_measure_timeInMilliseconds.csv com
+		os dados de
+		pressão da medida	</string>
+	<string name="new_measure">Nova medida de Pressão Sanguinea</string>
+	<string name="view_measure_button">Ver Medidas</string>
+	<string name="help_button">Ajuda</string>
+	<string name="delete_button">Apagar</string>
+	<string name="measure_view_button">Ver Medida</string>
+	<string name="discard_button">Rejeitar</string>
+	<string name="main_no_items">Sem dados</string>
+	<string name="save_button">Guardar</string>
+
+	<!--measure list	-->
+	<string name="number">Nr</string>
+	<string name="date_time">Data Hora</string>
+	<string name="sys">SIS</string>
+	<string name="dia">DIA</string>
+	<string name="pulse">FC </string>
+
+	<!--measure view page -->
+	<string name="view_measure_header">Ver Medida de Pressão Arterial</string>
+	<string name="has_csv_file_no">Tem ficheiro csv: Não</string>
+	<string name="has_csv_file_yes">Tem ficheiro csv: Sim</string>
+	<string name="alert_dialog_delete_measure">"Tem a certeza que quer apagar a medida?</string>
+	<string name="modified_date">Modificado:</string>
+	<string name="created_date">Criado:</string>
+	<string name="alert_dialog_changes_saved">Alteração efectuada</string>
+	<!-- measure -->
+	<string name="pump">Fechar Valvula! Bombear! Bombear! Bombear!</string>
+	<string name="stop_pump">"PARAR de Bombear! Abrir valvula, despressurizar devagar a um ritmo constante!"</string>
+	<string name="create_csv_file">criar ficheiro csv</string>
+	<string name="notes">Notas:</string>
+	<string name="alert_dialog_discard_measure">Tem a certeza que quer rejeitar medida?</string>
+	<string name="alert_dialog_no">Não</string>
+	<string name="alert_dialog_yes">Sim</string>
+	<string name="alert_dialog_data_saved_file_and_database">Dados guardados para ficheiro csv e base de dados
+	</string>
+	<string name="alert_dialog_data_saved_to_database">Dados guardados para a base de dados</string>
+	<string name="pressure_x_legend">Tempo (s)</string>
+	<string name="pressure_y_legend">Pressão (mmHg)</string>
+	<string name="alert_dialog_processing_data">Processando Dados...</string>
+	<string name="alert_dialog_determine_bp">Determinando a Pressão Arterial...</string>
+	<string name="alert_dialog_discard_changes">Tem a certeza que quer rejeitar a alteração?
+	</string>
+</resources>

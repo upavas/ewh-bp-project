@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+	<!--
+		<RelativeLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+	-->
+	<!--
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+	-->
+	<!--		android:orientation="vertical">-->
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="vertical" android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+
+		<TextView android:id="@+id/id_date" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:text="@string/view_measure_header"
+			android:textStyle="bold" android:textSize="15px" />
+
+
+		<!--
+			<com.ewhoxford.android.bloodpressure.GraphView
+			android:id="@+id/graph" android:layout_width="fill_parent"
+
+			android:layout_height="135dip" android:layout_marginTop="10dip"
+
+			android:layout_marginBottom="10dip" android:layout_marginLeft="35dip"
+
+			android:layout_marginRight="35dip" android:layout_below="@+id/text0"
+			/>
+		-->
+
+		<com.ewhoxford.android.bloodpressure.ValuesView
+			android:id="@+id/results" android:layout_width="fill_parent"
+			android:layout_height="80dip" android:layout_marginTop="5dip"
+			android:layout_marginBottom="5dip" android:layout_marginLeft="50dip"
+			android:layout_marginRight="50dip" android:layout_below="@+id/mySimpleXYPlot" />
+
+		<TextView android:id="@+id/notes_view" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:text="@string/notes"
+			android:textStyle="bold" android:textSize="15px" />
+		<EditText android:id="@+id/edittext" android:layout_below="@+id/results"
+			android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+		<TextView android:id="@+id/answer_csv" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:textSize="15px"
+			android:text="@string/has_csv_file_no" android:textStyle="bold" />
+		<TableLayout android:id="@+id/table_buttons"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_below="@+id/checkbox" android:stretchColumns="0,1,2">
+			<TableRow android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<Button android:id="@+id/button_delete" android:text="@string/delete_button"></Button>
+				<Button android:id="@+id/button_save" android:text="@string/save_button"></Button>
+				<Button android:id="@+id/button_discard" android:text="@string/discard_button"></Button>
+			</TableRow>
+
+		</TableLayout>
+
+	</LinearLayout>
+	<!--	</RelativeLayout>-->
+
+</ScrollView>
