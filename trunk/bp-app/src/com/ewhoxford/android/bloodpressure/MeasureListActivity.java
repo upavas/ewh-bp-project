@@ -324,4 +324,5 @@ public class MeasureListActivity extends ListActivity implements
 		return true;
 	}
 
+
 }

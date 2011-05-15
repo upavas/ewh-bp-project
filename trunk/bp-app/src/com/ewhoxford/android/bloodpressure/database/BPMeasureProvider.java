@@ -21,7 +21,8 @@ import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BP
 /**
  * Provides access to a database of BP Measures. Each BP Measure has an ID,
  * note, SP, DP, Pulse rate, a creation date and a modified data.
-  * @author mauro
+ * 
+ * @author mauro
  */
 public class BPMeasureProvider extends ContentProvider {
 
@@ -58,11 +59,13 @@ public class BPMeasureProvider extends ContentProvider {
 					+ BPMeasure.CREATED_DATE + " INTEGER,"
 					+ BPMeasure.MODIFIED_DATE + " INTEGER,"
 					+ BPMeasure.MEASUREMENT_FILE_EXIST + " BOOLEAN,"
-					+ BPMeasure.MEASUREMENT_FILE_SYNC + " BOOLEAN,"
-					+ BPMeasure.MEASUREMENT_FILE + " varchar(600)" + ");";
+					+ BPMeasure.MEASUREMENT_SYNC + " BOOLEAN,"
+					+ BPMeasure.MEASUREMENT_FILE + " varchar(600),"
+					+ BPMeasure.PATIENT_PROVIDER_USERNAME + " varchar(400),"
+					+ BPMeasure.PHR_PROVIDER + " varchar(400)" + ");";
 			System.out.println(createDatabase);
 			db.execSQL(createDatabase);
-			
+
 		}
 
 		@Override
@@ -184,6 +187,18 @@ public class BPMeasureProvider extends ContentProvider {
 			values.put(BPMeasure.NOTE, "");
 		}
 
+		if (values.containsKey(BPMeasure.MEASUREMENT_SYNC) == false) {
+			values.put(BPMeasure.MEASUREMENT_SYNC, 0);
+		}
+
+		if (values.containsKey(BPMeasure.PHR_PROVIDER) == false) {
+			values.put(BPMeasure.PHR_PROVIDER, "");
+		}
+
+		if (values.containsKey(BPMeasure.PATIENT_PROVIDER_USERNAME) == false) {
+			values.put(BPMeasure.PATIENT_PROVIDER_USERNAME, "");
+		}
+
 		SQLiteDatabase db = mBPOpenHelper.getWritableDatabase();
 		long rowId = db.insert(MEASURES_TABLE, BPMeasure.NOTE, values);
 		if (rowId > 0) {
@@ -200,7 +215,7 @@ public class BPMeasureProvider extends ContentProvider {
 	public int delete(Uri uri, String where, String[] whereArgs) {
 		SQLiteDatabase db = mBPOpenHelper.getWritableDatabase();
 		int count;
-		//TODO: delete files.
+		// TODO: delete files.
 		switch (sUriMatcher.match(uri)) {
 		case MEASURES:
 			count = db.delete(MEASURES_TABLE, where, whereArgs);
@@ -273,9 +288,12 @@ public class BPMeasureProvider extends ContentProvider {
 				BPMeasure.MEASUREMENT_FILE);
 		sBPMeasuresProjectionMap.put(BPMeasure.MEASUREMENT_FILE_EXIST,
 				BPMeasure.MEASUREMENT_FILE_EXIST);
-		sBPMeasuresProjectionMap.put(BPMeasure.MEASUREMENT_FILE_SYNC,
-				BPMeasure.MEASUREMENT_FILE_SYNC);
-
+		sBPMeasuresProjectionMap.put(BPMeasure.MEASUREMENT_SYNC,
+				BPMeasure.MEASUREMENT_SYNC);
+		sBPMeasuresProjectionMap.put(BPMeasure.PATIENT_PROVIDER_USERNAME,
+				BPMeasure.PATIENT_PROVIDER_USERNAME);
+		sBPMeasuresProjectionMap.put(BPMeasure.PHR_PROVIDER,
+				BPMeasure.PHR_PROVIDER);
 
 	}
 }
