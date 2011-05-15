@@ -1,5 +1,3 @@
-
-
 package com.ewhoxford.android.bloodpressure.database;
 
 import android.content.ContentResolver;
@@ -8,7 +6,8 @@ import android.provider.BaseColumns;
 
 /**
  * Convenience definitions for blood pressure provider
-* @author mauro
+ * 
+ * @author mauro
  */
 public final class BloodPressureMeasureTable {
 	public static final String AUTHORITY = "com.ewhoxford.android.bloodpressure.database.bpmeasureprovider";
@@ -102,7 +101,7 @@ public final class BloodPressureMeasureTable {
 		 * Type: BOOLEAN
 		 * </P>
 		 */
-		public static final String MEASUREMENT_FILE_SYNC = "measurement_file_sync";
+		public static final String MEASUREMENT_SYNC = "measurement_sync";
 
 		/**
 		 * The timestamp for when the note was created
@@ -120,6 +119,22 @@ public final class BloodPressureMeasureTable {
 		 */
 		public static final String MODIFIED_DATE = "modified";
 
+		/**
+		 * username of the patient in the PHR platform
+		 * <P>
+		 * Type: INTEGER (long)
+		 * </P>
+		 */
+		public static final String PATIENT_PROVIDER_USERNAME = "patient_provider_username";
+
+		/**
+		 * PHR provider - google or openMRS
+		 * <P>
+		 * Type: INTEGER (long)
+		 * </P>
+		 */
+		public static final String PHR_PROVIDER = "phr_provider";
+
 		// Column indexes int
 		public static final int PULSE_COLUMN = 1;
 		public static final int SP_COLUMN = 2;
@@ -130,6 +145,8 @@ public final class BloodPressureMeasureTable {
 		public static final int MEASUREMENT_FILE_SYNC_COLUMN = 7;
 		public static final int CREATED_DATE_COLUMN = 8;
 		public static final int MODIFIED_DATE_COLUMN = 9;
+		public static final int PATIENT_PROVIDER_USERNAME_COLUMN = 10;
+		public static final int PHR_PROVIDER_COLUMN = 11;
 
 	}
 }
