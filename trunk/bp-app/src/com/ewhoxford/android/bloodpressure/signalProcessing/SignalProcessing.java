@@ -46,12 +46,18 @@ public class SignalProcessing {
 		GetDecrCurve r2 = new GetDecrCurve();
 		cuffDeflation = r2.getDecrCurve(aux5);
 
+//		/**
+//		 * CURVE FITTING get oscillations by applying exponential LSF
+//		 */
+//		Detrend r3 = new Detrend();
+//		originalOscillations = r3.detrend(cuffDeflation);
+
 		/**
 		 * CURVE FITTING get oscillations by applying exponential LSF
 		 */
-		Detrend r3 = new Detrend();
-		originalOscillations = r3.detrend(cuffDeflation);
-
+		ExpFitting r3 = new ExpFitting();
+		originalOscillations = r3.expFitting(cuffDeflation);
+		
 		/**
 		 * APPLY BAND-PASS FILTER get filtered signal by applying a Butterworth
 		 * band-pass filter

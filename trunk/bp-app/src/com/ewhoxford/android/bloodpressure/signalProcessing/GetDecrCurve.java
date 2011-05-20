@@ -103,4 +103,15 @@ public class GetDecrCurve {
 		decSignal.setTime(timef);
 		return decSignal;
 	}
+
+	public boolean evaluateSlope(TimeSeriesMod signal, int slopeTreshold) {
+
+		int slope = 100;
+		if (slope > slopeTreshold) {
+			return false;
+		}
+
+		return true;
+	}
+
 }
