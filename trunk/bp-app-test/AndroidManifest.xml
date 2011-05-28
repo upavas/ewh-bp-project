@@ -8,5 +8,5 @@
     <uses-library android:name="android.test.runner" />
     </application>
 
-    <instrumentation android:targetPackage="com.example.android.home" android:name="android.test.InstrumentationTestRunner" />
+    <instrumentation android:targetPackage="com.ewhoxford.android.bloodpressure" android:name="android.test.InstrumentationTestRunner" />
 </manifest> 
