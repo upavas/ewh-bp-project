@@ -1,6 +1,5 @@
 Systolic Pressure, Dyastolic Pressure,Pulse, note
-0,0,138,map showed
-. bp=0
+0,0,138,map showed bp=0
 time,pressure(mmHg)
 0.0,-16.261102520604396
 0.01,-16.668037027440334
