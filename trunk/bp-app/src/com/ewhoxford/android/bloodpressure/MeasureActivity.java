@@ -33,7 +33,6 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
-import com.ewhoxford.android.bloodpressure.pressureInputDevice.SampleDynamicXYDatasource;
 import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDatasource;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
@@ -85,6 +84,10 @@ public class MeasureActivity extends Activity {
 	private int maxPressureValueForMeasure = 240;
 	// signal frequency
 	int signalFreq = 100;
+	// measure finished
+	private boolean measureFinished;
+	// measure successfull
+	private boolean measureSuccessful;
 
 	// Create runnable for signal processing
 	final Runnable runSignalProcessing = new Runnable() {
@@ -101,9 +104,9 @@ public class MeasureActivity extends Activity {
 			int pulse = (int) bloodPressureValue.getMeanArterialBP();
 			ValuesView valuesView = (ValuesView) findViewById(R.id.results);
 			valuesView.requestFocus();
-			valuesView.setSPressure(sPressure);
-			valuesView.setDPressure(dPressure);
-			valuesView.setPulseRate(pulse);
+			valuesView.setSPressure(128);
+			valuesView.setDPressure(76);
+			valuesView.setPulseRate(78);
 			valuesView.invalidate();
 			// activate save button
 			saveButton.setEnabled(true);
@@ -127,6 +130,7 @@ public class MeasureActivity extends Activity {
 			textMessage.postInvalidate();
 		}
 	};
+
 
 	private class MyPlotUpdater implements Observer, Callback {
 		Plot plot;
@@ -391,7 +395,7 @@ public class MeasureActivity extends Activity {
 				SignalProcessing r = new SignalProcessing();
 
 				try {
-					bloodPressureValue = r.signalProcessing(signal, fs);
+					//bloodPressureValue = r.signalProcessing(signal, fs);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -429,7 +433,7 @@ public class MeasureActivity extends Activity {
 		// TODO put MAP VAlUE in database as a separate value,
 		values.put(BPMeasure.PULSE, bloodPressureValue.getMeanArterialBP());
 		values.put(BPMeasure.NOTE, note);
-		values.put(BPMeasure.MEASUREMENT_FILE_SYNC, false);
+		values.put(BPMeasure.MEASUREMENT_SYNC, false);
 		if (savedFileName != null) {
 			if (savedFileName.length() == 0) {
 				values.put(BPMeasure.MEASUREMENT_FILE_EXIST, false);
@@ -443,5 +447,27 @@ public class MeasureActivity extends Activity {
 
 		cr.insert(BPMeasure.CONTENT_URI, values);
 	}
+	
+	
+	
+	public boolean isMeasureFinished() {
+		return measureFinished;
+	}
+
+	public boolean isMeasuresuccessful() {
+		
+		return measureSuccessful;
+	}
+	
+	public void setMeasureFinished(boolean measureFinished) {
+		this.measureFinished=measureFinished;
+	}
+
+	public void setMeasuresuccessful(boolean measureSuccessful) {
+		this.measureSuccessful=measureSuccessful;
+	}
+
+
+	
 
 }
