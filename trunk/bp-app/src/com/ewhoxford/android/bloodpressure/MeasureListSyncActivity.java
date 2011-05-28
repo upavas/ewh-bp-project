@@ -32,7 +32,7 @@ import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BP
  * 
  * @author mauro
  */
-public class MeasureListActivity extends ListActivity implements
+public class MeasureListSyncActivity extends ListActivity implements
 		SimpleCursorAdapter.ViewBinder {
 	private static final String TAG = "BloodPressureMeasuresList";
 
@@ -323,6 +323,7 @@ public class MeasureListActivity extends ListActivity implements
 		}
 		return true;
 	}
-
+	
+	
 
 }

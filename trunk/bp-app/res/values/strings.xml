@@ -5,7 +5,7 @@
 
 	<string name="help_title">Instructions</string>
 
-	<string name="help_subtitle1">What you need</string>
+	<string name="help_subtitle1">What you need:</string>
 
 	<string name="help_needed">- Cuff without manometer\n
 		- BP device\n
@@ -13,7 +13,7 @@
 		phone\n
 		- USB cable</string>
 	<string name="help_before">
-		Before taking readings\n
+		Before taking readings:\n
 		- Do not drink caffeine
 		or\n
 		smoke for at least 30min\n
@@ -22,14 +22,14 @@
 		your arm
 	</string>
 	<string name="help_reading">
-		Taking readings\n
+		Taking readings:\n
 		- Rest your arm on a table\n
 		at the
 		level of your heart
    </string>
 
 	<string name="help_record">
-		Recording readings\n
+		Recording readings:\n
 		- Push save button after the
 		reading\n
 		- bp_measure_timeInMilliseconds.csv will have the data
