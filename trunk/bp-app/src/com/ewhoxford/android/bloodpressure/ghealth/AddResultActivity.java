@@ -35,8 +35,9 @@
 //import android.widget.Spinner;
 //import android.widget.TextView;
 //
-//import com.ewhoxford.android.bloodpressure.ghelth.gdata.Result;
-//import com.ewhoxford.android.bloodpressure.ghelth.gdata.TestResult;
+//import com.ewhoxford.android.bloodpressure.R;
+//import com.ewhoxford.android.bloodpressure.ghealth.gdata.Result;
+//import com.ewhoxford.android.bloodpressure.ghealth.gdata.TestResult;
 //
 //public class AddResultActivity extends Activity {
 //

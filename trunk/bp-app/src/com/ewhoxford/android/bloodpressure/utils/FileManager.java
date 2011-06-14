@@ -100,10 +100,21 @@ public class FileManager {
 		// pictures and other media owned by the application, consider
 		// Context.getExternalMediaDir().
 		// String uuid = UUID.randomUUID().toString();
-
-		File path = Environment.getExternalStoragePublicDirectory(DIRECTORY);
+		File path;
 		String fileName = "bp_measure_" + createdDate + ".csv";
-		File file = new File(path, fileName);
+		File file;
+		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		if (currentapiVersion >= android.os.Build.VERSION_CODES.FROYO){
+			path = Environment.getExternalStoragePublicDirectory(DIRECTORY);
+			file= new File(path, fileName);
+		} else{
+			path=Environment.getExternalStorageDirectory();
+			file = new File(path,"/"+DIRECTORY+"/"+fileName);
+		}
+
+		
+		
+		
 
 		try {
 			// Make sure the Pictures directory exists.
@@ -132,15 +143,22 @@ public class FileManager {
 
 			// // Tell the media scanner about the new file so that it is
 			// // immediately available to the user.
-			MediaScannerConnection.scanFile(context, new String[] { file
-					.toString() }, new String[] { MimeTypeMap
-					.getFileExtensionFromUrl(file.toString()) },
-					new MediaScannerConnection.OnScanCompletedListener() {
-						public void onScanCompleted(String path, Uri uri) {
-							Log.i("ExternalStorage", "Scanned " + path + ":");
-							Log.i("ExternalStorage", "-> uri=" + uri);
-						}
-					});
+			
+			if (currentapiVersion >= android.os.Build.VERSION_CODES.FROYO) {
+				MediaScannerConnection.scanFile(context, new String[] { file
+						.toString() }, new String[] { MimeTypeMap
+						.getFileExtensionFromUrl(file.toString()) },
+						new MediaScannerConnection.OnScanCompletedListener() {
+							public void onScanCompleted(String path, Uri uri) {
+								Log.i("ExternalStorage", "Scanned " + path + ":");
+								Log.i("ExternalStorage", "-> uri=" + uri);
+							}
+						});
+			} else{
+				
+				
+			}
+			
 		} catch (IOException e) {
 			// Unable to create file, likely because external storage is
 			// not currently mounted.
@@ -153,8 +171,19 @@ public class FileManager {
 		// Create a path where we will place our picture in the user's
 		// public pictures directory and delete the file. If external
 		// storage is not currently mounted this will fail.
-		File path = Environment.getExternalStoragePublicDirectory(DIRECTORY);
-		File file = new File(path, fileName);
+		
+		File path;
+		File file;
+		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		if (currentapiVersion >= android.os.Build.VERSION_CODES.FROYO){
+			path = Environment.getExternalStoragePublicDirectory(DIRECTORY);
+			file= new File(path, fileName);
+		} else{
+			path=Environment.getExternalStorageDirectory();
+			file = new File(path,"/"+DIRECTORY+"/"+fileName);
+		}
+		
+		
 		file.delete();
 	}
 
@@ -163,8 +192,18 @@ public class FileManager {
 		// public pictures directory and check if the file exists. If
 		// external storage is not currently mounted this will think the
 		// picture doesn't exist.
-		File path = Environment.getExternalStoragePublicDirectory(DIRECTORY);
-		File file = new File(path, fileName);
+		File path;
+		
+		File file;
+		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		if (currentapiVersion >= android.os.Build.VERSION_CODES.FROYO){
+			path = Environment.getExternalStoragePublicDirectory(DIRECTORY);
+			file= new File(path, fileName);
+		} else{
+			path=Environment.getExternalStorageDirectory();
+			file = new File(path,"/"+DIRECTORY+"/"+fileName);
+		}
+		
 		return file.exists();
 	}
 

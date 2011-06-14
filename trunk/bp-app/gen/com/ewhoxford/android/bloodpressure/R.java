@@ -33,6 +33,7 @@ public final class R {
         public static final int button_help=0x7f070010;
         public static final int button_save=0x7f070011;
         public static final int button_start=0x7f070001;
+        public static final int button_sync_ghealth=0x7f07002c;
         public static final int checkbox=0x7f07000e;
         public static final int createdDate=0x7f07001f;
         public static final int createdDate_h=0x7f070019;
@@ -88,6 +89,8 @@ public final class R {
         /**  Main activity dashboard buttons 
          */
         public static final int account=0x7f060042;
+        public static final int alert_dialog_bp_syncked=0x7f060045;
+        public static final int alert_dialog_bp_syncked_error=0x7f060046;
         public static final int alert_dialog_changes_saved=0x7f06001b;
         public static final int alert_dialog_data_saved_file_and_database=0x7f060023;
         public static final int alert_dialog_data_saved_to_database=0x7f060024;
@@ -127,18 +130,18 @@ public final class R {
         public static final int help_needed=0x7f060004;
         public static final int help_reading=0x7f060006;
         public static final int help_record=0x7f060007;
-        public static final int help_subtitle=0x7f060045;
+        public static final int help_subtitle=0x7f060047;
         public static final int help_subtitle1=0x7f060003;
         public static final int help_title=0x7f060002;
         /**  Progress dialog text 
          */
         public static final int loading=0x7f06003e;
-        public static final int main_no_items=0x7f060048;
+        public static final int main_no_items=0x7f06004a;
         public static final int measure_list_no_items=0x7f06000d;
         public static final int measure_title=0x7f060001;
-        public static final int measure_view_button=0x7f060047;
+        public static final int measure_view_button=0x7f060049;
         public static final int modified_date=0x7f060019;
-        public static final int new_measure=0x7f060046;
+        public static final int new_measure=0x7f060048;
         public static final int new_measure_button=0x7f060008;
         /**  Main activity button and menu option strings 
          */

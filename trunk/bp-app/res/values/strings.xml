@@ -123,13 +123,18 @@
 	<!-- Health notice dialog text -->
 	<string name="health_notice">If you have not yet enabled your Google Health
 		account, any data uploaded by this application will be held at
-		Google until you do so. To enable your account and view your data,
-		just go to https://health.google.com and sign in.</string>
+		Google
+		until you do so. To enable your account and view your data,
+		just go to
+		https://health.google.com and sign in.</string>
 
 	<!-- Main activity dashboard buttons -->
 	<string name="account">Account</string>
 	<string name="profile">Profile</string>
-	
-	  <string name="ok">OK</string>
 
+	<string name="ok">OK</string>
+	<string name="alert_dialog_bp_syncked">Measure data synched with Google Health Account
+	</string>
+	<string name="alert_dialog_bp_syncked_error">Synck with Google Health was not sucessfull
+	</string>
 </resources>

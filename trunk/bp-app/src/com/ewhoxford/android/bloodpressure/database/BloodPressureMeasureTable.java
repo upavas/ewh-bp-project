@@ -141,6 +141,9 @@ public final class BloodPressureMeasureTable {
 		 * </P>
 		 */
 		public static final String PHR_PROVIDER_PROFILE = "phr_provider_profile";
+		
+		
+		public static final String PHR_PROVIDER_PROFILE_ID = "phr_provider_profile_id";
 
 		// Column indexes int
 		public static final int PULSE_COLUMN = 1;
@@ -155,6 +158,8 @@ public final class BloodPressureMeasureTable {
 		public static final int PHR_PROVIDER_USERNAME_COLUMN = 10;
 		public static final int PHR_PROVIDER_COLUMN = 11;
 		public static final int PHR_PROVIDER_PROFILE_COLUMN = 12;
+
+		public static final int PHR_PROVIDER_PROFILE_ID_COLUMN = 13;
 
 	}
 }

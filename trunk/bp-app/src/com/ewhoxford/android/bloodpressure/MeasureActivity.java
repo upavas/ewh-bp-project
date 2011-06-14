@@ -99,6 +99,10 @@ public class MeasureActivity extends Activity {
 
 		public void run() {
 			// Display blood pressure algorithm result in the Measure layout
+			bloodPressureValue.setDiastolicBP(76);
+			bloodPressureValue.setSystolicBP(128);
+			bloodPressureValue.setMeanArterialBP(78);
+	
 			int dPressure = (int) bloodPressureValue.getDiastolicBP();
 			int sPressure = (int) bloodPressureValue.getSystolicBP();
 			int pulse = (int) bloodPressureValue.getMeanArterialBP();
