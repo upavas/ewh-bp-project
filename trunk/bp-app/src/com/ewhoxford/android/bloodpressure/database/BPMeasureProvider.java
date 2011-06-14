@@ -53,15 +53,18 @@ public class BPMeasureProvider extends ContentProvider {
 		public void onCreate(SQLiteDatabase db) {
 
 			String createDatabase = "CREATE TABLE " + MEASURES_TABLE + " ("
-					+ BPMeasure._ID + " INTEGER PRIMARY KEY," + BPMeasure.PULSE
-					+ " INTEGER," + BPMeasure.SP + " INTEGER," + BPMeasure.DP
-					+ " INTEGER," + BPMeasure.NOTE + " varchar(400),"
+					+ BPMeasure._ID + " INTEGER PRIMARY KEY," 
+					+ BPMeasure.PULSE + " INTEGER," 
+					+ BPMeasure.SP + " INTEGER," 
+					+ BPMeasure.DP + " INTEGER," 
+					+ BPMeasure.NOTE + " varchar(400),"
 					+ BPMeasure.CREATED_DATE + " INTEGER,"
 					+ BPMeasure.MODIFIED_DATE + " INTEGER,"
 					+ BPMeasure.MEASUREMENT_FILE_EXIST + " BOOLEAN,"
 					+ BPMeasure.MEASUREMENT_SYNC + " BOOLEAN,"
 					+ BPMeasure.MEASUREMENT_FILE + " varchar(600),"
-					+ BPMeasure.PATIENT_PROVIDER_USERNAME + " varchar(400),"
+					+ BPMeasure.PHR_PROVIDER_USERNAME + " varchar(400),"
+					+ BPMeasure.PHR_PROVIDER_PROFILE + " varchar(400),"
 					+ BPMeasure.PHR_PROVIDER + " varchar(400)" + ");";
 			System.out.println(createDatabase);
 			db.execSQL(createDatabase);
@@ -187,18 +190,18 @@ public class BPMeasureProvider extends ContentProvider {
 			values.put(BPMeasure.NOTE, "");
 		}
 
-		if (values.containsKey(BPMeasure.MEASUREMENT_SYNC) == false) {
-			values.put(BPMeasure.MEASUREMENT_SYNC, 0);
-		}
-
 		if (values.containsKey(BPMeasure.PHR_PROVIDER) == false) {
 			values.put(BPMeasure.PHR_PROVIDER, "");
 		}
 
-		if (values.containsKey(BPMeasure.PATIENT_PROVIDER_USERNAME) == false) {
-			values.put(BPMeasure.PATIENT_PROVIDER_USERNAME, "");
+		if (values.containsKey(BPMeasure.PHR_PROVIDER_USERNAME) == false) {
+			values.put(BPMeasure.PHR_PROVIDER_USERNAME, "");
 		}
-
+		
+		if (values.containsKey(BPMeasure.PHR_PROVIDER_PROFILE) == false) {
+			values.put(BPMeasure.PHR_PROVIDER_PROFILE, "");
+		}
+		
 		SQLiteDatabase db = mBPOpenHelper.getWritableDatabase();
 		long rowId = db.insert(MEASURES_TABLE, BPMeasure.NOTE, values);
 		if (rowId > 0) {
@@ -290,10 +293,12 @@ public class BPMeasureProvider extends ContentProvider {
 				BPMeasure.MEASUREMENT_FILE_EXIST);
 		sBPMeasuresProjectionMap.put(BPMeasure.MEASUREMENT_SYNC,
 				BPMeasure.MEASUREMENT_SYNC);
-		sBPMeasuresProjectionMap.put(BPMeasure.PATIENT_PROVIDER_USERNAME,
-				BPMeasure.PATIENT_PROVIDER_USERNAME);
+		sBPMeasuresProjectionMap.put(BPMeasure.PHR_PROVIDER_USERNAME,
+				BPMeasure.PHR_PROVIDER_USERNAME);
 		sBPMeasuresProjectionMap.put(BPMeasure.PHR_PROVIDER,
 				BPMeasure.PHR_PROVIDER);
+		sBPMeasuresProjectionMap.put(BPMeasure.PHR_PROVIDER_PROFILE,
+				BPMeasure.PHR_PROVIDER_PROFILE);
 
 	}
 }

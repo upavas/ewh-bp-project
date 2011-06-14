@@ -31,11 +31,10 @@ public class TestDatasource implements Runnable {
 			super.notifyObservers();
 		}
 	}
-	
-	public TestDatasource(Activity activity){
-		this.activity=activity;
+
+	public TestDatasource(Activity activity) {
+		this.activity = activity;
 	}
-	
 
 	public static final int SIGNAL1 = 0;
 	// private static final int SAMPLE_SIZE = 1;
@@ -104,7 +103,7 @@ public class TestDatasource implements Runnable {
 			// }
 			// }.start();
 			ReadCSV r = new ReadCSV();
-		
+
 			int[][] pressureValues = r.readCSV(activity);
 			int l = pressureValues.length;
 			TimeSeriesMod pressureValuesMod = ConvertTommHg.convertArrayTommHg(

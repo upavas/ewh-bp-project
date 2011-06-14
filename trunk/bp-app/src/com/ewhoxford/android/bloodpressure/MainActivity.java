@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+
 /**
  * Main Blood pressure activity. When the app is launched, this activity runs,
  * allowing the user to either run a measure, or view saved blood pressure
@@ -36,6 +37,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 		View measureList = findViewById(R.id.measure_list);
 		measureList.setOnClickListener(this);
+
+
 		// Help button
 		Button helpButton = (Button) findViewById(R.id.help_button);
 		helpButton.setOnClickListener(new OnClickListener() {
@@ -124,14 +127,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		}.start();
 	}
 
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case OPTION_SYNC:
-			Intent i = new Intent(this, MeasureListSyncActivity.class);
-			startActivity(i);
-			return true;
-		}
-
-		return false;
-	}
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case OPTION_SYNC:
+//			Intent i = new Intent(this, MeasureListSyncActivity.class);
+//			startActivity(i);
+//			return true;
+//		}
+//
+//		return false;
+//	}
 }

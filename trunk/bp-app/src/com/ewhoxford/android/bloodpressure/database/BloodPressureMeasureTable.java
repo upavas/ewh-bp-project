@@ -125,7 +125,7 @@ public final class BloodPressureMeasureTable {
 		 * Type: INTEGER (long)
 		 * </P>
 		 */
-		public static final String PATIENT_PROVIDER_USERNAME = "patient_provider_username";
+		public static final String PHR_PROVIDER_USERNAME = "phr_provider_username";
 
 		/**
 		 * PHR provider - google or openMRS
@@ -135,6 +135,13 @@ public final class BloodPressureMeasureTable {
 		 */
 		public static final String PHR_PROVIDER = "phr_provider";
 
+		/**
+		 * <P>
+		 * Type: String
+		 * </P>
+		 */
+		public static final String PHR_PROVIDER_PROFILE = "phr_provider_profile";
+
 		// Column indexes int
 		public static final int PULSE_COLUMN = 1;
 		public static final int SP_COLUMN = 2;
@@ -142,11 +149,12 @@ public final class BloodPressureMeasureTable {
 		public static final int NOTE_COLUMN = 4;
 		public static final int MEASUREMENT_FILE_COLUMN = 5;
 		public static final int MEASUREMENT_FILE_EXIST_COLUMN = 6;
-		public static final int MEASUREMENT_FILE_SYNC_COLUMN = 7;
-		public static final int CREATED_DATE_COLUMN = 8;
-		public static final int MODIFIED_DATE_COLUMN = 9;
-		public static final int PATIENT_PROVIDER_USERNAME_COLUMN = 10;
+		public static final int CREATED_DATE_COLUMN = 7;
+		public static final int MODIFIED_DATE_COLUMN = 8;
+		public static final int MEASUREMENT_SYNC_COLUMN = 9;
+		public static final int PHR_PROVIDER_USERNAME_COLUMN = 10;
 		public static final int PHR_PROVIDER_COLUMN = 11;
+		public static final int PHR_PROVIDER_PROFILE_COLUMN = 12;
 
 	}
 }

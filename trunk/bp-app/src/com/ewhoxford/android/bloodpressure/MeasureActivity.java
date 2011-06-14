@@ -55,7 +55,7 @@ public class MeasureActivity extends Activity {
 	// Observer object that is notified by pressure data stream observable file
 	private MyPlotUpdater plotUpdater;
 	// Observable object that notifies observer that new values were acquired.
-	private SampleDynamicXYDatasource data;
+	private TestDatasource data;
 	// pressure time series shown in the real time chart
 	private SimpleXYSeries bpMeasureSeries = null;
 	// array with time points
@@ -130,7 +130,6 @@ public class MeasureActivity extends Activity {
 			textMessage.postInvalidate();
 		}
 	};
-
 
 	private class MyPlotUpdater implements Observer, Callback {
 		Plot plot;
@@ -310,7 +309,7 @@ public class MeasureActivity extends Activity {
 		// initialize our XYPlot reference and real time update code:
 
 		// getInstance and position datasets:
-		data = new SampleDynamicXYDatasource();
+		data = new TestDatasource(this);
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
 		// "Blood Pressure");
 
@@ -395,7 +394,7 @@ public class MeasureActivity extends Activity {
 				SignalProcessing r = new SignalProcessing();
 
 				try {
-					//bloodPressureValue = r.signalProcessing(signal, fs);
+					// bloodPressureValue = r.signalProcessing(signal, fs);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -434,6 +433,7 @@ public class MeasureActivity extends Activity {
 		values.put(BPMeasure.PULSE, bloodPressureValue.getMeanArterialBP());
 		values.put(BPMeasure.NOTE, note);
 		values.put(BPMeasure.MEASUREMENT_SYNC, false);
+		// values.put(BPMeasure., value)
 		if (savedFileName != null) {
 			if (savedFileName.length() == 0) {
 				values.put(BPMeasure.MEASUREMENT_FILE_EXIST, false);
@@ -447,27 +447,22 @@ public class MeasureActivity extends Activity {
 
 		cr.insert(BPMeasure.CONTENT_URI, values);
 	}
-	
-	
-	
+
 	public boolean isMeasureFinished() {
 		return measureFinished;
 	}
 
 	public boolean isMeasuresuccessful() {
-		
+
 		return measureSuccessful;
 	}
-	
+
 	public void setMeasureFinished(boolean measureFinished) {
-		this.measureFinished=measureFinished;
+		this.measureFinished = measureFinished;
 	}
 
 	public void setMeasuresuccessful(boolean measureSuccessful) {
-		this.measureSuccessful=measureSuccessful;
+		this.measureSuccessful = measureSuccessful;
 	}
-
-
-	
 
 }

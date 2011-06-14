@@ -38,15 +38,16 @@ public class MeasureViewActivity extends Activity {
 	/**
 	 * Standard projection for the interesting columns of a normal note.
 	 */
-	private static final String[] PROJECTION = new String[] { BPMeasure._ID, // 0
+	private static final String[] PROJECTION = new String[] {
+			BPMeasure._ID, // 0
 			BPMeasure.CREATED_DATE,// 1
 			BPMeasure.SP, // 2
 			BPMeasure.DP, // 3
 			BPMeasure.PULSE, // 4
 			BPMeasure.NOTE, // 5
 			BPMeasure.MEASUREMENT_FILE_EXIST, // 6
-			BPMeasure.MODIFIED_DATE,// 1
-	};
+			BPMeasure.MODIFIED_DATE,BPMeasure.MEASUREMENT_SYNC, BPMeasure.PHR_PROVIDER,
+			BPMeasure.PHR_PROVIDER_PROFILE, BPMeasure.PHR_PROVIDER_USERNAME };
 	/** The index of the note column */
 	private static final int COLUMN_INDEX_NOTE = 5;
 
@@ -74,6 +75,14 @@ public class MeasureViewActivity extends Activity {
 	TextView textView;
 	// has csv file answer
 	TextView csvFileAnswerTextView;
+	// measurementExists
+	TextView measureSyncTextView;
+	// profile sync
+	TextView phrProfileTextView;
+	// provider sync
+	TextView phrProviderTextView;
+	// username sync
+	TextView phrUsernameTextView;
 
 	private int mState;
 	private Uri mUri;
@@ -109,8 +118,15 @@ public class MeasureViewActivity extends Activity {
 		// The text view for our note, identified by its ID in the XML file.
 		textView = (TextView) findViewById(R.id.id_date);
 
-		// initialize checkbox variable
 		csvFileAnswerTextView = (TextView) findViewById(R.id.answer_csv);
+
+		measureSyncTextView = (TextView) findViewById(R.id.syncked_phr);
+		// profile sync
+		phrProfileTextView = (TextView) findViewById(R.id.phr_profile);
+		// provider sync
+		phrProviderTextView = (TextView) findViewById(R.id.phr_provider);
+		// username sync
+		phrUsernameTextView = (TextView) findViewById(R.id.phr_username);
 
 		// Help button
 		Button deleteButton = (Button) findViewById(R.id.button_delete);
@@ -187,7 +203,8 @@ public class MeasureViewActivity extends Activity {
 
 		});
 		saveAlert = new AlertDialog.Builder(this);
-		saveAlert.setMessage(getResources().getText(R.string.alert_dialog_changes_saved));
+		saveAlert.setMessage(getResources().getText(
+				R.string.alert_dialog_changes_saved));
 		saveAlert.setCancelable(false).setPositiveButton("OK",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
@@ -206,6 +223,9 @@ public class MeasureViewActivity extends Activity {
 		if (mCursor.moveToFirst()) {
 
 			String notes;
+			String phrProvider;
+			String phrProfile;
+			String phrUsername;
 			long createdDate;
 			long modified;
 			int sp;
@@ -224,6 +244,14 @@ public class MeasureViewActivity extends Activity {
 			int idColumn = mCursor.getColumnIndex(BPMeasure._ID);
 			int fileExistsColumn = mCursor
 					.getColumnIndex(BPMeasure.MEASUREMENT_FILE_EXIST);
+			int measureSyncColumn = mCursor
+					.getColumnIndex(BPMeasure.MEASUREMENT_SYNC);
+			int phrUsernameColumn = mCursor
+					.getColumnIndex(BPMeasure.PHR_PROVIDER_USERNAME);
+			int phrProviderColumn = mCursor
+					.getColumnIndex(BPMeasure.PHR_PROVIDER);
+			int phrProfileColumn = mCursor
+					.getColumnIndex(BPMeasure.PHR_PROVIDER_PROFILE);
 
 			// Get the field values
 			id = mCursor.getInt(idColumn);
@@ -239,6 +267,9 @@ public class MeasureViewActivity extends Activity {
 			Date createdResultdate = new Date(createdDate);
 			modified = new Long(mCursor.getString(modifiedDateColumn));
 			Date modifiedResultdate = new Date(modified);
+			phrProvider = mCursor.getString(phrProviderColumn);
+			phrProfile = mCursor.getString(phrProfileColumn);
+			phrUsername = mCursor.getString(phrUsernameColumn);
 
 			// Display notes and blood pressure algorithm result in the
 			// Measure layout
@@ -261,7 +292,18 @@ public class MeasureViewActivity extends Activity {
 			if (fileExists.equals("1")) {
 				csvFileAnswerTextView.setText(R.string.has_csv_file_yes);
 			}
+			
+			String measureSync = mCursor.getString(measureSyncColumn);
+			if (measureSync.equals("1")) {
+				measureSyncTextView.setText(R.string.syncked);
+				phrProfileTextView.setText(R.string.phr_profile+phrProfile);
+				// provider sync
+				phrProviderTextView.setText(R.string.phr_provider+phrProvider);
+				// username sync
+				phrUsernameTextView.setText(R.string.phr_username+phrUsername);
 
+			}
+				
 		}
 		// If an instance of this activity had previously stopped, we can
 		// get the original text iMEASUREMENT_FILE_SYNCt started with.
@@ -355,6 +397,23 @@ public class MeasureViewActivity extends Activity {
 		ContentValues values = new ContentValues();
 		values.put(BPMeasure.MODIFIED_DATE, time);
 		values.put(BPMeasure.NOTE, note);
+		cr.update(mUri, values, null, null);
+	}
+
+	/**
+	 * 
+	 * @param time
+	 */
+	private void saveSyncGHealth(String username, String provider,
+			String profile, long time) {
+
+		ContentResolver cr = getContentResolver();
+		ContentValues values = new ContentValues();
+		values.put(BPMeasure.MODIFIED_DATE, time);
+		values.put(BPMeasure.PHR_PROVIDER, provider);
+		values.put(BPMeasure.PHR_PROVIDER_USERNAME, username);
+		values.put(BPMeasure.PHR_PROVIDER_PROFILE, profile);
+		values.put(BPMeasure.MEASUREMENT_SYNC, 1);
 		cr.update(mUri, values, null, null);
 	}
 
