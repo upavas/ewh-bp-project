@@ -382,7 +382,7 @@ public class MeasureListActivity extends ListActivity implements
 					String aux12 = cur.getString(columnIndex);
 					if (aux12 == null)
 						((TextView) v).setText("No");
-					if (aux12 == "")
+					if (aux12.equals(""))
 						((TextView) v).setText("No");
 					break;
 

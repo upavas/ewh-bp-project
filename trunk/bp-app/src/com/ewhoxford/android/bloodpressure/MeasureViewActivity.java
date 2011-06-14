@@ -5,17 +5,32 @@ package com.ewhoxford.android.bloodpressure;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
+import android.accounts.Account;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.AlertDialog.Builder;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,6 +39,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
+import com.ewhoxford.android.bloodpressure.ghealth.auth.AccountChooser;
+import com.ewhoxford.android.bloodpressure.ghealth.auth.AuthManager;
+import com.ewhoxford.android.bloodpressure.ghealth.gdata.GDataHealthClient;
+import com.ewhoxford.android.bloodpressure.ghealth.gdata.HealthClient;
+import com.ewhoxford.android.bloodpressure.ghealth.gdata.Result;
+import com.ewhoxford.android.bloodpressure.ghealth.gdata.TestResult;
+import com.ewhoxford.android.bloodpressure.ghealth.gdata.HealthClient.AuthenticationException;
+import com.ewhoxford.android.bloodpressure.ghealth.gdata.HealthClient.InvalidProfileException;
+import com.ewhoxford.android.bloodpressure.ghealth.gdata.HealthClient.ServiceException;
 
 /**
  * A generic activity for editing a bp measure in a database. This can be used
@@ -33,7 +57,6 @@ import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BP
  * @author mauro
  */
 public class MeasureViewActivity extends Activity {
-	private static final String TAG = "BloodPressureMeasure";
 
 	/**
 	 * Standard projection for the interesting columns of a normal note.
@@ -46,8 +69,9 @@ public class MeasureViewActivity extends Activity {
 			BPMeasure.PULSE, // 4
 			BPMeasure.NOTE, // 5
 			BPMeasure.MEASUREMENT_FILE_EXIST, // 6
-			BPMeasure.MODIFIED_DATE,BPMeasure.MEASUREMENT_SYNC, BPMeasure.PHR_PROVIDER,
-			BPMeasure.PHR_PROVIDER_PROFILE, BPMeasure.PHR_PROVIDER_USERNAME };
+			BPMeasure.MODIFIED_DATE, BPMeasure.MEASUREMENT_SYNC,
+			BPMeasure.PHR_PROVIDER, BPMeasure.PHR_PROVIDER_PROFILE,
+			BPMeasure.PHR_PROVIDER_USERNAME };
 	/** The index of the note column */
 	private static final int COLUMN_INDEX_NOTE = 5;
 
@@ -84,11 +108,82 @@ public class MeasureViewActivity extends Activity {
 	// username sync
 	TextView phrUsernameTextView;
 
+	private int sp;
+	private int dp;
+	private int pulse;
+
+	private static final TreeMap<String, String> RESULTS = new TreeMap<String, String>();
+
+	// TODO Load template results instead of map
+	static {
+		RESULTS.put("Blood glucose", "mg/dL");
+		RESULTS.put("Blood pressure", "mmHg");
+		RESULTS.put("Body temperature", "degrees Fahrenheit");
+		RESULTS.put("Breathing", "breaths/min");
+		RESULTS.put("Calories burned", "calories");
+		RESULTS.put("Calories consumed", "calories");
+		RESULTS.put("Cycling distance", "miles");
+		RESULTS.put("Cycling time", "minutes");
+		RESULTS.put("Exercise minutes", "minutes");
+		RESULTS.put("Heart rate", "bpm");
+		RESULTS.put("Height", "in");
+		RESULTS.put("Hours slept", "hours");
+		RESULTS.put("Peak flow", "liters/sec");
+		RESULTS.put("Running distance", "miles");
+		RESULTS.put("Running time", "minutes");
+		RESULTS.put("Steps taken", "steps");
+		RESULTS.put("Swimming distance", "meters");
+		RESULTS.put("Swimming time", "minutes");
+		RESULTS.put("Vegetable servings", "servings");
+		RESULTS.put("Walking distance", "miles");
+		RESULTS.put("Walking time", "minutes");
+		RESULTS.put("Weight", "lb");
+	}
 	private int mState;
 	private Uri mUri;
 	private Cursor mCursor;
 	private EditText mText;
 	private String mOriginalContent;
+
+	public static final String RESULT_PROPERTY = "result";
+
+	private Date createdResultdate;
+
+	public static final String TAG = "BloodPressureMeasuresList";
+
+	private static final String SERVICE_NAME = HealthClient.H9_SERVICE;
+
+	private static final int ACTIVITY_AUTHENTICATE = 0;
+	// Public so that the AuthManager can start a new get_login activity after
+	// the
+	// user has authorized the app to access their data.
+	public static final int ACTIVITY_GET_LOGIN = 1;
+	private static final int ACTIVITY_ADD_RESULT = 2;
+
+	private static final int DIALOG_PROFILES = 0;
+	private static final int DIALOG_PROGRESS = 1;
+	private static final int DIALOG_ERROR = 2;
+	private static final int DIALOG_TERMS = 3;
+	/**
+	 * Service client for send to and retrieving information from Google Health.
+	 */
+	private final HealthClient client = new GDataHealthClient(SERVICE_NAME);
+
+	private Map<String, String> profiles = new LinkedHashMap<String, String>();
+	private String profileId;
+
+	private List<Result> results;
+
+	private AuthManager auth;
+	private Account account;
+
+	@SuppressWarnings("unchecked")
+	private AsyncTask currentTask;
+	private Builder syncAlert;
+
+	private static final String PREF_HEALTH_NOTE = "read_note";
+
+	public static final String ACCOUNT_TYPE = "com.google";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -214,6 +309,76 @@ public class MeasureViewActivity extends Activity {
 						startActivity(i);
 					}
 				});
+		Button syncButton = (Button) findViewById(R.id.button_sync_ghealth);
+		syncButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+
+				if (account == null) {
+					chooseAccount();
+					return;
+				}
+				String resultName1 = "Blood Pressure";
+
+				TestResult test = new TestResult();
+				test.setName(resultName1);
+				test.setValue(sp+"");
+				test.setUnits(RESULTS.get(resultName1));
+				test.setDate(createdResultdate.toGMTString());
+
+//				String resultName2 = "Heart rate";
+//				TestResult test1 = new TestResult();
+//				test1.setName(resultName2);
+//				test1.setValue(Integer.toString(pulse));
+//				test1.setUnits(RESULTS.get(resultName2));
+//				test1.setDate(createdResultdate.toGMTString());
+
+				Result result = new Result();
+				result.addTestResult(test);
+				//result.addTestResult(test1);
+
+				// showDialog(DIALOG_PROGRESS);
+				// currentTask = new CreateResultTask().execute(result);
+
+//				Bundle bundle = new Bundle();
+//				bundle.putSerializable(MeasureViewActivity.RESULT_PROPERTY,
+//						result);
+//
+//				Intent intent = new Intent();
+//				intent.putExtras(bundle);
+//				setResult(RESULT_OK, intent);
+				// finish();
+				showDialog(DIALOG_PROGRESS);
+				currentTask = new CreateResultTask().execute(result);
+			}
+		});
+
+		syncAlert = new AlertDialog.Builder(this);
+		syncAlert.setMessage(getResources().getText(
+				R.string.alert_dialog_bp_syncked));
+		syncAlert.setCancelable(false).setPositiveButton("OK",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+						Intent i = new Intent(measureContext,
+								MeasureListActivity.class);
+						startActivity(i);
+					}
+				});
+		// Configure the buttons
+		Button button = (Button) findViewById(R.id.main_accounts);
+		button.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				chooseAccount();
+			}
+		});
+
+		button = (Button) findViewById(R.id.main_profiles);
+		button.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				chooseProfile();
+			}
+		});
 
 		// #### End of Set up click listeners for all the buttons
 
@@ -228,9 +393,7 @@ public class MeasureViewActivity extends Activity {
 			String phrUsername;
 			long createdDate;
 			long modified;
-			int sp;
-			int dp;
-			int pulse;
+
 			int id = 0;
 			float aux;
 			int notesColumn = mCursor.getColumnIndex(BPMeasure.NOTE);
@@ -264,7 +427,7 @@ public class MeasureViewActivity extends Activity {
 			pulse = Math.round(aux);
 			createdDate = new Long(mCursor.getString(createdDateColumn));
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm");
-			Date createdResultdate = new Date(createdDate);
+			createdResultdate = new Date(createdDate);
 			modified = new Long(mCursor.getString(modifiedDateColumn));
 			Date modifiedResultdate = new Date(modified);
 			phrProvider = mCursor.getString(phrProviderColumn);
@@ -292,19 +455,24 @@ public class MeasureViewActivity extends Activity {
 			if (fileExists.equals("1")) {
 				csvFileAnswerTextView.setText(R.string.has_csv_file_yes);
 			}
-			
+
 			String measureSync = mCursor.getString(measureSyncColumn);
 			if (measureSync.equals("1")) {
 				measureSyncTextView.setText(R.string.syncked);
-				phrProfileTextView.setText(R.string.phr_profile+phrProfile);
+				phrProfileTextView.setText(R.string.phr_profile + phrProfile);
 				// provider sync
-				phrProviderTextView.setText(R.string.phr_provider+phrProvider);
+				phrProviderTextView
+						.setText(R.string.phr_provider + phrProvider);
 				// username sync
-				phrUsernameTextView.setText(R.string.phr_username+phrUsername);
-
+				phrUsernameTextView
+						.setText(R.string.phr_username + phrUsername);
+				syncButton.setEnabled(false);
 			}
-				
+
 		}
+
+		auth = new AuthManager(this, SERVICE_NAME);
+
 		// If an instance of this activity had previously stopped, we can
 		// get the original text iMEASUREMENT_FILE_SYNCt started with.
 		if (savedInstanceState != null) {
@@ -405,7 +573,7 @@ public class MeasureViewActivity extends Activity {
 	 * @param time
 	 */
 	private void saveSyncGHealth(String username, String provider,
-			String profile, long time) {
+			String profile, String profileID, long time) {
 
 		ContentResolver cr = getContentResolver();
 		ContentValues values = new ContentValues();
@@ -414,7 +582,344 @@ public class MeasureViewActivity extends Activity {
 		values.put(BPMeasure.PHR_PROVIDER_USERNAME, username);
 		values.put(BPMeasure.PHR_PROVIDER_PROFILE, profile);
 		values.put(BPMeasure.MEASUREMENT_SYNC, 1);
+		values.put(BPMeasure.PHR_PROVIDER_PROFILE_ID, profileID);
 		cr.update(mUri, values, null, null);
 	}
 
+	/**
+	 * Retrieve a list of accounts stored in the phone and display a dialog
+	 * allowing the user to choose one.
+	 */
+	protected void chooseAccount() {
+		Log.d(TAG, "Selecting account.");
+		AccountChooser accountChooser = new AccountChooser();
+		accountChooser.chooseAccount(MeasureViewActivity.this,
+				new AccountChooser.AccountHandler() {
+					@Override
+					public void handleAccountSelected(Account account) {
+						Log.d(TAG, "Account selected.");
+						// The user hit cancel
+						if (account == null) {
+							return;
+						}
+						authenticate(account);
+					}
+				});
+	}
+
+	/**
+	 * Once an account has been selected, use account credentials to get an
+	 * authorization token. If the account has already been authenticated, then
+	 * the existing token will be invalidated prior to re-authenticating.
+	 * 
+	 * @param account
+	 *            The {@code Account} to authenticate with.
+	 */
+	protected void authenticate(Account account) {
+		Log.d(TAG, "Authenticating account.");
+
+		this.account = account;
+
+		auth.doLogin(new Runnable() {
+			public void run() {
+				Log.d(TAG, "User authenticated.");
+				onActivityResult(ACTIVITY_AUTHENTICATE, RESULT_OK, null);
+			}
+		}, account);
+	}
+
+	/**
+	 * Retrieve a list of profiles from Health and display a dialog allowing the
+	 * user to select one.
+	 */
+	protected void chooseProfile() {
+		// If the user hasn't selected an account (i.e. they canceled the
+		// initial
+		// account dialog), have them do so.
+		if (account == null) {
+			chooseAccount();
+			return;
+		}
+
+		showDialog(DIALOG_PROGRESS);
+		currentTask = new RetrieveProfilesTask().execute();
+	}
+
+	protected class RetrieveProfilesTask extends AsyncTask<Void, Void, Void> {
+		private Exception exception;
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			Log.d(TAG, "Retreiving profiles.");
+			try {
+				profiles = client.retrieveProfiles();
+			} catch (Exception e) {
+				exception = e;
+			}
+			return null;
+		}
+
+		protected void onPostExecute(Void result) {
+			if (exception != null) {
+				handleException(exception);
+				return;
+			}
+
+			Log.d(TAG, "Profiles retrieved.");
+			dismissDialog(DIALOG_PROGRESS);
+			showDialog(DIALOG_PROFILES);
+		}
+	}
+
+	/**
+	 * Method processes network connectivity exceptions, which will
+	 * re-authenticate the user, re-request a Health profile, or request that
+	 * the user check the network connection.
+	 * 
+	 * @param e
+	 *            The network connectivity exception to process, which can be a
+	 *            AuthenticationException, InvalidProfileException, or
+	 *            ServiceException.
+	 */
+	protected void handleException(Exception e) {
+		if (e instanceof AuthenticationException) {
+			Log.w(TAG, "User authentication failed. Re-authenticating.");
+			authenticate(account);
+		} else if (e instanceof InvalidProfileException) {
+			Log.w(TAG, "Profile invalid. Re-retrieving profiles.");
+			chooseProfile();
+		} else if (e instanceof ServiceException) {
+			if (e.getCause() != null) {
+				// Likely network connectivity issue.
+				Log.e(TAG, "Error connecting to Health service.", e);
+			} else {
+				ServiceException se = (ServiceException) e;
+				Log.e(TAG, "Error connecting to Health service: code="
+						+ se.getCode() + ", message=" + e.getMessage()
+						+ ", content=" + se.getContent());
+			}
+
+			// Remove the progress dialog and display the error.
+			dismissDialog(DIALOG_PROGRESS);
+			showDialog(DIALOG_ERROR);
+		}
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		Dialog dialog;
+		AlertDialog.Builder builder;
+
+		switch (id) {
+		case DIALOG_TERMS:
+			final SpannableString msg = new SpannableString(this
+					.getString(R.string.health_notice));
+			Linkify.addLinks(msg, Linkify.WEB_URLS);
+			// TODO Make links click-able
+
+			builder = new AlertDialog.Builder(this);
+			builder.setTitle("Please note:");
+			builder.setMessage(msg);
+			builder.setPositiveButton("Close",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							// Store that the user has read the note.
+							Editor e = getPreferences(Context.MODE_PRIVATE)
+									.edit();
+							e.putBoolean(PREF_HEALTH_NOTE, true);
+							e.commit();
+
+							chooseAccount();
+						}
+					});
+
+			dialog = builder.create();
+			break;
+
+		case DIALOG_PROGRESS:
+			dialog = ProgressDialog.show(MeasureViewActivity.this, "", this
+					.getString(R.string.loading), true);
+			dialog.setCancelable(true);
+			dialog.setOnCancelListener(new OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					currentTask.cancel(true);
+				}
+			});
+			break;
+
+		case DIALOG_PROFILES:
+			String[] profileNames = profiles.values().toArray(
+					new String[profiles.size()]);
+
+			builder = new AlertDialog.Builder(this);
+			builder.setTitle(this.getText(R.string.choose_profile));
+			builder.setItems(profileNames,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int i) {
+							// Remove the dialog so that it's refreshed with new
+							// list items the
+							// next time it's displayed since onPrepareDialog
+							// cannot change the dialog's
+							// list items.
+							removeDialog(DIALOG_PROFILES);
+
+							profileId = profiles.keySet().toArray(
+									new String[profiles.size()])[i];
+							client.setProfileId(profileId);
+
+							Button button = (Button) findViewById(R.id.main_profiles);
+							button.setText(profiles.get(profileId));
+
+						}
+					});
+
+			dialog = builder.create();
+			break;
+
+		case DIALOG_ERROR:
+			builder = new AlertDialog.Builder(this);
+			builder.setTitle(this.getText(R.string.connection_error_title));
+			builder.setMessage(R.string.connection_error_message);
+			builder.setCancelable(true);
+			builder.setPositiveButton("Close",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+						}
+					});
+
+			dialog = builder.create();
+			break;
+
+		default:
+			dialog = null;
+		}
+
+		return dialog;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		switch (requestCode) {
+		case ACTIVITY_AUTHENTICATE:
+			if (resultCode == RESULT_OK) {
+				if (auth.getAuthToken() == null) {
+					Log.w(TAG, "User authenticated, but auth token not found.");
+					authenticate(account);
+				} else {
+					Log
+							.d(TAG,
+									"User authenticated, proceeding with profile selection.");
+
+					Button button = (Button) findViewById(R.id.main_accounts);
+					button.setText(account.name);
+
+					client.setAuthToken(auth.getAuthToken());
+					chooseProfile();
+				}
+			}
+			break;
+		// Called after the user has authorized application access to the
+		// service.
+		case ACTIVITY_GET_LOGIN:
+			if (resultCode == RESULT_OK) {
+				if (!auth.authResult(resultCode, data)) {
+					// Auth token could not be retrieved.
+				}
+			}
+			break;
+
+		case ACTIVITY_ADD_RESULT:
+			if (resultCode == RESULT_OK) {
+				Bundle bundle = data.getExtras();
+				Result result = (Result) bundle.get(RESULT_PROPERTY);
+
+				showDialog(DIALOG_PROGRESS);
+				currentTask = new CreateResultTask().execute(result);
+			}
+			break;
+		}
+	}
+
+	protected class RetrieveResultsTask extends AsyncTask<Void, Void, Void> {
+		private Exception exception;
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			try {
+				Log.d(TAG, "Retreiving results.");
+				results = client.retrieveResults();
+			} catch (Exception e) {
+				exception = e;
+			}
+			return null;
+		}
+
+		protected void onPostExecute(Void results) {
+			if (exception != null) {
+				handleException(exception);
+				return;
+			}
+
+			Log.d(TAG, "Results retrieved.");
+			dismissDialog(DIALOG_PROGRESS);
+			displayResults();
+		}
+	}
+
+	/**
+	 * Display results in the main activity's test result list.
+	 */
+	protected void displayResults() {
+		Log.d(TAG, "Displaying test results.");
+		// Collect the Tests from the Results and order them chronologically.
+		Set<Result> resultSet = new TreeSet<Result>();
+		resultSet.addAll(results);
+		Result[] items = resultSet.toArray(new Result[resultSet.size()]);
+
+		// Update the list view of the main activity with the list of test
+		// results.
+		// setListAdapter(new ArrayAdapter<Result>(this,
+		// R.layout.main_list_item,
+		// items));
+
+		// Display a notice if not results found.
+		if (items.length == 0) {
+			// Toast
+			// .makeText(getApplicationContext(),
+			// this.getString(R.string.no_test_results),
+			// Toast.LENGTH_LONG).show();
+		}
+	}
+
+	protected class CreateResultTask extends AsyncTask<Result, Void, Void> {
+		private Exception exception;
+
+		@Override
+		protected Void doInBackground(Result... results) {
+			Log.d(TAG, "Creating result.");
+			try {
+				client.createResult(results[0]);
+
+			
+
+			} catch (Exception e) {
+				exception = e;
+			}
+			return null;
+		}
+
+		protected void onPostExecute(Void results) {
+			if (exception != null) {
+				handleException(exception);
+				return;
+			}
+
+			Log.d(TAG, "Results retrieved.");
+			dismissDialog(DIALOG_PROGRESS);
+			displayResults();
+		}
+	}
 }

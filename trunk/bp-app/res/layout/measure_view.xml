@@ -91,7 +91,7 @@
 			</TableRow>
 			<TableRow android:layout_width="fill_parent"
 				android:layout_height="wrap_content">
-				<Button android:id="@+id/button_delete" android:text="@string/sync_ghealth_button"></Button>
+				<Button android:id="@+id/button_sync_ghealth" android:text="@string/sync_ghealth_button"></Button>
 			</TableRow>
 		</TableLayout>
 

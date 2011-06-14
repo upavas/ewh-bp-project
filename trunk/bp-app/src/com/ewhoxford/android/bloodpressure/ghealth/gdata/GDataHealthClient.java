@@ -214,8 +214,8 @@ public class GDataHealthClient implements HealthClient {
     }
 
     String ccr = CCR_HEADER + "<Body><Results>" + result.toCCR() + "</Results></Body>" + CCR_FOOTER;
-    String notice = String.format(NOTICE, "Health Android Example App data posted",
-        "The Health Android Example App posted the following data to your profile:");
+    String notice = String.format(NOTICE, "BP App data posted",
+        "The BP APP posted the following data to your profile:");
     String atom = ATOM_HEADER + notice + ccr + ATOM_FOOTER;
 
     String url = service.getBaseURL() + "/register/ui/" + profileId;
