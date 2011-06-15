@@ -127,7 +127,7 @@ public class TestDatasource implements Runnable {
 
 			while (active) {
 
-				Thread.sleep(500);
+				Thread.sleep(250);
 
 				int j = 1;
 				while (j < 101) {

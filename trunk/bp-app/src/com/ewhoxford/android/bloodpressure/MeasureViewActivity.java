@@ -180,10 +180,11 @@ public class MeasureViewActivity extends Activity {
 	@SuppressWarnings("unchecked")
 	private AsyncTask currentTask;
 	private Builder syncAlert;
+	private Builder syncAlert2;
 
 	private static final String PREF_HEALTH_NOTE = "read_note";
 
-	public static final String ACCOUNT_TYPE = "com.google";
+	public static final String ACCOUNT_TYPE = "Google Health";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -318,35 +319,40 @@ public class MeasureViewActivity extends Activity {
 					chooseAccount();
 					return;
 				}
-				String resultName1 = "Blood Pressure";
+				String resultName1 = "Blood pressure";
 
 				TestResult test = new TestResult();
 				test.setName(resultName1);
-				test.setValue(sp+"");
-				test.setUnits(RESULTS.get(resultName1));
-				test.setDate(createdResultdate.toGMTString());
+				test.setValue(sp + "/" + dp);
+				test.setUnits("mmHg");
+				// test.setDate();
+				String format = "yyyy-MM-dd";
+				SimpleDateFormat sdf = new SimpleDateFormat(format);
+				String date = sdf.format(createdResultdate);
 
-//				String resultName2 = "Heart rate";
-//				TestResult test1 = new TestResult();
-//				test1.setName(resultName2);
-//				test1.setValue(Integer.toString(pulse));
-//				test1.setUnits(RESULTS.get(resultName2));
-//				test1.setDate(createdResultdate.toGMTString());
+				test.setDate(date);
+				System.out.println(test.getDate());
+				String resultName2 = "Heart rate";
+				TestResult test1 = new TestResult();
+				test1.setName(resultName2);
+				test1.setValue(Integer.toString(pulse));
+				test1.setUnits(RESULTS.get(resultName2));
+				test1.setDate(date);
 
 				Result result = new Result();
 				result.addTestResult(test);
-				//result.addTestResult(test1);
+				result.addTestResult(test1);
 
 				// showDialog(DIALOG_PROGRESS);
 				// currentTask = new CreateResultTask().execute(result);
 
-//				Bundle bundle = new Bundle();
-//				bundle.putSerializable(MeasureViewActivity.RESULT_PROPERTY,
-//						result);
-//
-//				Intent intent = new Intent();
-//				intent.putExtras(bundle);
-//				setResult(RESULT_OK, intent);
+				// Bundle bundle = new Bundle();
+				// bundle.putSerializable(MeasureViewActivity.RESULT_PROPERTY,
+				// result);
+				//
+				// Intent intent = new Intent();
+				// intent.putExtras(bundle);
+				// setResult(RESULT_OK, intent);
 				// finish();
 				showDialog(DIALOG_PROGRESS);
 				currentTask = new CreateResultTask().execute(result);
@@ -459,14 +465,26 @@ public class MeasureViewActivity extends Activity {
 			String measureSync = mCursor.getString(measureSyncColumn);
 			if (measureSync.equals("1")) {
 				measureSyncTextView.setText(R.string.syncked);
-				phrProfileTextView.setText(R.string.phr_profile + phrProfile);
+
+				phrProfileTextView.setText(getResources().getText(
+						R.string.phr_profile)
+						+ " " + phrProfile);
 				// provider sync
-				phrProviderTextView
-						.setText(R.string.phr_provider + phrProvider);
+				phrProviderTextView.setText(getResources().getText(
+						R.string.phr_provider)
+						+ " " + phrProvider);
 				// username sync
-				phrUsernameTextView
-						.setText(R.string.phr_username + phrUsername);
+				phrUsernameTextView.setText(getResources().getText(
+						R.string.phr_username)
+						+ " " + phrUsername);
 				syncButton.setEnabled(false);
+				phrProfileTextView.setEnabled(false);
+				phrProviderTextView.setEnabled(false);
+				phrUsernameTextView.setEnabled(false);
+			} else {
+				phrProfileTextView.setEnabled(false);
+				phrProviderTextView.setEnabled(false);
+				phrUsernameTextView.setEnabled(false);
 			}
 
 		}
@@ -752,6 +770,16 @@ public class MeasureViewActivity extends Activity {
 			String[] profileNames = profiles.values().toArray(
 					new String[profiles.size()]);
 
+			syncAlert2 = new AlertDialog.Builder(this);
+			syncAlert2.setMessage(getResources().getText(
+					R.string.alert_dialog_bp_synck_again));
+			syncAlert2.setCancelable(false).setPositiveButton("OK",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+
 			builder = new AlertDialog.Builder(this);
 			builder.setTitle(this.getText(R.string.choose_profile));
 			builder.setItems(profileNames,
@@ -770,7 +798,8 @@ public class MeasureViewActivity extends Activity {
 
 							Button button = (Button) findViewById(R.id.main_profiles);
 							button.setText(profiles.get(profileId));
-
+							dialog = syncAlert2.create();
+							syncAlert2.show();
 						}
 					});
 
@@ -903,8 +932,6 @@ public class MeasureViewActivity extends Activity {
 			try {
 				client.createResult(results[0]);
 
-			
-
 			} catch (Exception e) {
 				exception = e;
 			}
@@ -919,7 +946,13 @@ public class MeasureViewActivity extends Activity {
 
 			Log.d(TAG, "Results retrieved.");
 			dismissDialog(DIALOG_PROGRESS);
-			displayResults();
+
+			saveSyncGHealth(account.name, ACCOUNT_TYPE,
+					profiles.get(profileId), profileId, System
+							.currentTimeMillis());
+
+			AlertDialog alert = syncAlert.create();
+			alert.show();
 		}
 	}
 }
