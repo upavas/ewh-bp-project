@@ -54,7 +54,10 @@
 			android:layout_height="80dip" android:layout_marginTop="5dip"
 			android:layout_marginBottom="5dip" android:layout_marginLeft="50dip"
 			android:layout_marginRight="50dip" android:layout_below="@+id/mySimpleXYPlot" />
-
+		<TextView android:id="@+id/answer_csv" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:textSize="15px"
+			android:text="@string/has_csv_file_no" android:textStyle="bold" />
+			
 		<TextView android:id="@+id/notes_view" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:text="@string/notes"
 			android:textStyle="bold" android:textSize="15px" />
@@ -62,9 +65,7 @@
 			android:focusableInTouchMode="true" android:layout_width="match_parent"
 			android:layout_height="wrap_content" />
 
-		<TextView android:id="@+id/answer_csv" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:textSize="15px"
-			android:text="@string/has_csv_file_no" android:textStyle="bold" />
+
 		<TextView android:id="@+id/syncked_phr" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:textSize="15px"
 			android:text="@string/syncked_no" android:textStyle="bold" />

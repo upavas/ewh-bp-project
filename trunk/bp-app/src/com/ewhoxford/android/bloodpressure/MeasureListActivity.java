@@ -382,8 +382,12 @@ public class MeasureListActivity extends ListActivity implements
 					String aux12 = cur.getString(columnIndex);
 					if (aux12 == null)
 						((TextView) v).setText("No");
+					else
 					if (aux12.equals(""))
 						((TextView) v).setText("No");
+					else
+						if(aux12.length()>3)
+						((TextView) v).setText(aux12.substring(0, 3)+".");
 					break;
 
 				}
@@ -560,7 +564,8 @@ public class MeasureListActivity extends ListActivity implements
 
 		case DIALOG_PROFILES:
 			String[] profileNames = profiles.values().toArray(
-					new String[profiles.size()]);
+					new String[profiles.size()+1]);
+			profileNames[profileNames.length-1]="ALL";
 
 			builder = new AlertDialog.Builder(this);
 			builder.setTitle(this.getText(R.string.choose_profile));
