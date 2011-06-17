@@ -8,9 +8,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import android.accounts.Account;
 import android.app.Activity;
@@ -176,7 +174,7 @@ public class MeasureViewActivity extends Activity {
 
 	private AuthManager auth;
 	private Account account;
-
+	private Result result;
 	@SuppressWarnings("unchecked")
 	private AsyncTask currentTask;
 	private Builder syncAlert;
@@ -185,6 +183,8 @@ public class MeasureViewActivity extends Activity {
 	private static final String PREF_HEALTH_NOTE = "read_note";
 
 	public static final String ACCOUNT_TYPE = "Google Health";
+	private static final int ACTIVITY_AUTHENTICATE2 = 4;
+	private static final int DIALOG_PROFILES2 = 5;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -315,10 +315,7 @@ public class MeasureViewActivity extends Activity {
 
 			public void onClick(View v) {
 
-				if (account == null) {
-					chooseAccount();
-					return;
-				}
+				
 				String resultName1 = "Blood pressure";
 
 				TestResult test = new TestResult();
@@ -339,9 +336,15 @@ public class MeasureViewActivity extends Activity {
 				test1.setUnits(RESULTS.get(resultName2));
 				test1.setDate(date);
 
-				Result result = new Result();
+				result = new Result();
 				result.addTestResult(test);
 				result.addTestResult(test1);
+				
+				if (account == null) {
+					chooseAccount2();
+					return;
+				}
+				
 
 				// showDialog(DIALOG_PROGRESS);
 				// currentTask = new CreateResultTask().execute(result);
@@ -626,6 +629,27 @@ public class MeasureViewActivity extends Activity {
 	}
 
 	/**
+	 * Retrieve a list of accounts stored in the phone and display a dialog
+	 * allowing the user to choose one.
+	 */
+	protected void chooseAccount2() {
+		Log.d(TAG, "Selecting account2.");
+		AccountChooser accountChooser = new AccountChooser();
+		accountChooser.chooseAccount(MeasureViewActivity.this,
+				new AccountChooser.AccountHandler() {
+					@Override
+					public void handleAccountSelected(Account account) {
+						Log.d(TAG, "Account selected2.");
+						// The user hit cancel
+						if (account == null) {
+							return;
+						}
+						authenticate2(account);
+					}
+				});
+	}
+
+	/**
 	 * Once an account has been selected, use account credentials to get an
 	 * authorization token. If the account has already been authenticated, then
 	 * the existing token will be invalidated prior to re-authenticating.
@@ -647,6 +671,27 @@ public class MeasureViewActivity extends Activity {
 	}
 
 	/**
+	 * Once an account has been selected, use account credentials to get an
+	 * authorization token. If the account has already been authenticated, then
+	 * the existing token will be invalidated prior to re-authenticating.
+	 * 
+	 * @param account
+	 *            The {@code Account} to authenticate with.
+	 */
+	protected void authenticate2(Account account) {
+		Log.d(TAG, "Authenticating account.");
+
+		this.account = account;
+
+		auth.doLogin(new Runnable() {
+			public void run() {
+				Log.d(TAG, "User authenticated.");
+				onActivityResult(ACTIVITY_AUTHENTICATE2, RESULT_OK, null);
+			}
+		}, account);
+	}
+
+	/**
 	 * Retrieve a list of profiles from Health and display a dialog allowing the
 	 * user to select one.
 	 */
@@ -661,6 +706,23 @@ public class MeasureViewActivity extends Activity {
 
 		showDialog(DIALOG_PROGRESS);
 		currentTask = new RetrieveProfilesTask().execute();
+	}
+
+	/**
+	 * Retrieve a list of profiles from Health and display a dialog allowing the
+	 * user to select one.
+	 */
+	protected void chooseProfile2() {
+		// If the user hasn't selected an account (i.e. they canceled the
+		// initial
+		// account dialog), have them do so.
+		if (account == null) {
+			chooseAccount();
+			return;
+		}
+
+		showDialog(DIALOG_PROGRESS);
+		currentTask = new RetrieveProfilesTask2().execute();
 	}
 
 	protected class RetrieveProfilesTask extends AsyncTask<Void, Void, Void> {
@@ -686,6 +748,32 @@ public class MeasureViewActivity extends Activity {
 			Log.d(TAG, "Profiles retrieved.");
 			dismissDialog(DIALOG_PROGRESS);
 			showDialog(DIALOG_PROFILES);
+		}
+	}
+
+	protected class RetrieveProfilesTask2 extends AsyncTask<Void, Void, Void> {
+		private Exception exception;
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			Log.d(TAG, "Retreiving profiles.");
+			try {
+				profiles = client.retrieveProfiles();
+			} catch (Exception e) {
+				exception = e;
+			}
+			return null;
+		}
+
+		protected void onPostExecute(Void result) {
+			if (exception != null) {
+				handleException(exception);
+				return;
+			}
+
+			Log.d(TAG, "Profiles retrieved.");
+			dismissDialog(DIALOG_PROGRESS);
+			showDialog(DIALOG_PROFILES2);
 		}
 	}
 
@@ -770,15 +858,33 @@ public class MeasureViewActivity extends Activity {
 			String[] profileNames = profiles.values().toArray(
 					new String[profiles.size()]);
 
-			syncAlert2 = new AlertDialog.Builder(this);
-			syncAlert2.setMessage(getResources().getText(
-					R.string.alert_dialog_bp_synck_again));
-			syncAlert2.setCancelable(false).setPositiveButton("OK",
+			builder = new AlertDialog.Builder(this);
+			builder.setTitle(this.getText(R.string.choose_profile));
+			builder.setItems(profileNames,
 					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
+						public void onClick(DialogInterface dialog, int i) {
+							// Remove the dialog so that it's refreshed with new
+							// list items the
+							// next time it's displayed since onPrepareDialog
+							// cannot change the dialog's
+							// list items.
+							removeDialog(DIALOG_PROFILES);
+
+							profileId = profiles.keySet().toArray(
+									new String[profiles.size()])[i];
+							client.setProfileId(profileId);
+
+							Button button = (Button) findViewById(R.id.main_profiles);
+							button.setText(profiles.get(profileId));
+
 						}
 					});
+
+			dialog = builder.create();
+			break;
+		case DIALOG_PROFILES2:
+			profileNames = profiles.values().toArray(
+					new String[profiles.size()]);
 
 			builder = new AlertDialog.Builder(this);
 			builder.setTitle(this.getText(R.string.choose_profile));
@@ -798,14 +904,14 @@ public class MeasureViewActivity extends Activity {
 
 							Button button = (Button) findViewById(R.id.main_profiles);
 							button.setText(profiles.get(profileId));
-							dialog = syncAlert2.create();
-							syncAlert2.show();
+							showDialog(DIALOG_PROGRESS);
+							currentTask = new CreateResultTask()
+									.execute(result);
 						}
 					});
 
 			dialog = builder.create();
 			break;
-
 		case DIALOG_ERROR:
 			builder = new AlertDialog.Builder(this);
 			builder.setTitle(this.getText(R.string.connection_error_title));
@@ -847,6 +953,24 @@ public class MeasureViewActivity extends Activity {
 
 					client.setAuthToken(auth.getAuthToken());
 					chooseProfile();
+				}
+			}
+			break;
+		case ACTIVITY_AUTHENTICATE2:
+			if (resultCode == RESULT_OK) {
+				if (auth.getAuthToken() == null) {
+					Log.w(TAG, "User authenticated, but auth token not found.");
+					authenticate(account);
+				} else {
+					Log
+							.d(TAG,
+									"User authenticated, proceeding with profile selection.");
+
+					Button button = (Button) findViewById(R.id.main_accounts);
+					button.setText(account.name);
+
+					client.setAuthToken(auth.getAuthToken());
+					chooseProfile2();
 				}
 			}
 			break;
@@ -894,34 +1018,36 @@ public class MeasureViewActivity extends Activity {
 
 			Log.d(TAG, "Results retrieved.");
 			dismissDialog(DIALOG_PROGRESS);
-			displayResults();
+		
 		}
 	}
 
-	/**
-	 * Display results in the main activity's test result list.
-	 */
-	protected void displayResults() {
-		Log.d(TAG, "Displaying test results.");
-		// Collect the Tests from the Results and order them chronologically.
-		Set<Result> resultSet = new TreeSet<Result>();
-		resultSet.addAll(results);
-		Result[] items = resultSet.toArray(new Result[resultSet.size()]);
+	protected class RetrieveResultsTask2 extends AsyncTask<Void, Void, Void> {
+		private Exception exception;
 
-		// Update the list view of the main activity with the list of test
-		// results.
-		// setListAdapter(new ArrayAdapter<Result>(this,
-		// R.layout.main_list_item,
-		// items));
+		@Override
+		protected Void doInBackground(Void... params) {
+			try {
+				Log.d(TAG, "Retreiving results.");
+				results = client.retrieveResults();
+			} catch (Exception e) {
+				exception = e;
+			}
+			return null;
+		}
 
-		// Display a notice if not results found.
-		if (items.length == 0) {
-			// Toast
-			// .makeText(getApplicationContext(),
-			// this.getString(R.string.no_test_results),
-			// Toast.LENGTH_LONG).show();
+		protected void onPostExecute(Void results) {
+			if (exception != null) {
+				handleException(exception);
+				return;
+			}
+
+			Log.d(TAG, "Results retrieved.");
+			dismissDialog(DIALOG_PROGRESS);
+		
 		}
 	}
+	
 
 	protected class CreateResultTask extends AsyncTask<Result, Void, Void> {
 		private Exception exception;
