@@ -31,6 +31,11 @@ public class BloodPressureValue {
 	 * Value of mean arterial pressure
 	 */
 	double meanArterialBP;
+	
+	/**
+	 * Heart Rate
+	 */
+	int heartRate;
 
 	public double[] getPressureSignal() {
 		return pressureSignal;
@@ -70,6 +75,14 @@ public class BloodPressureValue {
 
 	public void setMeanArterialBP(double meanArterialBP) {
 		this.meanArterialBP = meanArterialBP;
+	}
+
+	public int getHeartRate() {
+		return heartRate;
+	}
+
+	public void setHeartRate(int heartRate) {
+		this.heartRate = heartRate;
 	}
 
 }

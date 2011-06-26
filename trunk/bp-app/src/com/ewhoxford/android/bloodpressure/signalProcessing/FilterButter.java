@@ -28,15 +28,15 @@ public class FilterButter {
 		/**** LOW PASS FILTER ****/
 		
 		// define filter coefficients a and b
-		aux0 = (double) (1.110223024625157 * Math.pow(10, -16));
-		a[0] = (double) 1.0; a[1] = (double) ((double) -1*5.525910392807559); a[2] = (double) (12.740627899450287);
-		a[3] = (double) ((double) -1*15.687126805573577); a[4] = (double) (10.878282534811364); a[5] = (double) ((double) -1*4.028050786181747); 
-		a[6] = (double) (0.622180264806158 + aux0);
+		aux0 = (double) (-3.33066907387547 * Math.pow(10, -16));
+		a[0] = (double) 1.0; a[1] = (double) ((double) -1*5.715523948648149); a[2] = (double) (13.617800960004807);
+		a[3] = (double) ((double) -1*17.312394973020645); a[4] = (double) (12.385827978528630); a[5] = (double) ((double) -1*4.728047449606683); 
+		a[6] = (double) (0.752337571338128 + aux0);
 		
-		aux1 = (double) (5.551115123125783 * Math.pow(10, -16));
-		b[0] = (double) (0.788784041931730 - aux1); b[1] = (double) ((double) -1*4.732704251590377); b[2] = (double) (11.831760628975942); 
-		b[3] = (double) ((double) -1*15.775680838634589); b[4] = (double) (11.831760628975942); b[5] = (double) ((double) -1*4.732704251590377); 
-		b[6] = (double) (0.788784041931730 - aux1);
+		aux1 = (double) (4.440892098500626 * Math.pow(10, -16));
+		b[0] = (double) (0.867373951267923 - aux1); b[1] = (double) ((double) -1*5.204243707607535); b[2] = (double) (13.010609269018840); 
+		b[3] = (double) ((double) -1*17.347479025358453); b[4] = (double) (13.010609269018840); b[5] = (double) ((double) -1*5.204243707607535); 
+		b[6] = (double) (0.867373951267923 - aux1);
 		
 		// introduce zeros in the beginning of the array
 		for (int i = 0; i < x.length; ++i){

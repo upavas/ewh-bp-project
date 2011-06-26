@@ -43,6 +43,43 @@ public class ArrayOperator {
 		}
 
 	}
+	
+	/**
+	 * 
+	 * @param array
+	 * @return max and index values of an array
+	 * @throws ArrayIsNullException
+	 * @see mr
+	 */
+	public static MaxResult maxValue(float[] array) {
+
+		if (array.length == 0) {
+
+			throw new IllegalArgumentException(
+					"Array is Null, cannot calculate Maximum value and Index value");
+
+		} else {
+
+			// initialize variables
+			double maximum = array[0];
+			int index = 0;
+
+			// get max value
+			for (int i = 1; i < array.length; i++) {
+				if (array[i] > maximum) {
+					maximum = array[i];
+					index = i;
+				}
+			}
+
+			// output
+			MaxResult mr = new MaxResult();
+			mr.setIndex(index);
+			mr.setMax(maximum);
+			return mr;
+		}
+
+	}
 
 	/**
 	 * 
