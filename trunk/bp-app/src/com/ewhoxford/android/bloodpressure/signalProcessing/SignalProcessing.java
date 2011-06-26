@@ -41,7 +41,7 @@ public class SignalProcessing {
 		filtSignal = r2.getDecrCurve(aux5);
 		indexUp = r2.getDecrCurveIndexUp();
 		indexDown = r2.getDecrCurveIndexDown();
-		badMeasure = r2.isBadMeasure(filtSignal, 45);
+		badMeasure = r2.isBadMeasure(filtSignal, 20);
 		
 		if (badMeasure){
 			throw new BadMeasureException(TAG);

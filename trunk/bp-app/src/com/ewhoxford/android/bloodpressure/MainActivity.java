@@ -83,14 +83,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-
-		menu.add(0, OPTION_SYNC, 1, "Sync");
-
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		super.onCreateOptionsMenu(menu);
+//
+//		menu.add(0, OPTION_SYNC, 1, "Sync");
+//
+//		return true;
+//	}
 
 	private ProgressDialog progressDialog;
 

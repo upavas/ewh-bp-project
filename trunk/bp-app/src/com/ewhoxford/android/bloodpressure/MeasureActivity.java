@@ -34,6 +34,7 @@ import com.androidplot.xy.XYPlot;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.exception.BadMeasureException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
+import com.ewhoxford.android.bloodpressure.pressureInputDevice.SampleDynamicXYDatasource;
 import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDatasource;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
@@ -56,7 +57,7 @@ public class MeasureActivity extends Activity {
 	// Observer object that is notified by pressure data stream observable file
 	private MyPlotUpdater plotUpdater;
 	// Observable object that notifies observer that new values were acquired.
-	private TestDatasource data;
+	private SampleDynamicXYDatasource data;
 	// pressure time series shown in the real time chart
 	private SimpleXYSeries bpMeasureSeries = null;
 	// array with time points
@@ -100,10 +101,10 @@ public class MeasureActivity extends Activity {
 
 		public void run() {
 			// Display blood pressure algorithm result in the Measure layout
-//			bloodPressureValue.setDiastolicBP(76);
-//			bloodPressureValue.setSystolicBP(128);
-//			bloodPressureValue.setMeanArterialBP(78);
-	
+			// bloodPressureValue.setDiastolicBP(76);
+			// bloodPressureValue.setSystolicBP(128);
+			// bloodPressureValue.setMeanArterialBP(78);
+
 			int dPressure = (int) bloodPressureValue.getDiastolicBP();
 			int sPressure = (int) bloodPressureValue.getSystolicBP();
 			int pulse = (int) bloodPressureValue.getHeartRate();
@@ -314,7 +315,7 @@ public class MeasureActivity extends Activity {
 		// initialize our XYPlot reference and real time update code:
 
 		// getInstance and position datasets:
-		data = new TestDatasource(this);
+		data = new SampleDynamicXYDatasource();
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
 		// "Blood Pressure");
 
@@ -404,9 +405,20 @@ public class MeasureActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					myProgressDialog.dismiss();
-					
-					
-					//mHandler.post(updataBPResultView);
+
+					builder = new AlertDialog.Builder(measureContext);
+					builder.setMessage(
+							R.string.alert_dialog_discard_bad_measure)
+							.setCancelable(false).setPositiveButton("OK",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog, int id) {
+											MeasureActivity.this.finish();
+										}
+									});
+
+					mHandler.post(discardMeasure);
+
 				}
 
 				// Dismiss the Dialog
@@ -416,6 +428,24 @@ public class MeasureActivity extends Activity {
 		}.start();
 
 	}
+
+	// Create runnable for chaging messages while pressure is being acquired
+	final Runnable discardMeasure = new Runnable() {
+		public void run() {
+
+			builder = new AlertDialog.Builder(measureContext);
+			builder.setMessage(R.string.alert_dialog_discard_bad_measure)
+					.setCancelable(false).setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									MeasureActivity.this.finish();
+								}
+							});
+			AlertDialog alert = builder.create();
+			alert.show();
+		}
+	};
 
 	/**
 	 * Add new blood pressure result to database and create file in sdcard
@@ -437,7 +467,7 @@ public class MeasureActivity extends Activity {
 		values.put(BPMeasure.SP, bloodPressureValue.getSystolicBP());
 		// TODO correct this value @MARCO,
 		// TODO put MAP VAlUE in database as a separate value,
-		values.put(BPMeasure.PULSE, bloodPressureValue.getMeanArterialBP());
+		values.put(BPMeasure.PULSE, bloodPressureValue.getHeartRate());
 		values.put(BPMeasure.NOTE, note);
 		values.put(BPMeasure.MEASUREMENT_SYNC, false);
 		// values.put(BPMeasure., value)
