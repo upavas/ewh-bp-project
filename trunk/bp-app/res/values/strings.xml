@@ -78,6 +78,7 @@
 	<string name="alert_dialog_discard_changes">
 		Are you sure you want to discard changes?
 	</string>
+	<string name="alert_dialog_discard_bad_measure">Please repeat measure. Deflate slowly</string>
 	<!--
 			Google account selection
 		-->
@@ -138,4 +139,5 @@
 	<string name="alert_dialog_bp_syncked_error">Synck with Google Health was not sucessfull
 	</string>
 	<string name="alert_dialog_bp_synck_again">Push the "Sync GHealth" Button again to sync</string>
+
 </resources>

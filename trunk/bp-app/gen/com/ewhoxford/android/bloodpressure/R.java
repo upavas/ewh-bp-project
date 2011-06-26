@@ -24,7 +24,17 @@ public final class R {
         public static final int bp=0x7f020000;
         public static final int heartbloodpressure=0x7f020001;
         public static final int heartbloodpressure2=0x7f020002;
-        public static final int icon=0x7f020003;
+        public static final int help_0=0x7f020003;
+        public static final int help_1=0x7f020004;
+        public static final int help_2=0x7f020005;
+        public static final int help_3=0x7f020006;
+        public static final int help_4_1=0x7f020007;
+        public static final int help_4_2=0x7f020008;
+        public static final int help_5=0x7f020009;
+        public static final int help_6_1=0x7f02000a;
+        public static final int help_6_2=0x7f02000b;
+        public static final int help_7=0x7f02000c;
+        public static final int icon=0x7f02000d;
     }
     public static final class id {
         public static final int answer_csv=0x7f070025;
@@ -89,36 +99,37 @@ public final class R {
     public static final class string {
         /**  Main activity dashboard buttons 
          */
-        public static final int account=0x7f060042;
-        public static final int alert_dialog_bp_synck_again=0x7f060047;
-        public static final int alert_dialog_bp_syncked=0x7f060045;
-        public static final int alert_dialog_bp_syncked_error=0x7f060046;
+        public static final int account=0x7f060043;
+        public static final int alert_dialog_bp_synck_again=0x7f060048;
+        public static final int alert_dialog_bp_syncked=0x7f060046;
+        public static final int alert_dialog_bp_syncked_error=0x7f060047;
         public static final int alert_dialog_changes_saved=0x7f06001b;
         public static final int alert_dialog_data_saved_file_and_database=0x7f060023;
         public static final int alert_dialog_data_saved_to_database=0x7f060024;
         public static final int alert_dialog_delete_measure=0x7f060018;
         public static final int alert_dialog_determine_bp=0x7f060028;
+        public static final int alert_dialog_discard_bad_measure=0x7f06002a;
         public static final int alert_dialog_discard_changes=0x7f060029;
         public static final int alert_dialog_discard_measure=0x7f060020;
         public static final int alert_dialog_no=0x7f060021;
         public static final int alert_dialog_processing_data=0x7f060027;
         public static final int alert_dialog_yes=0x7f060022;
         public static final int app_name=0x7f060000;
-        public static final int choose_account=0x7f060030;
-        public static final int choose_account_title=0x7f06002c;
-        public static final int choose_profile=0x7f060031;
+        public static final int choose_account=0x7f060031;
+        public static final int choose_account_title=0x7f06002d;
+        public static final int choose_profile=0x7f060032;
         /**  Health profile selection 
          */
-        public static final int choose_profile_title=0x7f06002d;
-        public static final int connection_error_message=0x7f060040;
+        public static final int choose_profile_title=0x7f06002e;
+        public static final int connection_error_message=0x7f060041;
         /**  Network error dialog strings 
          */
-        public static final int connection_error_title=0x7f06003f;
+        public static final int connection_error_title=0x7f060040;
         public static final int create_csv_file=0x7f06001e;
         public static final int created_date=0x7f06001a;
         public static final int date_time=0x7f060011;
         public static final int delete_button=0x7f06000b;
-        public static final int delete_results=0x7f060032;
+        public static final int delete_results=0x7f060033;
         public static final int dia=0x7f060013;
         public static final int discard_button=0x7f06000c;
         public static final int empty_measure_list=0x7f06000e;
@@ -126,34 +137,34 @@ public final class R {
         public static final int has_csv_file_yes=0x7f060017;
         /**  Health notice dialog text 
          */
-        public static final int health_notice=0x7f060041;
+        public static final int health_notice=0x7f060042;
         public static final int help_before=0x7f060005;
         public static final int help_button=0x7f06000a;
         public static final int help_needed=0x7f060004;
         public static final int help_reading=0x7f060006;
         public static final int help_record=0x7f060007;
-        public static final int help_subtitle=0x7f060048;
+        public static final int help_subtitle=0x7f060049;
         public static final int help_subtitle1=0x7f060003;
         public static final int help_title=0x7f060002;
         /**  Progress dialog text 
          */
-        public static final int loading=0x7f06003e;
-        public static final int main_no_items=0x7f06004b;
+        public static final int loading=0x7f06003f;
+        public static final int main_no_items=0x7f06004c;
         public static final int measure_list_no_items=0x7f06000d;
         public static final int measure_title=0x7f060001;
-        public static final int measure_view_button=0x7f06004a;
+        public static final int measure_view_button=0x7f06004b;
         public static final int modified_date=0x7f060019;
-        public static final int new_measure=0x7f060049;
+        public static final int new_measure=0x7f06004a;
         public static final int new_measure_button=0x7f060008;
         /**  Main activity button and menu option strings 
          */
-        public static final int new_result=0x7f06002e;
-        public static final int no_account_found=0x7f06002b;
+        public static final int new_result=0x7f06002f;
+        public static final int no_account_found=0x7f06002c;
         /** 
 			Google account selection
 		
          */
-        public static final int no_account_found_title=0x7f06002a;
+        public static final int no_account_found_title=0x7f06002b;
         public static final int notes=0x7f06001f;
         /** measure list	
 measure list	
@@ -165,17 +176,17 @@ measure list
 measure list	
          */
         public static final int number=0x7f060010;
-        public static final int ok=0x7f060044;
-        public static final int phr_profile=0x7f06003c;
-        public static final int phr_profile_no=0x7f060037;
-        public static final int phr_provider=0x7f06003b;
-        public static final int phr_provider_google=0x7f060039;
-        public static final int phr_provider_no=0x7f060036;
-        public static final int phr_username=0x7f06003d;
-        public static final int phr_username_no=0x7f060038;
+        public static final int ok=0x7f060045;
+        public static final int phr_profile=0x7f06003d;
+        public static final int phr_profile_no=0x7f060038;
+        public static final int phr_provider=0x7f06003c;
+        public static final int phr_provider_google=0x7f06003a;
+        public static final int phr_provider_no=0x7f060037;
+        public static final int phr_username=0x7f06003e;
+        public static final int phr_username_no=0x7f060039;
         public static final int pressure_x_legend=0x7f060025;
         public static final int pressure_y_legend=0x7f060026;
-        public static final int profile=0x7f060043;
+        public static final int profile=0x7f060044;
         public static final int pulse=0x7f060014;
         /**  measure 
  measure 
@@ -189,11 +200,11 @@ measure list
         public static final int pump=0x7f06001c;
         public static final int save_button=0x7f06000f;
         public static final int stop_pump=0x7f06001d;
-        public static final int sync_ghealth_button=0x7f060034;
-        public static final int sync_measures=0x7f06002f;
-        public static final int sync_profile=0x7f060033;
-        public static final int syncked=0x7f06003a;
-        public static final int syncked_no=0x7f060035;
+        public static final int sync_ghealth_button=0x7f060035;
+        public static final int sync_measures=0x7f060030;
+        public static final int sync_profile=0x7f060034;
+        public static final int syncked=0x7f06003b;
+        public static final int syncked_no=0x7f060036;
         public static final int sys=0x7f060012;
         public static final int view_measure_button=0x7f060009;
         /** measure view page 

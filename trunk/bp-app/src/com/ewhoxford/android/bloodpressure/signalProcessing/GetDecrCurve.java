@@ -128,6 +128,7 @@ public class GetDecrCurve {
 	
 	public boolean isBadMeasure(TimeSeriesMod signal, int timeTreshold) {
 		float time = signal.time[indxdown] - signal.time[indxup]; 
+		System.out.println("initial:"+signal.time[indxdown]+"s, end:"+signal.time[indxup]+"s");
 		if (time < timeTreshold) {
 			return true;
 		}
