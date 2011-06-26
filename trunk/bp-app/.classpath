@@ -8,6 +8,10 @@
 			<attribute name="javadoc_location" value="jar:file:/home/user/projects/android2/tutorials/AndroidPlot-0.3c-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Jama-1.0.2.jar" sourcepath="/home/user/Downloads/Jama-1.0.2.zip"/>
+	<classpathentry kind="lib" path="libs/HermitLibrary.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="HermitLibrary"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

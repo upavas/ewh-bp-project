@@ -32,6 +32,7 @@ import com.androidplot.xy.LineAndPointRenderer;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
+import com.ewhoxford.android.bloodpressure.exception.BadMeasureException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
 import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDatasource;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
@@ -99,18 +100,18 @@ public class MeasureActivity extends Activity {
 
 		public void run() {
 			// Display blood pressure algorithm result in the Measure layout
-			bloodPressureValue.setDiastolicBP(76);
-			bloodPressureValue.setSystolicBP(128);
-			bloodPressureValue.setMeanArterialBP(78);
+//			bloodPressureValue.setDiastolicBP(76);
+//			bloodPressureValue.setSystolicBP(128);
+//			bloodPressureValue.setMeanArterialBP(78);
 	
 			int dPressure = (int) bloodPressureValue.getDiastolicBP();
 			int sPressure = (int) bloodPressureValue.getSystolicBP();
-			int pulse = (int) bloodPressureValue.getMeanArterialBP();
+			int pulse = (int) bloodPressureValue.getHeartRate();
 			ValuesView valuesView = (ValuesView) findViewById(R.id.results);
 			valuesView.requestFocus();
-			valuesView.setSPressure(128);
-			valuesView.setDPressure(76);
-			valuesView.setPulseRate(78);
+			valuesView.setSPressure(sPressure);
+			valuesView.setDPressure(dPressure);
+			valuesView.setPulseRate(pulse);
 			valuesView.invalidate();
 			// activate save button
 			saveButton.setEnabled(true);
@@ -398,12 +399,14 @@ public class MeasureActivity extends Activity {
 				SignalProcessing r = new SignalProcessing();
 
 				try {
-					// bloodPressureValue = r.signalProcessing(signal, fs);
-				} catch (Exception e) {
+					bloodPressureValue = r.signalProcessing(signal, fs);
+				} catch (BadMeasureException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					myProgressDialog.dismiss();
-					mHandler.post(updataBPResultView);
+					
+					
+					//mHandler.post(updataBPResultView);
 				}
 
 				// Dismiss the Dialog
