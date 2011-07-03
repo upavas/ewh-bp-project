@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.ewhoxford.android.bloodpressure" android:versionCode="1"
+	android:versionName="1.0">
+	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="11" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+	<uses-permission android:name="android.permission.USE_CREDENTIALS" />
+	<uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+
+	<application android:icon="@drawable/icon" android:label="@string/app_name"
+		android:debuggable="true">
+
+		<activity android:name=".MainActivity" android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"></action>
+				<category android:name="android.intent.category.LAUNCHER"></category>
+			</intent-filter>
+		</activity>
+		<activity android:name=".MeasureActivity"></activity>
+		<activity android:name=".MeasureListActivity">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="android.intent.action.PICK" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.dir/vnd.ewhoxford.measure" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.GET_CONTENT" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.item/vnd.ewhoxford.measure" />
+			</intent-filter>
+
+		</activity>
+		<activity android:name=".HelpActivity"></activity>
+		<activity android:name="MeasureViewActivity">
+			<!--
+				This filter says that we can view or edit the data of a single blood
+				pressure measure
+			-->
+			<intent-filter android:label="EDIT">
+				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.EDIT" />
+				<action android:name="com.android.notepad.action.EDIT_NOTE" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="vnd.android.cursor.item/vnd.ewhoxford.measure" />
+			</intent-filter>
+		</activity>
+		<provider
+			android:name="com.ewhoxford.android.bloodpressure.database.BPMeasureProvider"
+			android:authorities="com.ewhoxford.android.bloodpressure.database.bpmeasureprovider" />
+	</application>
+</manifest> 
