@@ -11,6 +11,7 @@ public class PressureValues {
 
 	/**
 	 * 
+	 * @param signalInFrequency TODO
 	 * @param oscillations
 	 * @param curve
 	 * @return SP, DP, MAP, and interpolated signal
@@ -18,7 +19,7 @@ public class PressureValues {
 	 * @see bloodPressure
 	 */
 	public BloodPressureValue pressureValues(TimeSeriesMod signalOscillations,
-			TimeSeriesMod signalIn, int indexUp, int indexDown) {
+			TimeSeriesMod signalIn, int indexUp, int indexDown, float signalInFrequency) {
 
 		BloodPressureValue bloodPressure = new BloodPressureValue();
 
@@ -165,15 +166,17 @@ public class PressureValues {
 				i = i - 1;
 			}
 
-			FileManager.createVectors("osc.m", oscillations);
-			int windowSize = 256;
-			FFT fft = new FFT(oscillations, windowSize);
+			//FileManager.createVectors("osc.m", oscillations);
+			int nextPow2 = Power2.determine(oscillations.length);
+			FFT fft = new FFT(oscillations, nextPow2);
 			float[] spectrum = fft.fft();
 
 			FileManager.createVectors("spectrum1.m", spectrum);
 			MaxResult maxMAP = ArrayOperator.maxValue(spectrum);
-			System.out.println("mR:" + maxMAP);
-			float freq = (maxMAP.getIndex()/spectrum.length) * windowSize;
+			//System.out.println("mR:" + maxMAP);
+			float index=maxMAP.getIndex();
+			//float spectrumL=spectrum.length;
+			float freq = (index-1) * signalInFrequency/nextPow2;
 			int heartRate = Math.round(freq * 60);
 
 			// bloodPressure.setPressureSignal(maxOscillationsMod);

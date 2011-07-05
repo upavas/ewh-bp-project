@@ -23,12 +23,12 @@ public class FFT {
 	}
 
 	float[] fft(){
-		int fftBlock=windowSize*2;
+		int fftBlock=windowSize;
 		
 	        FFTTransformer fft = new FFTTransformer(fftBlock);
 	        float[] out = new float[fftBlock / 2];
 		
-	        fft.setInput(signal, 0, out.length * 2);
+	        fft.setInput(signal, 0, windowSize);
 	        fft.transform();
 	        fft.getResults(out);
 		
