@@ -22,7 +22,7 @@ public class SignalProcessing {
 	 * @see values
 	 */
 	public BloodPressureValue signalProcessing(TimeSeriesMod aux5,
-			int samplingFrequency) throws BadMeasureException {
+			float samplingFrequency) throws BadMeasureException {
 
 		// initialize variables
 		BloodPressureValue values = new BloodPressureValue();
@@ -64,7 +64,7 @@ public class SignalProcessing {
 		 * arterial blood pressure values
 		 */
 		PressureValues r5 = new PressureValues();
-		values = r5.pressureValues(oscillations, filtSignal, indexUp, indexDown);
+		values = r5.pressureValues(oscillations, filtSignal, indexUp, indexDown, samplingFrequency);
 
 		// output
 		return values;

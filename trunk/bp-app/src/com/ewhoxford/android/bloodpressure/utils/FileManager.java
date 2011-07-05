@@ -119,7 +119,7 @@ public class FileManager {
 			FileWriter writer = new FileWriter(file);
 			int dPressure = (int) values.getDiastolicBP();
 			int sPressure = (int) values.getSystolicBP();
-			int pulse = (int) values.getMeanArterialBP();
+			int pulse = (int) values.getHeartRate();
 			writer.append("Systolic_Pressure, Dyastolic_Pressure,Pulse, note\n");
 			writer.append(sPressure + "," + dPressure + "," + pulse + ","
 					+ note + "\n");
