@@ -167,16 +167,16 @@ public class PressureValues {
 			}
 
 			//FileManager.createVectors("osc.m", oscillations);
-			int nextPow2 = Power2.determine(oscillations.length);
+			int nextPow2 = Power2.determine(Math.round(oscillations.length/2));
 			FFT fft = new FFT(oscillations, nextPow2);
 			float[] spectrum = fft.fft();
 
-			FileManager.createVectors("spectrum1.m", spectrum);
+			//FileManager.createVectors("spectrum1.m", spectrum);
 			MaxResult maxMAP = ArrayOperator.maxValue(spectrum);
 			//System.out.println("mR:" + maxMAP);
 			float index=maxMAP.getIndex();
 			//float spectrumL=spectrum.length;
-			float freq = (index-1) * signalInFrequency/nextPow2;
+			float freq = (index) * signalInFrequency/nextPow2;
 			int heartRate = Math.round(freq * 60);
 
 			// bloodPressure.setPressureSignal(maxOscillationsMod);
