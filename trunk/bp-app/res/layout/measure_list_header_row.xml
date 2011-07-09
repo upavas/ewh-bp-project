@@ -8,30 +8,31 @@
 	<TextView android:text="@string/number" android:id="@+id/id_h"
 		android:layout_width="wrap_content" android:layout_height="fill_parent"
 		android:focusable="false" android:focusableInTouchMode="false"
-		android:gravity="center" android:layout_weight="2" android:ellipsize="marquee" />
+		android:gravity="center" android:layout_weight="2" android:ellipsize="marquee" 
+	android:textStyle="bold"/>
 	<TextView android:text="@string/date_time"
 		android:layout_width="wrap_content" android:layout_height="fill_parent"
 		android:id="@+id/createdDate_h" android:focusable="false"
 		android:focusableInTouchMode="false" android:gravity="center"
-		android:layout_weight="2" android:ellipsize="marquee" />
+		android:layout_weight="2" android:ellipsize="marquee" android:textStyle="bold"/>
 	<TextView android:text="@string/sys" android:layout_width="wrap_content"
 		android:layout_height="fill_parent" android:layout_weight="2"
 		android:id="@+id/sp_h" android:ellipsize="marquee" android:focusable="false"
-		android:focusableInTouchMode="false" android:gravity="center" />
+		android:focusableInTouchMode="false" android:gravity="center" android:textStyle="bold"/>
 	<TextView android:text="@string/dia" android:layout_width="wrap_content"
 		android:layout_height="fill_parent" android:layout_weight="2"
 		android:id="@+id/dp_h" android:ellipsize="marquee" android:focusable="false"
-		android:focusableInTouchMode="false" />
+		android:focusableInTouchMode="false" android:textStyle="bold"/>
 	<TextView android:text="@string/pulse" android:layout_width="wrap_content"
 		android:layout_height="fill_parent" android:layout_weight="2"
 		android:id="@+id/pulse_h" android:ellipsize="marquee"
 		android:focusable="false" android:focusableInTouchMode="false"
-		android:gravity="center" />
+		android:gravity="center" android:textStyle="bold"/>
 	<TextView android:text="@string/sync_profile" android:layout_width="wrap_content"
 		android:layout_height="fill_parent" android:layout_weight="2"
 		android:id="@+id/sync_profile_h" android:ellipsize="marquee"
 		android:focusable="false" android:focusableInTouchMode="false"
-		android:gravity="center" />
+		android:gravity="center" android:textStyle="bold"/>
 	<!--	<TextView android:text="" android:layout_width="wrap_content"-->
 	<!--		android:layout_height="fill_parent" android:id="@+id/note"-->
 	<!--

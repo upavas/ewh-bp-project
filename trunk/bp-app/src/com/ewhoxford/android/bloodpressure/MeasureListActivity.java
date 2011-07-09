@@ -5,6 +5,7 @@ package com.ewhoxford.android.bloodpressure;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.location.Criteria;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,6 +38,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.SimpleAdapter.ViewBinder;
 
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.ghealth.auth.AccountChooser;
@@ -46,6 +49,7 @@ import com.ewhoxford.android.bloodpressure.ghealth.gdata.Result;
 import com.ewhoxford.android.bloodpressure.ghealth.gdata.HealthClient.AuthenticationException;
 import com.ewhoxford.android.bloodpressure.ghealth.gdata.HealthClient.InvalidProfileException;
 import com.ewhoxford.android.bloodpressure.ghealth.gdata.HealthClient.ServiceException;
+import com.ewhoxford.android.bloodpressure.model.BloodPressure;
 
 /**
  * Displays a list of BP measures. Will display notes from the {@link Uri}
@@ -281,7 +285,7 @@ public class MeasureListActivity extends ListActivity implements
 	private void populateBPMeasureList() {
 
 		Cursor cursor = getBPMeasureList();
-
+		List bpList= getData(cursor);
 		// Used to map notes entries from the database to views
 		String[] from = new String[] { BPMeasure._ID, BPMeasure.CREATED_DATE,
 				BPMeasure.SP, BPMeasure.DP, BPMeasure.PULSE,
@@ -289,13 +293,77 @@ public class MeasureListActivity extends ListActivity implements
 		int[] to = new int[] { R.id.id, R.id.createdDate, R.id.sp, R.id.dp,
 				R.id.pulse, R.id.sync_profile };
 
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-				R.layout.measure_list_row, cursor, from, to);
+		SimpleBPAdapter adapter = new SimpleBPAdapter(this,bpList,
+				R.layout.measure_list_row,from, to);
 		
-		adapter.setViewBinder(this);
-
 		setListAdapter(adapter);
 
+	}
+
+	private List getData(Cursor cur) {
+		
+		List<BloodPressure> bpList= new ArrayList<BloodPressure>();
+		
+		String[] cn= cur.getColumnNames();
+		cur.moveToFirst();
+		String id="";
+        String sp="";
+        String dp="";
+        String pulse="";
+        String phrProviderProfile="";
+        String createdDate="";
+        int aux2=0;
+		while (cur.isAfterLast() == false) {
+        	
+        	for (int i = 0; i < cur.getColumnCount()-1; i++) {
+        	
+        		if(cn[i].equals(BPMeasure.PULSE)){
+        			pulse=cur.getString(i);
+        		}else if(cn[i].equals(BPMeasure.CREATED_DATE)){
+        			createdDate=cur.getString(i);
+        			
+        			long dateStr = new Long(createdDate);
+					SimpleDateFormat sdf = new SimpleDateFormat(
+							"dd/MM/yy HH:mm");
+					Date resultdate = new Date(dateStr);
+					createdDate=sdf.format(resultdate);
+
+        		}else if(cn[i].equals(BPMeasure.SP)){
+        				float aux = Float.parseFloat(cur.getString(i));
+        			aux2 = Math.round(aux);
+					sp=Integer.toString(aux2);
+        		}else if(cn[i].equals(BPMeasure.DP)){
+        			float aux = Float.parseFloat(cur.getString(i));
+        			aux2 = Math.round(aux);
+					dp=Integer.toString(aux2);
+        	
+        		}else if(cn[i].equals(BPMeasure._ID)){
+        			id=cur.getString(i);
+        		}else if(cn[i].equals(BPMeasure.PHR_PROVIDER_PROFILE)){
+        			
+        			String aux12 = cur.getString(i);
+					if (aux12 == null)
+						phrProviderProfile="No";
+					else
+					if (aux12.equals(""))
+						phrProviderProfile="No";
+					else
+						if(aux12.length()>3)
+							phrProviderProfile=aux12.substring(0, 3)+".";
+        		}
+        		
+			}
+        	BloodPressure bp= new BloodPressure(id, createdDate, sp, dp, pulse, phrProviderProfile);
+        	bpList.add(bp);
+        	
+       	    cur.moveToNext();
+        }
+        cur.close();
+		
+		return bpList;
+		
+		
+		
 	}
 
 	/**
