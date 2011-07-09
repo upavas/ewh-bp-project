@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="match_parent"
+	android:layout_height="match_parent" android:paddingLeft="8dp"
+	android:paddingRight="8dp">
+	 <RelativeLayout
+    android:background="#cccccc"
+    android:layout_alignParentBottom="true"
+    android:layout_height="37dp"
+    android:layout_width="fill_parent"
+    android:orientation="horizontal"
+    android:paddingLeft="3px"
+    android:paddingRight="3px"
+    android:paddingTop="5px"
+    android:paddingBottom="0px">
+    <Button
+      android:id="@+id/main_accounts"
+      android:layout_alignParentLeft="true"
+      android:layout_height="wrap_content"
+      android:layout_width="wrap_content"
+      android:text="@string/account"
+      android:textSize="12sp"/>
+    <Button
+      android:id="@+id/main_profiles"
+      android:layout_alignParentRight="true"
+      android:layout_height="wrap_content"
+      android:layout_width="wrap_content"
+      android:text="@string/profile"
+      android:textSize="12sp"/>
+  </RelativeLayout>
+	<include android:id="@+id/header_override" layout="@layout/measure_list_header_row"
+		android:layout_width="fill_parent" android:layout_height="wrap_content" />
+	<ListView android:id="@id/android:list" android:layout_width="match_parent"
+		android:layout_height="match_parent" android:drawSelectorOnTop="false" />
+	<Button android:id="@+id/new_measure_button"
+		android:layout_width="240px" android:layout_height="wrap_content"
+		android:text="@string/new_measure_button"
+		android:layout_alignParentBottom="true" />
+		
+		  <!-- Using TableLayout to get evenly spaced buttons. -->
+  <TableLayout
+    android:background="#cccccc"
+    android:layout_alignParentBottom="true"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="fill_vertical"
+    android:stretchColumns="*">
+    <TableRow
+      android:layout_weight="1"
+      android:layout_height="wrap_content"
+      android:layout_width="wrap_content"
+      android:paddingTop="3dp">
+      <Button
+        android:id="@+id/main_new_result"
+        android:layout_column="0"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/new_measure_button"
+        android:textSize="12sp"/>
+    </TableRow>
+  </TableLayout>
+</LinearLayout>
+ 
