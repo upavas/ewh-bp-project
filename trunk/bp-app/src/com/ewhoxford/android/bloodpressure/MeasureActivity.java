@@ -35,7 +35,6 @@ import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BP
 import com.ewhoxford.android.bloodpressure.exception.BadMeasureException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
 import com.ewhoxford.android.bloodpressure.pressureInputDevice.SampleDynamicXYDatasource;
-import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDatasource;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 import com.ewhoxford.android.bloodpressure.utils.FileManager;
@@ -57,7 +56,7 @@ public class MeasureActivity extends Activity {
 	// Observer object that is notified by pressure data stream observable file
 	private MyPlotUpdater plotUpdater;
 	// Observable object that notifies observer that new values were acquired.
-	private TestDatasource data;
+	private SampleDynamicXYDatasource data;
 	// pressure time series shown in the real time chart
 	private SimpleXYSeries bpMeasureSeries = null;
 	// array with time points
@@ -83,7 +82,7 @@ public class MeasureActivity extends Activity {
 	// number of points in X axis
 	public static int BOUNDARY_NUMBER_OF_POINTS = 100;
 	// max pressure value for measure
-	private int maxPressureValueForMeasure = 240;
+	private int maxPressureValueForMeasure = 200;
 	// signal frequency
 	int signalFreq = 100;
 	// measure finished
@@ -114,8 +113,6 @@ public class MeasureActivity extends Activity {
 			valuesView.setDPressure(dPressure);
 			valuesView.setPulseRate(pulse);
 			valuesView.invalidate();
-			// activate save button
-
 			saveButton.setEnabled(true);
 			saveButton.invalidate();
 
@@ -316,7 +313,7 @@ public class MeasureActivity extends Activity {
 		// initialize our XYPlot reference and real time update code:
 
 		// getInstance and position datasets:
-		data = new TestDatasource(this);
+		data = new SampleDynamicXYDatasource();
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
 		// "Blood Pressure");
 
@@ -466,12 +463,10 @@ public class MeasureActivity extends Activity {
 		values.put(BPMeasure.MODIFIED_DATE, time);
 		values.put(BPMeasure.DP, bloodPressureValue.getDiastolicBP());
 		values.put(BPMeasure.SP, bloodPressureValue.getSystolicBP());
-		// TODO correct this value @MARCO,
-		// TODO put MAP VAlUE in database as a separate value,
+		values.put(BPMeasure.MAP, bloodPressureValue.getMeanArterialBP());
 		values.put(BPMeasure.PULSE, bloodPressureValue.getHeartRate());
 		values.put(BPMeasure.NOTE, note);
 		values.put(BPMeasure.MEASUREMENT_SYNC, false);
-		// values.put(BPMeasure., value)
 		if (savedFileName != null) {
 			if (savedFileName.length() == 0) {
 				values.put(BPMeasure.MEASUREMENT_FILE_EXIST, false);

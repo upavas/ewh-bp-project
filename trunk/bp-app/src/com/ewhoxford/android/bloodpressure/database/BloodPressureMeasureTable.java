@@ -71,6 +71,14 @@ public final class BloodPressureMeasureTable {
 		 * </P>
 		 */
 		public static final String DP = "dp";
+		
+		/**
+		 * The Mean arterial pressure
+		 * <P>
+		 * Type: INTEGER (int)
+		 * </P>
+		 */
+		public static final String MAP = "map";
 
 		/**
 		 * The note of measurement
@@ -158,8 +166,7 @@ public final class BloodPressureMeasureTable {
 		public static final int PHR_PROVIDER_USERNAME_COLUMN = 10;
 		public static final int PHR_PROVIDER_COLUMN = 11;
 		public static final int PHR_PROVIDER_PROFILE_COLUMN = 12;
-
 		public static final int PHR_PROVIDER_PROFILE_ID_COLUMN = 13;
-
+		public static final int MAP_COLUMN = 14;
 	}
 }
