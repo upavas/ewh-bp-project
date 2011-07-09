@@ -291,7 +291,7 @@ public class MeasureListActivity extends ListActivity implements
 
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
 				R.layout.measure_list_row, cursor, from, to);
-
+		
 		adapter.setViewBinder(this);
 
 		setListAdapter(adapter);

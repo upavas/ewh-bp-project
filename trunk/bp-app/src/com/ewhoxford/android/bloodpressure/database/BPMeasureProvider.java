@@ -64,7 +64,8 @@ public class BPMeasureProvider extends ContentProvider {
 					+ BPMeasure.PHR_PROVIDER_USERNAME + " varchar(400),"
 					+ BPMeasure.PHR_PROVIDER_PROFILE + " varchar(400),"
 					+ BPMeasure.PHR_PROVIDER_PROFILE_ID + " varchar(400),"
-					+ BPMeasure.PHR_PROVIDER + " varchar(400)" + ");";
+					+ BPMeasure.PHR_PROVIDER + " varchar(400)," 
+					+ BPMeasure.MAP + " INTEGER"+ ");";
 			System.out.println(createDatabase);
 			db.execSQL(createDatabase);
 
@@ -200,6 +201,9 @@ public class BPMeasureProvider extends ContentProvider {
 		if (values.containsKey(BPMeasure.PHR_PROVIDER_PROFILE) == false) {
 			values.put(BPMeasure.PHR_PROVIDER_PROFILE, "");
 		}
+		if (values.containsKey(BPMeasure.MAP) == false) {
+			values.put(BPMeasure.MAP, 0);
+		}
 
 		SQLiteDatabase db = mBPOpenHelper.getWritableDatabase();
 		long rowId = db.insert(MEASURES_TABLE, BPMeasure.NOTE, values);
@@ -300,6 +304,8 @@ public class BPMeasureProvider extends ContentProvider {
 				BPMeasure.PHR_PROVIDER_PROFILE_ID);
 		sBPMeasuresProjectionMap.put(BPMeasure.PHR_PROVIDER_PROFILE,
 				BPMeasure.PHR_PROVIDER_PROFILE);
+		sBPMeasuresProjectionMap.put(BPMeasure.MAP,
+				BPMeasure.MAP);
 
 	}
 }
