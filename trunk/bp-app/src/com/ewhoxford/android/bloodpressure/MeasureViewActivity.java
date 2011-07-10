@@ -501,49 +501,43 @@ public class MeasureViewActivity extends Activity {
 		}
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
+//	@Override
+//	protected void onResume() {
+//		super.onResume();
+//
+//		// If we didn't have any trouble retrieving the data, it is now
+//		// time to get at the stuff.
+//		if (mCursor != null) {
+//			// Make sure we are at the one and only row in the cursor.
+//			mCursor.moveToFirst();
+//
+//			// Modify our overall title depending on the mode we are running in.
+//			if (mState == STATE_EDIT) {
+//				// setTitle(getText(R.string.title_edit));
+//			} else if (mState == STATE_INSERT) {
+//				// setTitle(getText(R.string.title_create));
+//			}
+//
+//			// This is a little tricky: we may be resumed after previously being
+//			// paused/stopped. We want to put the new text in the text view,
+//			// but leave the user where they were (retain the cursor position
+//			// etc). This version of setText does that for us.
+//			String note = mCursor.getString(COLUMN_INDEX_NOTE);
+//			mText.setTextKeepState(note);
+//
+//			// If we hadn't previously retrieved the original text, do so
+//			// now. This allows the user to revert their changes.
+//			if (mOriginalContent == null) {
+//				mOriginalContent = note;
+//			}
+//
+//		} else {
+//			// setTitle(getText(R.string.error_title));
+//			// mText.setText(getText(R.string.error_message));
+//		}
+//	}
 
-		// If we didn't have any trouble retrieving the data, it is now
-		// time to get at the stuff.
-		if (mCursor != null) {
-			// Make sure we are at the one and only row in the cursor.
-			mCursor.moveToFirst();
-
-			// Modify our overall title depending on the mode we are running in.
-			if (mState == STATE_EDIT) {
-				// setTitle(getText(R.string.title_edit));
-			} else if (mState == STATE_INSERT) {
-				// setTitle(getText(R.string.title_create));
-			}
-
-			// This is a little tricky: we may be resumed after previously being
-			// paused/stopped. We want to put the new text in the text view,
-			// but leave the user where they were (retain the cursor position
-			// etc). This version of setText does that for us.
-			String note = mCursor.getString(COLUMN_INDEX_NOTE);
-			mText.setTextKeepState(note);
-
-			// If we hadn't previously retrieved the original text, do so
-			// now. This allows the user to revert their changes.
-			if (mOriginalContent == null) {
-				mOriginalContent = note;
-			}
-
-		} else {
-			// setTitle(getText(R.string.error_title));
-			// mText.setText(getText(R.string.error_message));
-		}
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		// Save away the original text, so we still have it if the activity
-		// needs to be killed while paused.
-		outState.putString(ORIGINAL_CONTENT, mOriginalContent);
-	}
-
+	
 	/**
 	 * Take care of canceling work on a note. Deletes the note if we had created
 	 * it, otherwise reverts to the original text.

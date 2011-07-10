@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
-import android.location.Criteria;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,7 +37,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.SimpleAdapter.ViewBinder;
 
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.ghealth.auth.AccountChooser;
@@ -62,7 +60,7 @@ public class MeasureListActivity extends ListActivity implements
 		SimpleCursorAdapter.ViewBinder {
 	public static final String TAG = "BloodPressureMeasuresList";
 
-	private static final String SERVICE_NAME = HealthClient.H9_SERVICE;
+	private static final String SERVICE_NAME = HealthClient.HEALTH_SERVICE;
 
 	private static final int ACTIVITY_AUTHENTICATE = 0;
 	// Public so that the AuthManager can start a new get_login activity after
@@ -285,7 +283,7 @@ public class MeasureListActivity extends ListActivity implements
 	private void populateBPMeasureList() {
 
 		Cursor cursor = getBPMeasureList();
-		List bpList= getData(cursor);
+		List bpList = getData(cursor);
 		// Used to map notes entries from the database to views
 		String[] from = new String[] { BPMeasure._ID, BPMeasure.CREATED_DATE,
 				BPMeasure.SP, BPMeasure.DP, BPMeasure.PULSE,
@@ -293,77 +291,74 @@ public class MeasureListActivity extends ListActivity implements
 		int[] to = new int[] { R.id.id, R.id.createdDate, R.id.sp, R.id.dp,
 				R.id.pulse, R.id.sync_profile };
 
-		SimpleBPAdapter adapter = new SimpleBPAdapter(this,bpList,
-				R.layout.measure_list_row,from, to);
-		
+		SimpleBPAdapter adapter = new SimpleBPAdapter(this, bpList,
+				R.layout.measure_list_row, from, to);
+
 		setListAdapter(adapter);
 
 	}
 
 	private List getData(Cursor cur) {
-		
-		List<BloodPressure> bpList= new ArrayList<BloodPressure>();
-		
-		String[] cn= cur.getColumnNames();
+
+		List<BloodPressure> bpList = new ArrayList<BloodPressure>();
+
+		String[] cn = cur.getColumnNames();
 		cur.moveToFirst();
-		String id="";
-        String sp="";
-        String dp="";
-        String pulse="";
-        String phrProviderProfile="";
-        String createdDate="";
-        int aux2=0;
+		String id = "";
+		String sp = "";
+		String dp = "";
+		String pulse = "";
+		String phrProviderProfile = "";
+		String createdDate = "";
+		int aux2 = 0;
 		while (cur.isAfterLast() == false) {
-        	
-        	for (int i = 0; i < cur.getColumnCount()-1; i++) {
-        	
-        		if(cn[i].equals(BPMeasure.PULSE)){
-        			pulse=cur.getString(i);
-        		}else if(cn[i].equals(BPMeasure.CREATED_DATE)){
-        			createdDate=cur.getString(i);
-        			
-        			long dateStr = new Long(createdDate);
+
+			for (int i = 0; i < cur.getColumnCount() - 1; i++) {
+
+				if (cn[i].equals(BPMeasure.PULSE)) {
+					pulse = cur.getString(i);
+				} else if (cn[i].equals(BPMeasure.CREATED_DATE)) {
+					createdDate = cur.getString(i);
+
+					long dateStr = new Long(createdDate);
 					SimpleDateFormat sdf = new SimpleDateFormat(
 							"dd/MM/yy HH:mm");
 					Date resultdate = new Date(dateStr);
-					createdDate=sdf.format(resultdate);
+					createdDate = sdf.format(resultdate);
 
-        		}else if(cn[i].equals(BPMeasure.SP)){
-        				float aux = Float.parseFloat(cur.getString(i));
-        			aux2 = Math.round(aux);
-					sp=Integer.toString(aux2);
-        		}else if(cn[i].equals(BPMeasure.DP)){
-        			float aux = Float.parseFloat(cur.getString(i));
-        			aux2 = Math.round(aux);
-					dp=Integer.toString(aux2);
-        	
-        		}else if(cn[i].equals(BPMeasure._ID)){
-        			id=cur.getString(i);
-        		}else if(cn[i].equals(BPMeasure.PHR_PROVIDER_PROFILE)){
-        			
-        			String aux12 = cur.getString(i);
+				} else if (cn[i].equals(BPMeasure.SP)) {
+					float aux = Float.parseFloat(cur.getString(i));
+					aux2 = Math.round(aux);
+					sp = Integer.toString(aux2);
+				} else if (cn[i].equals(BPMeasure.DP)) {
+					float aux = Float.parseFloat(cur.getString(i));
+					aux2 = Math.round(aux);
+					dp = Integer.toString(aux2);
+
+				} else if (cn[i].equals(BPMeasure._ID)) {
+					id = cur.getString(i);
+				} else if (cn[i].equals(BPMeasure.PHR_PROVIDER_PROFILE)) {
+
+					String aux12 = cur.getString(i);
 					if (aux12 == null)
-						phrProviderProfile="No";
-					else
-					if (aux12.equals(""))
-						phrProviderProfile="No";
-					else
-						if(aux12.length()>3)
-							phrProviderProfile=aux12.substring(0, 3)+".";
-        		}
-        		
+						phrProviderProfile = "No";
+					else if (aux12.equals(""))
+						phrProviderProfile = "No";
+					else if (aux12.length() > 3)
+						phrProviderProfile = aux12.substring(0, 3) + ".";
+				}
+
 			}
-        	BloodPressure bp= new BloodPressure(id, createdDate, sp, dp, pulse, phrProviderProfile);
-        	bpList.add(bp);
-        	
-       	    cur.moveToNext();
-        }
-        cur.close();
-		
+			BloodPressure bp = new BloodPressure(id, createdDate, sp, dp,
+					pulse, phrProviderProfile);
+			bpList.add(bp);
+
+			cur.moveToNext();
+		}
+		cur.close();
+
 		return bpList;
-		
-		
-		
+
 	}
 
 	/**
@@ -450,12 +445,10 @@ public class MeasureListActivity extends ListActivity implements
 					String aux12 = cur.getString(columnIndex);
 					if (aux12 == null)
 						((TextView) v).setText("No");
-					else
-					if (aux12.equals(""))
+					else if (aux12.equals(""))
 						((TextView) v).setText("No");
-					else
-						if(aux12.length()>3)
-						((TextView) v).setText(aux12.substring(0, 3)+".");
+					else if (aux12.length() > 3)
+						((TextView) v).setText(aux12.substring(0, 3) + ".");
 					break;
 
 				}
@@ -632,8 +625,8 @@ public class MeasureListActivity extends ListActivity implements
 
 		case DIALOG_PROFILES:
 			String[] profileNames = profiles.values().toArray(
-					new String[profiles.size()+1]);
-			profileNames[profileNames.length-1]="ALL";
+					new String[profiles.size() + 1]);
+			profileNames[profileNames.length - 1] = "ALL";
 
 			builder = new AlertDialog.Builder(this);
 			builder.setTitle(this.getText(R.string.choose_profile));
