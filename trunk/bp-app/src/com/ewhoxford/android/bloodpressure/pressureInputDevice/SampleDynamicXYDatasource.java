@@ -40,6 +40,7 @@ public class SampleDynamicXYDatasource implements Runnable {
 	private boolean active = true;
 	int countMiceSamples = 0;
 	int linearFilterThreshold = 40;
+	int mouseDisconnectedCount=0;
 
 	final Handler mHandler = new Handler();
 	// Create runnable for posting
@@ -127,7 +128,13 @@ public class SampleDynamicXYDatasource implements Runnable {
 				// i = i + 100;
 				count++;
 				if (update) {
+					mouseDisconnectedCount=0;
 					notifier.notifyObservers();
+				}else{
+					mouseDisconnectedCount=mouseDisconnectedCount+1;
+					if(mouseDisconnectedCount==3){
+						notifier.notifyObservers();
+					}
 				}
 			}
 		} catch (InterruptedException e) {

@@ -57,7 +57,7 @@ public class MeasureActivity extends Activity {
 	// Observer object that is notified by pressure data stream observable file
 	private MyPlotUpdater plotUpdater;
 	// Observable object that notifies observer that new values were acquired.
-	private TestDatasource data;
+	private SampleDynamicXYDatasource data;
 	// pressure time series shown in the real time chart
 	private SimpleXYSeries bpMeasureSeries = null;
 	// array with time points
@@ -84,12 +84,18 @@ public class MeasureActivity extends Activity {
 	public static int BOUNDARY_NUMBER_OF_POINTS = 100;
 	// max pressure value for measure
 	private int maxPressureValueForMeasure = 200;
+	// min pressure value for measure
+	private double minPressureReached = 35;
 	// signal frequency
 	int signalFreq = 100;
 	// measure finished
 	private boolean measureFinished;
 	// measure successfull
 	private boolean measureSuccessful;
+	// measure size
+	private int measureSize = 0;
+	// event count
+	private int totalCount = 0;
 
 	// Create runnable for signal processing
 	final Runnable runSignalProcessing = new Runnable() {
@@ -116,6 +122,7 @@ public class MeasureActivity extends Activity {
 			valuesView.invalidate();
 			saveButton.setEnabled(true);
 			saveButton.invalidate();
+			mHandler.post(disconnectedSensor);
 
 		}
 	};
@@ -136,6 +143,36 @@ public class MeasureActivity extends Activity {
 		}
 	};
 
+	// Create runnable for chaging messages while pressure is being acquired
+	final Runnable changeTextMessagePump = new Runnable() {
+		public void run() {
+			TextView textMessage = (TextView) findViewById(R.id.text_message);
+			textMessage.setText(R.string.pump);
+			textMessage.setTextColor(Color.GREEN);
+			textMessage.postInvalidate();
+		}
+	};
+
+	// Create runnable for chaging messages while pressure is being acquired
+	final Runnable connectedSensorText = new Runnable() {
+		public void run() {
+			TextView textMessage = (TextView) findViewById(R.id.text_message);
+			textMessage.setText(R.string.connect_sensor);
+			textMessage.setTextColor(Color.RED);
+			textMessage.postInvalidate();
+		}
+	};
+
+	// Create runnable for chaging messages while pressure is being acquired
+	final Runnable disconnectedSensor = new Runnable() {
+		public void run() {
+			TextView textMessage = (TextView) findViewById(R.id.text_message);
+			textMessage.setText(R.string.disconnect_sensor);
+			textMessage.setTextColor(Color.RED);
+			textMessage.postInvalidate();
+		}
+	};
+
 	private class MyPlotUpdater implements Observer, Callback {
 		Plot plot;
 		double pressureValue = 0;
@@ -148,16 +185,25 @@ public class MeasureActivity extends Activity {
 		public void update(Observable o, Object arg) {
 
 			pressureValue = data.getPressureValue();
+						
+			if (data.getBpMeasure().size() == measureSize) {
+				mHandler.post(connectedSensorText);
+			} else {
+				measureSize=data.getBpMeasure().size();
+				// check if operator has reached reasonable cuff pressure
+				if (!maxPressureReached) {
+					if (pressureValue > maxPressureValueForMeasure) {
+						maxPressureReached = true;
+						mHandler.post(changeTextMessage);
 
-			// check if operator has reached reasonable cuff pressure
-			if (pressureValue > maxPressureValueForMeasure) {
-				maxPressureReached = true;
-				mHandler.post(changeTextMessage);
+					} else {
+						mHandler.post(changeTextMessagePump);
+					}
+				}
 			}
-
 			if (maxPressureReached) {
 				// if max pressure reached, check if measurement is now over
-				if (pressureValue < 25) {
+				if (pressureValue < minPressureReached) {
 					// o.deleteObservers();
 					data.setActive(false);
 					// measurement is over, we are prepared to determine blood
@@ -314,7 +360,7 @@ public class MeasureActivity extends Activity {
 		// initialize our XYPlot reference and real time update code:
 
 		// getInstance and position datasets:
-		data = new TestDatasource(this);
+		data = new SampleDynamicXYDatasource();
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
 		// "Blood Pressure");
 
