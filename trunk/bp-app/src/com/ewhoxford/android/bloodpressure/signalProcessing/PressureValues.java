@@ -1,9 +1,6 @@
 package com.ewhoxford.android.bloodpressure.signalProcessing;
 
-import android.text.InputFilter.LengthFilter;
-
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
-import com.ewhoxford.android.bloodpressure.utils.FileManager;
 
 /**
  * @author user Determines systolic, diastolic and mean arterial blood pressure
@@ -13,7 +10,8 @@ public class PressureValues {
 
 	/**
 	 * 
-	 * @param signalInFrequency TODO
+	 * @param signalInFrequency
+	 *            TODO
 	 * @param oscillations
 	 * @param curve
 	 * @return SP, DP, MAP, and interpolated signal
@@ -21,7 +19,8 @@ public class PressureValues {
 	 * @see bloodPressure
 	 */
 	public BloodPressureValue pressureValues(TimeSeriesMod signalOscillations,
-			TimeSeriesMod signalIn, int indexUp, int indexDown, float signalInFrequency) {
+			TimeSeriesMod signalIn, int indexUp, int indexDown,
+			float signalInFrequency) {
 
 		BloodPressureValue bloodPressure = new BloodPressureValue();
 
@@ -52,8 +51,8 @@ public class PressureValues {
 			int defaultSize = 100;
 			double[] maxOscillations = new double[defaultSize];
 			float[] maxTime = new float[defaultSize];
-			//double[] meanOscillations = new double[defaultSize];
-			//float[] meanTime = new float[defaultSize];
+			// double[] meanOscillations = new double[defaultSize];
+			// float[] meanTime = new float[defaultSize];
 			int[] maxTimeInt = new int[defaultSize];
 			double[] minOscillations = new double[defaultSize];
 			float[] minTime = new float[defaultSize];
@@ -90,7 +89,7 @@ public class PressureValues {
 						lookForMax = false;
 					}
 				} else {
-					if (value > (mn + delta(index))) {
+					if (value > (mn + delta)) {
 						minOscillations[jmn] = mn;
 						minTime[jmn] = time[mnPos];
 						mx = value;
@@ -119,11 +118,12 @@ public class PressureValues {
 			for (int i = 0; i < indx; ++i) {
 				meanTimeMod[i] = maxTime[i];
 				meanTimeIntMod[i] = maxTimeInt[i];
-				meanOscillationsMod[i] = maxOscillations[i] - minOscillations[i];
+				meanOscillationsMod[i] = maxOscillations[i]
+						- minOscillations[i];
 			}
 			meanOscillationsMod[0] = 0;
-			meanOscillationsMod[meanOscillationsMod.length-1] = 0;
-			
+			meanOscillationsMod[meanOscillationsMod.length - 1] = 0;
+
 			// GET MEAN ARTERIAL PRESSURE
 			boolean FLAG = false;
 			int MAPPos = 0;
@@ -172,7 +172,7 @@ public class PressureValues {
 				i = i - 1;
 			}
 
-			//FileManager.createVectors("osc.m", oscillations);
+			// FileManager.createVectors("osc.m", oscillations);
 			int nfft = Power2.determine(Math.round(oscillations.length));
 			double[] newOscillations = new double[nfft];
 			for (int k = 0; k < nfft; k++) {
@@ -181,24 +181,23 @@ public class PressureValues {
 				else
 					newOscillations[k] = 0;
 			}
-			FFT fft = new FFT(oscillations, nfft);
+			FFT fft = new FFT(newOscillations, nfft);
 			float[] spectrum = fft.fft();
-			
+
 			boolean hrFound = false;
 			int heartRate = 72;
-			
-			while (hrFound == false){
-				//FileManager.createVectors("spectrum1.m", spectrum);
+
+			while (hrFound == false) {
+				// FileManager.createVectors("spectrum1.m", spectrum);
 				MaxResult maxMAP = ArrayOperator.maxValue(spectrum);
-				//System.out.println("mR:" + maxMAP);
-				int index = maxMAP.getIndex();
-				//float spectrumL=spectrum.length;
-				float freq = (index) * signalInFrequency/nfft;
+				// System.out.println("mR:" + maxMAP);
+				int index2 = maxMAP.getIndex();
+				// float spectrumL=spectrum.length;
+				float freq = (index2) * signalInFrequency / nfft;
 				heartRate = Math.round(freq * 60);
-				if (heartRate < 31){
-					spectrum[index] = 0;
-				}
-				else
+				if (heartRate < 31) {
+					spectrum[index2] = 0;
+				} else
 					hrFound = true;
 			}
 			// bloodPressure.setPressureSignal(maxOscillationsMod);
