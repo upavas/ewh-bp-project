@@ -63,20 +63,30 @@ public class ConvertTommHg {
 	}
 
 	public static double convertTommHg(int xValue, int yValue) {
-		yValue = Math.abs(yValue-255);
+		if (xValue != 0){
+			yValue = Math.abs(yValue-256);
+		}
 		float aux1 = 0, aux2 = 0;
 		double pressureValue = 0;
-		if (xValue==1){
-			xValue = (int) Math.pow(2, 8);
-		}
-		else if (xValue==2){
-			xValue = (int) Math.pow(2, 9);
-		}
-		else if (xValue==3){
-			xValue = (int) (Math.pow(2, 8) + Math.pow(2, 9));
-		}
-		else{
+		if (xValue == 20){
 			xValue = 0;
+			yValue = 128;
+		}
+		if (xValue == 21){
+			xValue = (int) Math.pow(2, 8);
+			yValue = 128;
+		}
+		if (xValue == 22){
+			xValue = (int) Math.pow(2, 9);
+			yValue = 128;
+		}
+		if (xValue == 23){
+			xValue = (int) (Math.pow(2, 8) + Math.pow(2, 9));
+			yValue = 128;
+		}
+		if (xValue == 24){
+			xValue = 0;
+			yValue = 128;
 		}
 		
 		// convert digital signal to volts 
