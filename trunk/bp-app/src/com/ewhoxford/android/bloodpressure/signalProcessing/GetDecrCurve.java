@@ -82,7 +82,7 @@ public class GetDecrCurve {
 
 		// get indexes
 		for (int i = maxval.index + 1; i < curve.length; ++i) {
-			if (curve[i] <= 240 && FLAG1 == false) {
+			if (curve[i] <= 200 && FLAG1 == false) {
 				indxup = i;
 				FLAG1 = true;
 			}
