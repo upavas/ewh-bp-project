@@ -114,12 +114,15 @@ public class PressureValues {
 			float[] meanTimeMod = new float[indx];
 			int[] meanTimeIntMod = new int[indx];
 			double[] meanOscillationsMod = new double[indx];
-
+			
+			float rr[] = new float[indx];
+			
 			for (int i = 0; i < indx; ++i) {
 				meanTimeMod[i] = maxTime[i];
 				meanTimeIntMod[i] = maxTimeInt[i];
 				meanOscillationsMod[i] = maxOscillations[i]
 						- minOscillations[i];
+				rr[i] = maxTime[i] - minTime[i];
 			}
 			meanOscillationsMod[0] = 0;
 			meanOscillationsMod[meanOscillationsMod.length - 1] = 0;
@@ -171,9 +174,10 @@ public class PressureValues {
 				}
 				i = i - 1;
 			}
-
-			// FileManager.createVectors("osc.m", oscillations);
-			int nfft = Power2.determine(Math.round(oscillations.length));
+			
+			
+			//FileManager.createVectors("osc.m", oscillations);
+			/*int nfft = Power2.determine(Math.round(oscillations.length));
 			double[] newOscillations = new double[nfft];
 			for (int k = 0; k < nfft; k++) {
 				if (k < oscillations.length)
@@ -183,10 +187,11 @@ public class PressureValues {
 			}
 			FFT fft = new FFT(newOscillations, nfft);
 			float[] spectrum = fft.fft();
-
-			boolean hrFound = false;
+			
+			boolean hrFound = false; 
+			*/
 			int heartRate = 72;
-
+			/*
 			while (hrFound == false) {
 				// FileManager.createVectors("spectrum1.m", spectrum);
 				MaxResult maxMAP = ArrayOperator.maxValue(spectrum);
@@ -202,7 +207,11 @@ public class PressureValues {
 			}
 			// bloodPressure.setPressureSignal(maxOscillationsMod);
 			// bloodPressure.setTimeSignal(maxTimeMod);
-
+			*/
+			int half = rr.length/2;
+			float rrAverage = (rr[half-1] + rr[half] + rr[half+1])/3;
+			heartRate = Math.round(60/rrAverage);
+			
 			// output
 			bloodPressure.setPressureSignal(maxOscillationsInterp);
 			bloodPressure.setTimeSignal(time);
