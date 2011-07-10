@@ -83,7 +83,7 @@ public class BloodPressure extends HashMap<Object, Object> {
 	}
 
 	public void setCreated_date(String createdDate) {
-		created_date = createdDate;
+		this.created_date = createdDate;
 	}
 
 	public void setSp(String sp) {
@@ -99,6 +99,6 @@ public class BloodPressure extends HashMap<Object, Object> {
 	}
 
 	public void setPhr_provider_profile(String phrProviderProfile) {
-		phr_provider_profile = phrProviderProfile;
+		this.phr_provider_profile = phrProviderProfile;
 	}
 }

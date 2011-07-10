@@ -1,5 +1,6 @@
 package com.ewhoxford.android.bloodpressure.signalProcessing;
 
+
 /**
  * 
  * @author user
@@ -53,6 +54,23 @@ public class LinearInterpolation {
 					y1 = yi[j];
 				}
 			}
+			Double y2 = null;
+			try {
+				 y2=new Double(y[i]);			
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			
+			if(y2.isNaN()||y2==null){
+				y[i]=y[i];
+						
+			}
+			
+			if(Double.isNaN(y[i])){
+				y[i]=y[i];
+			}
+				
 		}
 		
 		// output

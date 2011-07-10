@@ -1,6 +1,7 @@
 package com.ewhoxford.android.bloodpressure.signalProcessing;
 
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
+import com.ewhoxford.android.bloodpressure.utils.FileManager;
 
 /**
  * @author user Determines systolic, diastolic and mean arterial blood pressure
@@ -27,7 +28,7 @@ public class PressureValues {
 		try {
 
 			/**
-			 * Trunk signal between 240 and 40
+			 * Trunk signal between 200 and 40
 			 */
 			// initialize variables 1
 			int l1 = indexDown - indexUp + 1;
@@ -36,9 +37,8 @@ public class PressureValues {
 			float[] time = new float[l1];
 			int j = 0;
 			// determine heart rate;
-			// FileManager.createVectors("total.m",
-			// signalOscillations.pressure);
-			// select curve correspondent to the indexes 240 to 40
+			FileManager.createVectors("total.m",signalOscillations.pressure);
+			// select curve correspondent to the indexes 200 to 40
 			for (int i = indexUp; i <= indexDown; ++i) {
 				curve[j] = signalIn.pressure[i];
 				oscillations[j] = signalOscillations.pressure[i];
@@ -176,7 +176,7 @@ public class PressureValues {
 			}
 			
 			
-			//FileManager.createVectors("osc.m", oscillations);
+			FileManager.createVectors("osc.m", oscillations);
 			/*int nfft = Power2.determine(Math.round(oscillations.length));
 			double[] newOscillations = new double[nfft];
 			for (int k = 0; k < nfft; k++) {
@@ -209,8 +209,8 @@ public class PressureValues {
 			// bloodPressure.setTimeSignal(maxTimeMod);
 			*/
 			int half = rr.length/2;
-			float rrAverage = (rr[half-1] + rr[half] + rr[half+1])/3;
-			heartRate = Math.round(60/rrAverage);
+			float rrAverage = (rr[half-2] + rr[half-1] + rr[half]+ rr[half+1]+ rr[half+2])/5;
+			heartRate = Math.abs(Math.round(60/rrAverage));
 			
 			// output
 			bloodPressure.setPressureSignal(maxOscillationsInterp);

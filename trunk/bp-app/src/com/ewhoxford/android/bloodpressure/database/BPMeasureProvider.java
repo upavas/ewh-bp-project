@@ -29,7 +29,7 @@ public class BPMeasureProvider extends ContentProvider {
 	private static final String TAG = "BPMeasureProvider";
 
 	private static final String DATABASE_NAME = "blood_pressure.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	private static final String MEASURES_TABLE = "bpmeasure";
 
 	private static HashMap<String, String> sBPMeasuresProjectionMap;
