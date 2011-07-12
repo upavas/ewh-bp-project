@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">Blood Pressure</string>
-	<string name="measure_title">Measure</string>
+	<string name="measure_title">New Measure</string>
 
 	<string name="help_title">Instructions</string>
 
@@ -79,6 +79,8 @@
 		Are you sure you want to discard changes?
 	</string>
 	<string name="alert_dialog_discard_bad_measure">Please repeat measure. Deflate slowly</string>
+	<string name="alert_dialog_discard_temp_bad_measure">Not Measurable. Please repeat measure.</string>
+	
 	<string name="disconnect_sensor">Disconnect USB device.</string>
 	<string name="connect_sensor">Connect USB device.</string>
 	
@@ -143,5 +145,4 @@
 	<string name="alert_dialog_bp_syncked_error">Synck with Google Health was not sucessfull
 	</string>
 	<string name="alert_dialog_bp_synck_again">Push the "Sync GHealth" Button again to sync</string>
-
-</resources>
+	</resources>

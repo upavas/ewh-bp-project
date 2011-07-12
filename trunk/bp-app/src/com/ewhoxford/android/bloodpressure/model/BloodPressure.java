@@ -39,17 +39,17 @@ public class BloodPressure extends HashMap<Object, Object> {
 	public String get(Object k) {
 		String key = (String) k;
 		if (KEY_ID.equals(key))
-			return id;
+			return this.id;
 		else if (KEY_CREATED_DATE.equals(key))
-			return created_date;
+			return this.created_date;
 		else if (KEY_SP.equals(key))
-			return sp;
+			return this.sp;
 		else if (KEY_DP.equals(key))
-			return dp;
+			return this.dp;
 		else if (KEY_PULSE.equals(key))
-			return pulse;
+			return this.pulse;
 		else if (KEY_PHR_PROVIDER_PROFILE.equals(key))
-			return phr_provider_profile;
+			return this.phr_provider_profile;
 		else
 			return null;
 	}
