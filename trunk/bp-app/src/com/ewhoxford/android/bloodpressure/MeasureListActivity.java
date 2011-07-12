@@ -31,7 +31,6 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.util.Linkify;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -393,7 +392,12 @@ public class MeasureListActivity extends ListActivity implements
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Uri uri = ContentUris.withAppendedId(getIntent().getData(), id);
+
+		System.out.println("id:" + id);
+		BloodPressure bp = (BloodPressure) l.getAdapter().getItem(
+				new Long(id).intValue());
+		Uri uri = ContentUris.withAppendedId(getIntent().getData(), new Long(bp
+				.getId()));
 		String action = getIntent().getAction();
 		if (Intent.ACTION_PICK.equals(action)
 				|| Intent.ACTION_GET_CONTENT.equals(action)) {
@@ -784,8 +788,7 @@ public class MeasureListActivity extends ListActivity implements
 	public void onBackPressed() {
 		Intent i = new Intent(measureListContext, MainActivity.class);
 		startActivity(i);
-	return;
+		return;
 	}
-		
-	
+
 }
