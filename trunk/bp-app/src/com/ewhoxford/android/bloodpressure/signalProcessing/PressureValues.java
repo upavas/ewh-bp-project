@@ -37,7 +37,7 @@ public class PressureValues {
 			float[] time = new float[l1];
 			int j = 0;
 			// determine heart rate;
-			FileManager.createVectors("total.m",signalOscillations.pressure);
+			//FileManager.createVectors("total.m",signalOscillations.pressure);
 			// select curve correspondent to the indexes 200 to 40
 			for (int i = indexUp; i <= indexDown; ++i) {
 				curve[j] = signalIn.pressure[i];
@@ -176,8 +176,8 @@ public class PressureValues {
 			}
 			
 			
-			FileManager.createVectors("osc.m", oscillations);
-			/*int nfft = Power2.determine(Math.round(oscillations.length));
+			//FileManager.createVectors("osc.m", oscillations);
+			int nfft = Power2.determine(Math.round(oscillations.length));
 			double[] newOscillations = new double[nfft];
 			for (int k = 0; k < nfft; k++) {
 				if (k < oscillations.length)
@@ -189,9 +189,9 @@ public class PressureValues {
 			float[] spectrum = fft.fft();
 			
 			boolean hrFound = false; 
-			*/
+			
 			int heartRate = 72;
-			/*
+			
 			while (hrFound == false) {
 				// FileManager.createVectors("spectrum1.m", spectrum);
 				MaxResult maxMAP = ArrayOperator.maxValue(spectrum);
@@ -207,10 +207,10 @@ public class PressureValues {
 			}
 			// bloodPressure.setPressureSignal(maxOscillationsMod);
 			// bloodPressure.setTimeSignal(maxTimeMod);
-			*/
-			int half = rr.length/2;
-			float rrAverage = (rr[half-2] + rr[half-1] + rr[half]+ rr[half+1]+ rr[half+2])/5;
-			heartRate = Math.abs(Math.round(60/rrAverage));
+			
+//			int half = rr.length/2;
+//			float rrAverage = (rr[half-2] + rr[half-1] + rr[half]+ rr[half+1]+ rr[half+2])/5;
+//			heartRate = Math.abs(Math.round(60/rrAverage));
 			
 			// output
 			bloodPressure.setPressureSignal(maxOscillationsInterp);

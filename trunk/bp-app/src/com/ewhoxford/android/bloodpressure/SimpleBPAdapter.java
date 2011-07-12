@@ -38,6 +38,20 @@ public class SimpleBPAdapter extends SimpleAdapter {
 		super.setViewBinder(viewBinder);
 	}
 
-	
-	
+	public int getCount() {
+		return bpList.size();
+	}
+
+	/** returns the key for the table, not the value (which is another table) */
+	public Object getItem(int i) {
+		Object retval = bpList.toArray()[i];
+		// Log.i(getClass().getSimpleName(), "getItem(" + i + ") = " + retval);
+		return retval;
+	}
+
+	/** returns the unique id for the given index, which is just the index */
+	public long getItemId(int i) {
+		return i;
+	}
+
 }

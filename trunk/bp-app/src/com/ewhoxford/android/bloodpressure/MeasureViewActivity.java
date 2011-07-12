@@ -149,7 +149,7 @@ public class MeasureViewActivity extends Activity {
 
 	public static final String TAG = "BloodPressureMeasuresList";
 
-	private static final String SERVICE_NAME = HealthClient.H9_SERVICE;
+	private static final String SERVICE_NAME = HealthClient.HEALTH_SERVICE;
 
 	private static final int ACTIVITY_AUTHENTICATE = 0;
 	// Public so that the AuthManager can start a new get_login activity after

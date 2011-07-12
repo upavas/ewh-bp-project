@@ -11,9 +11,11 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- *  Class GraphView : a view controller for displaying the blood pressure / time graph
+ * Class GraphView : a view controller for displaying the blood pressure / time
+ * graph
+ * 
  * @author corentin
- *
+ * 
  */
 public class ValuesView extends View {
 	// Attributes
@@ -116,9 +118,12 @@ public class ValuesView extends View {
 		fm = paintFontLeft.getFontMetrics();
 		y = h / 6 - (fm.ascent + fm.descent) / 2;
 
-		canvas.drawText(getResources().getText(R.string.sys).toString(), 5, y, paintFontLeft);
-		canvas.drawText(getResources().getText(R.string.dia).toString(), 5, h / 3 + y, paintFontLeft);
-		canvas.drawText(getResources().getText(R.string.pulse).toString(), 5, 2 * h / 3 + y, paintFontLeft);
+		canvas.drawText(getResources().getText(R.string.sys).toString(), 5, y,
+				paintFontLeft);
+		canvas.drawText(getResources().getText(R.string.dia).toString(), 5, h
+				/ 3 + y, paintFontLeft);
+		canvas.drawText(getResources().getText(R.string.pulse).toString(), 5, 2
+				* h / 3 + y, paintFontLeft);
 
 		// Draw the text in the right rectangle
 		paintFontRight.setTextSize(h / 3 * 0.75f);
@@ -130,9 +135,17 @@ public class ValuesView extends View {
 
 		canvas.drawText(sPressure + " mmHg", w - 5, y, paintFontRight);
 		canvas.drawText(dPressure + " mmHg", w - 5, h / 3 + y, paintFontRight);
-		canvas.drawText(pulseRate + " bpm    ", w - 5, 2 * h / 3 + y,
-				paintFontRight);
-
+		if (pulseRate > 88 || pulseRate < 50) {
+			if (pulseRate == 0)
+				canvas.drawText(pulseRate + " bpm    ", w - 5, 2 * h / 3 + y,
+						paintFontRight);
+			else
+				canvas.drawText("Not Measurable", w - 5, 2 * h / 3 + y,
+						paintFontRight);
+		} else {
+			canvas.drawText(pulseRate + " bpm    ", w - 5, 2 * h / 3 + y,
+					paintFontRight);
+		}
 	}
 
 	public int getSPressure() {

@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -313,7 +314,7 @@ public class MeasureListActivity extends ListActivity implements
 		int aux2 = 0;
 		while (cur.isAfterLast() == false) {
 
-			for (int i = 0; i < cur.getColumnCount() - 1; i++) {
+			for (int i = 0; i < cur.getColumnCount(); i++) {
 
 				if (cn[i].equals(BPMeasure.PULSE)) {
 					pulse = cur.getString(i);
@@ -778,4 +779,13 @@ public class MeasureListActivity extends ListActivity implements
 			// Toast.LENGTH_LONG).show();
 		}
 	}
+
+	@Override
+	public void onBackPressed() {
+		Intent i = new Intent(measureListContext, MainActivity.class);
+		startActivity(i);
+	return;
+	}
+		
+	
 }

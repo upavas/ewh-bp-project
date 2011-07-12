@@ -33,9 +33,9 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.exception.BadMeasureException;
+import com.ewhoxford.android.bloodpressure.exception.TempBadMeasureException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
 import com.ewhoxford.android.bloodpressure.pressureInputDevice.SampleDynamicXYDatasource;
-import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDatasource;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 import com.ewhoxford.android.bloodpressure.utils.FileManager;
@@ -447,8 +447,6 @@ public class MeasureActivity extends Activity {
 				try {
 					bloodPressureValue = r.signalProcessing(signal, fs);
 				} catch (BadMeasureException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 					myProgressDialog.dismiss();
 
 					builder = new AlertDialog.Builder(measureContext);
@@ -464,6 +462,21 @@ public class MeasureActivity extends Activity {
 
 					mHandler.post(discardMeasure);
 
+				} catch (TempBadMeasureException e) {
+					myProgressDialog.dismiss();
+
+					builder = new AlertDialog.Builder(measureContext);
+					builder.setMessage(
+							R.string.alert_dialog_discard_temp_bad_measure)
+							.setCancelable(false).setPositiveButton("OK",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog, int id) {
+											MeasureActivity.this.finish();
+										}
+									});
+
+					mHandler.post(discardMeasure);
 				}
 
 				// Dismiss the Dialog
@@ -537,6 +550,13 @@ public class MeasureActivity extends Activity {
 
 	public void setMeasuresuccessful(boolean measureSuccessful) {
 		this.measureSuccessful = measureSuccessful;
+	}
+	
+	@Override
+	public void onBackPressed() {
+		Intent i = new Intent(this.getBaseContext(), MainActivity.class);
+		startActivity(i);
+	return;
 	}
 
 }
