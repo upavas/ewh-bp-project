@@ -186,7 +186,7 @@ public class MeasureActivity extends Activity {
 
 			pressureValue = data.getPressureValue();
 						
-			if (data.getBpMeasure().size() == measureSize) {
+			if (data.getBpMeasure().size() == measureSize && measureSize<BOUNDARY_NUMBER_OF_POINTS) {
 				mHandler.post(connectedSensorText);
 			} else {
 				measureSize=data.getBpMeasure().size();
@@ -448,35 +448,11 @@ public class MeasureActivity extends Activity {
 					bloodPressureValue = r.signalProcessing(signal, fs);
 				} catch (BadMeasureException e) {
 					myProgressDialog.dismiss();
-
-					builder = new AlertDialog.Builder(measureContext);
-					builder.setMessage(
-							R.string.alert_dialog_discard_bad_measure)
-							.setCancelable(false).setPositiveButton("OK",
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog, int id) {
-											MeasureActivity.this.finish();
-										}
-									});
-
 					mHandler.post(discardMeasure);
 
 				} catch (TempBadMeasureException e) {
 					myProgressDialog.dismiss();
-
-					builder = new AlertDialog.Builder(measureContext);
-					builder.setMessage(
-							R.string.alert_dialog_discard_temp_bad_measure)
-							.setCancelable(false).setPositiveButton("OK",
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog, int id) {
-											MeasureActivity.this.finish();
-										}
-									});
-
-					mHandler.post(discardMeasure);
+					mHandler.post(discardTemBadMeasure);
 				}
 
 				// Dismiss the Dialog
@@ -493,6 +469,24 @@ public class MeasureActivity extends Activity {
 
 			builder = new AlertDialog.Builder(measureContext);
 			builder.setMessage(R.string.alert_dialog_discard_bad_measure)
+					.setCancelable(false).setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									MeasureActivity.this.finish();
+								}
+							});
+			AlertDialog alert = builder.create();
+			alert.show();
+		}
+	};
+	
+	// Create runnable for chaging messages while pressure is being acquired
+	final Runnable discardTemBadMeasure = new Runnable() {
+		public void run() {
+
+			builder = new AlertDialog.Builder(measureContext);
+			builder.setMessage(R.string.alert_dialog_discard_temp_bad_measure)
 					.setCancelable(false).setPositiveButton("OK",
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
