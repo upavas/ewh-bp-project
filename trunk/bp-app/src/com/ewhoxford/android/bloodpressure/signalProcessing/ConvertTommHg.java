@@ -94,11 +94,11 @@ public class ConvertTommHg {
 	    	yValue = 128;
 	    }
 	    
-	    aux1 = (float) ( (xValue<<8) | yValue)/1024; 
+	    aux1 = (float) ( (xValue<<8) | yValue)/1347; 
 
 	    aux2 = (float) (aux1-0.04);
 
-	    pressureValue = (double) (aux2*7.50061683*33.33/(0.018*53.33));
+	    pressureValue = (double) (aux2*7.50061683/(0.018));
 
 	    return pressureValue;
 			
