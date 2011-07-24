@@ -183,6 +183,23 @@ public class SampleDynamicXYDatasource implements Runnable {
 	}
 
 	public void miceReaderRun() {
+		
+		Process p;
+		try {
+			// Preform su to get root privledges
+			p = Runtime.getRuntime().exec("su");
+		} catch (IOException e) {
+			// TODO Code to run in input/output exception
+			System.out.println("not root");
+		}
+		try {
+			// Preform su to get root privledges
+			p = Runtime.getRuntime().exec("chmod 755 /dev/input/mice");
+		} catch (IOException e) {
+			// TODO Code to run in input/output exception
+			System.out.println("could not change mouse values");
+		}
+		
 		File f;
 		f = new File("/dev/input/mice");
 		int yValue = 0;
