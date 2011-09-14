@@ -18,3 +18,5 @@ syntax: regexp
 ^trunk/bp-swt-app/bin$
 syntax: regexp
 ^trunk/bp-swt-app/bin$
+syntax: regexp
+^trunk/bp-swt-app/\.classpath$
