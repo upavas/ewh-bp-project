@@ -1,10 +1,10 @@
 clear all
 close all
 
-x2=csvread('conference_tests/mauro_normal_1.csv');
+x2=csvread('asma/marco_asma_with_finger_max_length_2.csv');  
 
-y_p1_o=abs(x2(:,3)-255);
-x_p1=x2(:,2);
+y_p1_o=abs(x2(:,2)-255);
+x_p1=x2(:,1);
 figure(1)
 plot(y_p1_o,'o')
 title('Y')
@@ -50,5 +50,5 @@ title('y pressure KPa')
 
 figure(9)
 plot(y_pressure_mm_hg)
-title('y pressure KPa')
+title('y pressure mmHg')
  
