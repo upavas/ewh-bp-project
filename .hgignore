@@ -11,3 +11,10 @@ syntax: regexp
 \~$
 \.out$
 \.log$
+
+syntax: regexp
+^trunk/bp-swt-app/\.settings$
+syntax: regexp
+^trunk/bp-swt-app/bin$
+syntax: regexp
+^trunk/bp-swt-app/bin$
