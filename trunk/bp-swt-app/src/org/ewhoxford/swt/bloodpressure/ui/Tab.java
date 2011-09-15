@@ -55,7 +55,7 @@ abstract class Tab {
 	TableItem newItem, lastSelected;
 	Vector data = new Vector ();
 	/* Controlling instance */
-	final LayoutExample instance;
+	final BPMainWindow instance;
 
 	/* Listeners */
 	SelectionListener selectionListener = new SelectionAdapter () {
@@ -76,7 +76,7 @@ abstract class Tab {
 	/**
 	 * Creates the Tab within a given instance of LayoutExample.
 	 */
-	Tab(LayoutExample instance) {
+	Tab(BPMainWindow instance) {
 		this.instance = instance;
 	}
 	
@@ -87,7 +87,7 @@ abstract class Tab {
 	 */
 	void createChildGroup () {
 		childGroup = new Group (controlGroup, SWT.NONE);
-		childGroup.setText (LayoutExample.getResourceString("Children"));
+		childGroup.setText (BPMainWindow.getResourceString("Children"));
 		GridLayout layout = new GridLayout ();
 		layout.numColumns = 3;
 		childGroup.setLayout (layout);
@@ -106,10 +106,10 @@ abstract class Tab {
 	void createChildWidgets () {
 		/* Controls for adding and removing children */
 		add = new Button (childGroup, SWT.PUSH);
-		add.setText (LayoutExample.getResourceString ("Add"));
+		add.setText (BPMainWindow.getResourceString ("Add"));
 		add.setLayoutData(new GridData (GridData.FILL_HORIZONTAL));
 		delete = new Button (childGroup, SWT.PUSH);
-		delete.setText (LayoutExample.getResourceString ("Delete"));
+		delete.setText (BPMainWindow.getResourceString ("Delete"));
 		delete.setLayoutData(new GridData (GridData.FILL_HORIZONTAL));
 		delete.addSelectionListener (new SelectionAdapter () {
 			public void widgetSelected (SelectionEvent e) {
@@ -126,7 +126,7 @@ abstract class Tab {
 			}
 		});
 		clear = new Button (childGroup, SWT.PUSH);
-		clear.setText (LayoutExample.getResourceString ("Clear"));
+		clear.setText (BPMainWindow.getResourceString ("Clear"));
 		clear.setLayoutData(new GridData (GridData.FILL_HORIZONTAL));
 		clear.addSelectionListener (new SelectionAdapter () {
 			public void widgetSelected (SelectionEvent e) {
@@ -202,93 +202,93 @@ abstract class Tab {
 	 */	
 	void createControlGroup () {
 		controlGroup = new Group (sash, SWT.NONE);
-		controlGroup.setText (LayoutExample.getResourceString("Parameters"));
+		controlGroup.setText (BPMainWindow.getResourceString("Parameters"));
 		GridLayout layout = new GridLayout ();
 		layout.numColumns = 2;
 		controlGroup.setLayout (layout);
-		size = new Button (controlGroup, SWT.CHECK);
-		size.setText (LayoutExample.getResourceString ("Preferred_Size"));
-		size.setSelection (false);
-		size.addSelectionListener (new SelectionAdapter () {
-			public void widgetSelected (SelectionEvent e) {
-				resetEditors ();
-				if (size.getSelection ()) {
-					layoutComposite.setLayoutData (new GridData ());
-					layoutGroup.layout (true);
-				} else {
-					layoutComposite.setLayoutData (new GridData (GridData.FILL_BOTH));
-					layoutGroup.layout (true);
-				}
-			}
-		});
-		GridData data = new GridData (GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 2;
-		size.setLayoutData (data);
-		createControlWidgets ();
+//		size = new Button (controlGroup, SWT.CHECK);
+//		size.setText (BPMainWindow.getResourceString ("Preferred_Size"));
+//		size.setSelection (false);
+//		size.addSelectionListener (new SelectionAdapter () {
+//			public void widgetSelected (SelectionEvent e) {
+//				resetEditors ();
+//				if (size.getSelection ()) {
+//					layoutComposite.setLayoutData (new GridData ());
+//					layoutGroup.layout (true);
+//				} else {
+//					layoutComposite.setLayoutData (new GridData (GridData.FILL_BOTH));
+//					layoutGroup.layout (true);
+//				}
+//			}
+//		});
+//		GridData data = new GridData (GridData.FILL_HORIZONTAL);
+//		data.horizontalSpan = 2;
+//		size.setLayoutData (data);
+//		createControlWidgets ();
 	}
 		
-	/**
-	 * Creates the "control" widget children.
-	 * Subclasses override this method to augment
-	 * the standard controls created.
-	 */
-	void createControlWidgets () {
-		createChildGroup ();
-		code = new Button (controlGroup, SWT.PUSH);
-		code.setText (LayoutExample.getResourceString ("Code"));
-		GridData gridData = new GridData (GridData.HORIZONTAL_ALIGN_CENTER | GridData.GRAB_HORIZONTAL);
-		gridData.horizontalSpan = 2;
-		code.setLayoutData (gridData);
-		code.addSelectionListener (new SelectionAdapter () {
-			public void widgetSelected (SelectionEvent e) {
-				final Shell shell = new Shell ();	
-				shell.setText (LayoutExample.getResourceString ("Generated_Code"));
-				shell.setLayout (new FillLayout ());
-				final StyledText text = new StyledText (shell, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
-				String layoutCode = generateCode ().toString ();
-				if (layoutCode.length () == 0) return;
-				text.setText (layoutCode);
-				
-				Menu bar = new Menu (shell, SWT.BAR);
-				shell.setMenuBar (bar);
-				MenuItem editItem = new MenuItem (bar, SWT.CASCADE);
-				editItem.setText (LayoutExample.getResourceString ("Edit"));
-				Menu menu = new Menu (bar);
-				MenuItem select = new MenuItem (menu, SWT.PUSH);
-				select.setText (LayoutExample.getResourceString ("Select_All"));
-				select.setAccelerator (SWT.MOD1 + 'A');
-				select.addSelectionListener (new SelectionAdapter () {
-					public void widgetSelected (SelectionEvent e) {
-						text.selectAll ();
-					}
-				});
-				MenuItem copy = new MenuItem (menu, SWT.PUSH);
-				copy.setText (LayoutExample.getResourceString ("Copy"));
-				copy.setAccelerator (SWT.MOD1 + 'C');
-				copy.addSelectionListener (new SelectionAdapter () {
-					public void widgetSelected (SelectionEvent e) {
-						text.copy ();
-					}
-				});
-				MenuItem exit = new MenuItem (menu, SWT.PUSH);
-				exit.setText (LayoutExample.getResourceString ("Exit"));
-				exit.addSelectionListener (new SelectionAdapter () {
-					public void widgetSelected (SelectionEvent e) {
-						shell.close ();
-					}
-				});
-				editItem.setMenu (menu);
-				
-				shell.pack ();
-				shell.setSize (400, 500);
-				shell.open ();
-				Display display = shell.getDisplay ();
-				while (!shell.isDisposed ())
-					if (!display.readAndDispatch ()) display.sleep ();
-			}
-		});
-	}
-	
+//	/**
+//	 * Creates the "control" widget children.
+//	 * Subclasses override this method to augment
+//	 * the standard controls created.
+//	 */
+//	void createControlWidgets () {
+//		createChildGroup ();
+//		code = new Button (controlGroup, SWT.PUSH);
+//		code.setText (BPMainWindow.getResourceString ("Code"));
+//		GridData gridData = new GridData (GridData.HORIZONTAL_ALIGN_CENTER | GridData.GRAB_HORIZONTAL);
+//		gridData.horizontalSpan = 2;
+//		code.setLayoutData (gridData);
+//		code.addSelectionListener (new SelectionAdapter () {
+//			public void widgetSelected (SelectionEvent e) {
+//				final Shell shell = new Shell ();	
+//				shell.setText (BPMainWindow.getResourceString ("Generated_Code"));
+//				shell.setLayout (new FillLayout ());
+//				final StyledText text = new StyledText (shell, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+//				String layoutCode = generateCode ().toString ();
+//				if (layoutCode.length () == 0) return;
+//				text.setText (layoutCode);
+//				
+//				Menu bar = new Menu (shell, SWT.BAR);
+//				shell.setMenuBar (bar);
+//				MenuItem editItem = new MenuItem (bar, SWT.CASCADE);
+//				editItem.setText (BPMainWindow.getResourceString ("Edit"));
+//				Menu menu = new Menu (bar);
+//				MenuItem select = new MenuItem (menu, SWT.PUSH);
+//				select.setText (BPMainWindow.getResourceString ("Select_All"));
+//				select.setAccelerator (SWT.MOD1 + 'A');
+//				select.addSelectionListener (new SelectionAdapter () {
+//					public void widgetSelected (SelectionEvent e) {
+//						text.selectAll ();
+//					}
+//				});
+//				MenuItem copy = new MenuItem (menu, SWT.PUSH);
+//				copy.setText (BPMainWindow.getResourceString ("Copy"));
+//				copy.setAccelerator (SWT.MOD1 + 'C');
+//				copy.addSelectionListener (new SelectionAdapter () {
+//					public void widgetSelected (SelectionEvent e) {
+//						text.copy ();
+//					}
+//				});
+//				MenuItem exit = new MenuItem (menu, SWT.PUSH);
+//				exit.setText (BPMainWindow.getResourceString ("Exit"));
+//				exit.addSelectionListener (new SelectionAdapter () {
+//					public void widgetSelected (SelectionEvent e) {
+//						shell.close ();
+//					}
+//				});
+//				editItem.setMenu (menu);
+//				
+//				shell.pack ();
+//				shell.setSize (400, 500);
+//				shell.open ();
+//				Display display = shell.getDisplay ();
+//				while (!shell.isDisposed ())
+//					if (!display.readAndDispatch ()) display.sleep ();
+//			}
+//		});
+//	}
+//	
 	/**
 	 * Creates the example layout.
 	 * Subclasses override this method.
@@ -311,7 +311,7 @@ abstract class Tab {
 	 */
 	void createLayoutGroup () {
 		layoutGroup = new Group (sash, SWT.NONE);
-		layoutGroup.setText (LayoutExample.getResourceString("Layout"));
+		layoutGroup.setText (BPMainWindow.getResourceString("Layout"));
 		layoutGroup.setLayout (new GridLayout ());
 		createLayoutComposite ();
 	}
@@ -523,14 +523,14 @@ abstract class Tab {
 		TableItem [] items = table.getItems ();
 		children = new Control [items.length];
 		String [] itemValues = new String [] {
-			LayoutExample.getResourceString ("Item",new String [] {"1"}),
-			LayoutExample.getResourceString ("Item",new String [] {"2"}),
-			LayoutExample.getResourceString ("Item",new String [] {"3"})};
+			BPMainWindow.getResourceString ("Item",new String [] {"1"}),
+			BPMainWindow.getResourceString ("Item",new String [] {"2"}),
+			BPMainWindow.getResourceString ("Item",new String [] {"3"})};
 		for (int i = 0; i < items.length; i++) {
 			String control = items [i].getText (1);
 			if (control.equals ("Button")) {
 				Button button = new Button (layoutComposite, SWT.PUSH);
-				button.setText (LayoutExample.getResourceString ("Button_Index", new String [] {new Integer (i).toString ()}));
+				button.setText (BPMainWindow.getResourceString ("Button_Index", new String [] {new Integer (i).toString ()}));
 				children [i] = button;
 			} else if (control.equals ("Canvas")) {
 				Canvas canvas = new Canvas (layoutComposite, SWT.BORDER);
@@ -538,7 +538,7 @@ abstract class Tab {
 			} else if (control.equals ("Combo")) {
 				Combo combo = new Combo (layoutComposite, SWT.NONE);
 				combo.setItems (itemValues);
-				combo.setText (LayoutExample.getResourceString ("Combo_Index", new String [] {new Integer (i).toString ()}));
+				combo.setText (BPMainWindow.getResourceString ("Combo_Index", new String [] {new Integer (i).toString ()}));
 				children [i] = combo;
 			} else if (control.equals ("Composite")) { 
 				Composite composite = new Composite (layoutComposite, SWT.BORDER);
@@ -547,16 +547,16 @@ abstract class Tab {
 		    	CoolBar coolBar = new CoolBar (layoutComposite, SWT.NONE);
 		    	ToolBar toolBar = new ToolBar (coolBar, SWT.BORDER);
 				ToolItem item = new ToolItem (toolBar, 0);
-				item.setText (LayoutExample.getResourceString ("Item",new String [] {"1"}));
+				item.setText (BPMainWindow.getResourceString ("Item",new String [] {"1"}));
 				item = new ToolItem (toolBar, 0);
-				item.setText (LayoutExample.getResourceString ("Item",new String [] {"2"}));
+				item.setText (BPMainWindow.getResourceString ("Item",new String [] {"2"}));
 		    	CoolItem coolItem1 = new CoolItem (coolBar, 0);
 		    	coolItem1.setControl (toolBar);
 				toolBar = new ToolBar (coolBar, SWT.BORDER);
 				item = new ToolItem (toolBar, 0);
-				item.setText (LayoutExample.getResourceString ("Item",new String [] {"3"}));
+				item.setText (BPMainWindow.getResourceString ("Item",new String [] {"3"}));
 				item = new ToolItem (toolBar, 0);
-				item.setText (LayoutExample.getResourceString ("Item",new String [] {"4"}));
+				item.setText (BPMainWindow.getResourceString ("Item",new String [] {"4"}));
 		    	CoolItem coolItem2 = new CoolItem (coolBar, 0);
 		    	coolItem2.setControl (toolBar);
 		    	Point size = toolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT);
@@ -566,11 +566,11 @@ abstract class Tab {
 				children [i] = coolBar;
 		    } else if (control.equals ("Group")) {
 				Group group = new Group (layoutComposite, SWT.NONE);
-				group.setText (LayoutExample.getResourceString ("Group_Index", new String [] {new Integer (i).toString ()}));
+				group.setText (BPMainWindow.getResourceString ("Group_Index", new String [] {new Integer (i).toString ()}));
 				children [i] = group;
 			} else if (control.equals ("Label")) {
 				Label label = new Label (layoutComposite, SWT.NONE);
-				label.setText (LayoutExample.getResourceString ("Label_Index", new String [] {new Integer (i).toString ()}));
+				label.setText (BPMainWindow.getResourceString ("Label_Index", new String [] {new Integer (i).toString ()}));
 				children [i] = label;
 			} else if (control.equals ("List")) {
 				List list = new List (layoutComposite, SWT.BORDER);
@@ -588,33 +588,33 @@ abstract class Tab {
 				children [i] = slider;
 			} else if (control.equals ("StyledText")) {
 				StyledText styledText = new StyledText (layoutComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-				styledText.setText (LayoutExample.getResourceString ("StyledText_Index", new String [] {new Integer (i).toString ()}));
+				styledText.setText (BPMainWindow.getResourceString ("StyledText_Index", new String [] {new Integer (i).toString ()}));
 				children [i] = styledText;			
 			} else if (control.equals ("Table")) {
 				Table table = new Table (layoutComposite, SWT.BORDER);
 				table.setLinesVisible (true);
 				TableItem item1 = new TableItem (table, 0);
-				item1.setText (LayoutExample.getResourceString ("Item",new String [] {"1"}));
+				item1.setText (BPMainWindow.getResourceString ("Item",new String [] {"1"}));
 				TableItem item2 = new TableItem (table, 0);
-				item2.setText (LayoutExample.getResourceString ("Item",new String [] {"2"}));
+				item2.setText (BPMainWindow.getResourceString ("Item",new String [] {"2"}));
 				children [i] = table;
 			} else if (control.equals ("Text")) {
 				Text text = new Text (layoutComposite, SWT.BORDER);
-				text.setText (LayoutExample.getResourceString ("Text_Index", new String [] {new Integer (i).toString ()}));
+				text.setText (BPMainWindow.getResourceString ("Text_Index", new String [] {new Integer (i).toString ()}));
 				children [i] = text;
 			} else if (control.equals ("ToolBar")) {
 				ToolBar toolBar = new ToolBar (layoutComposite, SWT.BORDER);
 				ToolItem item1 = new ToolItem (toolBar, 0);
-				item1.setText (LayoutExample.getResourceString ("Item",new String [] {"1"}));
+				item1.setText (BPMainWindow.getResourceString ("Item",new String [] {"1"}));
 				ToolItem item2 = new ToolItem (toolBar, 0);
-				item2.setText (LayoutExample.getResourceString ("Item",new String [] {"2"}));
+				item2.setText (BPMainWindow.getResourceString ("Item",new String [] {"2"}));
 				children [i] = toolBar;
 			} else {
 				Tree tree = new Tree (layoutComposite, SWT.BORDER);
 				TreeItem item1 = new TreeItem (tree, 0);
-				item1.setText (LayoutExample.getResourceString ("Item",new String [] {"1"}));
+				item1.setText (BPMainWindow.getResourceString ("Item",new String [] {"1"}));
 				TreeItem item2 = new TreeItem (tree, 0);
-				item2.setText (LayoutExample.getResourceString ("Item",new String [] {"2"}));
+				item2.setText (BPMainWindow.getResourceString ("Item",new String [] {"2"}));
 				children [i] = tree;
 			} 
 		}

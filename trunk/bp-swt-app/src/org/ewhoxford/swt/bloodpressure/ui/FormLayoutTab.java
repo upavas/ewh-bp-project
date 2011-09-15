@@ -46,7 +46,7 @@ class FormLayoutTab extends Tab {
 	/**
 	 * Creates the Tab within a given instance of LayoutExample.
 	 */
-	FormLayoutTab(LayoutExample instance) {
+	FormLayoutTab(BPMainWindow instance) {
 		super(instance);
 	}
 	
@@ -140,7 +140,7 @@ class FormLayoutTab extends Tab {
 				createTextEditor (heightText, heightEditor, HEIGHT_COL);
 				
 				leftAttach = new Button (table, SWT.PUSH);
-				leftAttach.setText (LayoutExample.getResourceString ("Attach_Edit"));
+				leftAttach.setText (BPMainWindow.getResourceString ("Attach_Edit"));
 				leftEditor.horizontalAlignment = SWT.LEFT;
 				leftEditor.grabHorizontal = true;
 				leftEditor.minimumWidth = leftAttach.computeSize (SWT.DEFAULT, SWT.DEFAULT).x;
@@ -149,7 +149,7 @@ class FormLayoutTab extends Tab {
 					public void widgetSelected (SelectionEvent e) {
 						Shell shell = tabFolderPage.getShell ();
 						AttachDialog dialog = new AttachDialog (shell);
-						dialog.setText (LayoutExample.getResourceString ("Left_Attachment"));
+						dialog.setText (BPMainWindow.getResourceString ("Left_Attachment"));
 						dialog.setColumn (LEFT_COL);
 						String attach = dialog.open ();
 						newItem.setText (LEFT_COL, attach);
@@ -158,7 +158,7 @@ class FormLayoutTab extends Tab {
 				});
 				
 				rightAttach = new Button (table, SWT.PUSH);
-				rightAttach.setText (LayoutExample.getResourceString ("Attach_Edit"));
+				rightAttach.setText (BPMainWindow.getResourceString ("Attach_Edit"));
 				rightEditor.horizontalAlignment = SWT.LEFT;
 				rightEditor.grabHorizontal = true;
 				rightEditor.minimumWidth = rightAttach.computeSize (SWT.DEFAULT, SWT.DEFAULT).x;
@@ -167,7 +167,7 @@ class FormLayoutTab extends Tab {
 					public void widgetSelected (SelectionEvent e) {
 						Shell shell = tabFolderPage.getShell ();
 						AttachDialog dialog = new AttachDialog (shell);
-						dialog.setText (LayoutExample.getResourceString ("Right_Attachment"));
+						dialog.setText (BPMainWindow.getResourceString ("Right_Attachment"));
 						dialog.setColumn (RIGHT_COL);
 						String attach = dialog.open ();
 						newItem.setText (RIGHT_COL, attach);
@@ -177,7 +177,7 @@ class FormLayoutTab extends Tab {
 				});
 				
 				topAttach = new Button (table, SWT.PUSH);
-				topAttach.setText (LayoutExample.getResourceString ("Attach_Edit"));
+				topAttach.setText (BPMainWindow.getResourceString ("Attach_Edit"));
 				topEditor.horizontalAlignment = SWT.LEFT;
 				topEditor.grabHorizontal = true;
 				topEditor.minimumWidth = topAttach.computeSize (SWT.DEFAULT, SWT.DEFAULT).x;
@@ -186,7 +186,7 @@ class FormLayoutTab extends Tab {
 					public void widgetSelected (SelectionEvent e) {
 						Shell shell = tabFolderPage.getShell ();
 						AttachDialog dialog = new AttachDialog (shell);
-						dialog.setText (LayoutExample.getResourceString ("Top_Attachment"));
+						dialog.setText (BPMainWindow.getResourceString ("Top_Attachment"));
 						dialog.setColumn (TOP_COL);
 						String attach = dialog.open ();
 						newItem.setText (TOP_COL, attach);
@@ -194,7 +194,7 @@ class FormLayoutTab extends Tab {
 					}
 				});
 				bottomAttach = new Button (table, SWT.PUSH);
-				bottomAttach.setText (LayoutExample.getResourceString ("Attach_Edit"));
+				bottomAttach.setText (BPMainWindow.getResourceString ("Attach_Edit"));
 				bottomEditor.horizontalAlignment = SWT.LEFT;
 				bottomEditor.grabHorizontal = true;
 				bottomEditor.minimumWidth = bottomAttach.computeSize (SWT.DEFAULT, SWT.DEFAULT).x;
@@ -203,7 +203,7 @@ class FormLayoutTab extends Tab {
 					public void widgetSelected (SelectionEvent e) {
 						Shell shell = tabFolderPage.getShell ();
 						AttachDialog dialog = new AttachDialog (shell);
-						dialog.setText (LayoutExample.getResourceString ("Bottom_Attachment"));
+						dialog.setText (BPMainWindow.getResourceString ("Bottom_Attachment"));
 						dialog.setColumn (BOTTOM_COL);
 						String attach = dialog.open ();
 						newItem.setText (BOTTOM_COL, attach);
@@ -242,8 +242,8 @@ class FormLayoutTab extends Tab {
 				TableItem item = new TableItem (table, 0);
 				String [] insert = new String [] {
 					String.valueOf (table.indexOf (item)), "Button", "-1", "-1",
-					"0,0 (" + LayoutExample.getResourceString ("Default") + ")", "", 
-					"0,0 (" + LayoutExample.getResourceString ("Default") + ")", ""};
+					"0,0 (" + BPMainWindow.getResourceString ("Default") + ")", "", 
+					"0,0 (" + BPMainWindow.getResourceString ("Default") + ")", ""};
 				item.setText (insert);
 				data.addElement (insert);
 				resetEditors ();
@@ -258,7 +258,7 @@ class FormLayoutTab extends Tab {
 		/* Controls the margins and spacing of the FormLayout */
 		String [] marginValues = new String [] {"0","3","5","10"};
 		Group marginGroup = new Group (controlGroup, SWT.NONE);
-		marginGroup.setText (LayoutExample.getResourceString ("Margins"));
+		marginGroup.setText (BPMainWindow.getResourceString ("Margins"));
 		GridLayout layout = new GridLayout ();
 		layout.numColumns = 2;
 		marginGroup.setLayout (layout);
@@ -283,7 +283,7 @@ class FormLayoutTab extends Tab {
 		marginWidth.setLayoutData (data);
 		
 		/* Add common controls */
-		super.createControlWidgets ();
+		//super.createControlWidgets ();
 		
 		/* Position the sash */
 		sash.setWeights (new int [] {6,4});
@@ -623,7 +623,7 @@ class FormLayoutTab extends Tab {
 			
 			/* Add position field */
 			final Button posButton = new Button (shell, SWT.RADIO);
-			posButton.setText (LayoutExample.getResourceString ("Position"));
+			posButton.setText (BPMainWindow.getResourceString ("Position"));
 			posButton.setSelection (!isControl);			
 			final Combo position = new Combo (shell, SWT.NONE);
 			position.setItems (new String [] {"0","25","50","75","100"});
@@ -635,7 +635,7 @@ class FormLayoutTab extends Tab {
 			
 			/* Add control field */
 			final Button contButton = new Button (shell, SWT.RADIO);
-			contButton.setText (LayoutExample.getResourceString ("Control"));
+			contButton.setText (BPMainWindow.getResourceString ("Control"));
 			contButton.setSelection (isControl);
 			final Combo control = new Combo (shell, SWT.READ_ONLY);
 			TableItem [] items = table.getItems ();
@@ -655,7 +655,7 @@ class FormLayoutTab extends Tab {
 			control.setLayoutData (data);
 			
 			/* Add alignment field */
-			new Label (shell, SWT.NONE).setText (LayoutExample.getResourceString ("Alignment"));
+			new Label (shell, SWT.NONE).setText (BPMainWindow.getResourceString ("Alignment"));
 			final Combo alignment = new Combo (shell, SWT.NONE);
 			String[] alignmentValues;
 			if (col == LEFT_COL || col == RIGHT_COL) {
@@ -672,7 +672,7 @@ class FormLayoutTab extends Tab {
 			alignment.setLayoutData (data);
 			
 			/* Add offset field */
-			new Label (shell, SWT.NONE).setText (LayoutExample.getResourceString ("Offset"));
+			new Label (shell, SWT.NONE).setText (BPMainWindow.getResourceString ("Offset"));
 			final Text offset = new Text (shell, SWT.SINGLE | SWT.BORDER);
 			offset.setText (oldOffset);
 			data = new GridData (GridData.FILL_HORIZONTAL);
@@ -696,7 +696,7 @@ class FormLayoutTab extends Tab {
 			});
 			
 			Button clear = new Button (shell, SWT.PUSH);
-			clear.setText (LayoutExample.getResourceString ("Clear"));
+			clear.setText (BPMainWindow.getResourceString ("Clear"));
 			clear.setLayoutData (new GridData (GridData.HORIZONTAL_ALIGN_END));
 			clear.addSelectionListener (new SelectionAdapter () {
 				public void widgetSelected (SelectionEvent e) {
@@ -706,7 +706,7 @@ class FormLayoutTab extends Tab {
 			});
 			/* OK button sets data into table */
 			Button ok = new Button (shell, SWT.PUSH);
-			ok.setText (LayoutExample.getResourceString ("OK"));
+			ok.setText (BPMainWindow.getResourceString ("OK"));
 			ok.setLayoutData (new GridData (GridData.HORIZONTAL_ALIGN_CENTER));
 			ok.addSelectionListener (new SelectionAdapter () {
 				public void widgetSelected (SelectionEvent e) {
@@ -735,7 +735,7 @@ class FormLayoutTab extends Tab {
 				}
 			});
 			Button cancel = new Button (shell, SWT.PUSH);
-			cancel.setText (LayoutExample.getResourceString ("Cancel"));
+			cancel.setText (BPMainWindow.getResourceString ("Cancel"));
 			cancel.setLayoutData (new GridData (GridData.HORIZONTAL_ALIGN_BEGINNING));
 			cancel.addSelectionListener (new SelectionAdapter () {
 				public void widgetSelected (SelectionEvent e) {
@@ -759,4 +759,10 @@ class FormLayoutTab extends Tab {
 			return result;
 		}
 	}
+	
+	
+	
+	
+	
+	
 }

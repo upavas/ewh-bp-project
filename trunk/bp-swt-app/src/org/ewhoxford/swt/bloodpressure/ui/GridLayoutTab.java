@@ -50,7 +50,7 @@ class GridLayoutTab extends Tab {
 	/**
 	 * Creates the Tab within a given instance of LayoutExample.
 	 */
-	GridLayoutTab(LayoutExample instance) {
+	GridLayoutTab(BPMainWindow instance) {
 		super(instance);
 	}
 	
@@ -224,7 +224,7 @@ class GridLayoutTab extends Tab {
 		/* Controls the margins and spacing of the GridLayout */
 		String [] marginValues = new String [] {"0","3","5","10"};
 		Group marginGroup = new Group (controlGroup, SWT.NONE);
-		marginGroup.setText (LayoutExample.getResourceString ("Margins_Spacing"));
+		marginGroup.setText (BPMainWindow.getResourceString ("Margins_Spacing"));
 		GridData data = new GridData (GridData.FILL_HORIZONTAL);
 		data.verticalSpan = 2;
 		marginGroup.setLayoutData (data);
@@ -270,7 +270,7 @@ class GridLayoutTab extends Tab {
         
         /* Controls the columns in the GridLayout */
 		Group columnGroup = new Group (controlGroup, SWT.NONE);
-		columnGroup.setText (LayoutExample.getResourceString ("Columns"));
+		columnGroup.setText (BPMainWindow.getResourceString ("Columns"));
 		layout = new GridLayout ();
 		layout.numColumns = 2;
 		columnGroup.setLayout (layout);
