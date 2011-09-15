@@ -44,7 +44,7 @@ import org.jfree.ui.RectangleInsets;
 
 class MeasurePageTab extends Tab {
 	/* Controls for setting layout parameters */
-	Button horizontal, vertical;
+	Button newMeasure, saveMeasure, createCSV;
 	/* The example layout instance */
 	FillLayout fillLayout;
 	/* TableEditors and related controls*/
@@ -64,65 +64,125 @@ class MeasurePageTab extends Tab {
 	 */
 	void createChildWidgets () {
 		/* Add common controls */
-//		super.createChildWidgets ();
-//		
-//		/* Add TableEditors */
-//		comboEditor = new TableEditor (table);
-//		table.addSelectionListener (new SelectionAdapter() {
-//			public void widgetSelected(SelectionEvent e) {
-//				resetEditors ();
-//				index = table.getSelectionIndex ();
-//				if (index == -1) return;
-//				TableItem oldItem = comboEditor.getItem ();
-//				newItem = table.getItem (index);
-//				if (newItem == oldItem || newItem != lastSelected) {
-//					lastSelected = newItem;
-//					return;
-//				}
-//				table.showSelection ();
-//				
-//				combo = new CCombo (table, SWT.READ_ONLY);
-//				createComboEditor (combo, comboEditor);
-//			}
-//		});
-//		
-//		
-//		/* Add listener to add an element to the table */
-//		add.addSelectionListener(new SelectionAdapter () {
-//			public void widgetSelected(SelectionEvent e) {
-//				TableItem item = new TableItem (table, 0);
-//				item.setText (0, String.valueOf (table.indexOf (item)));
-//				item.setText (1, "Button");
-//				data.addElement ("Button");
-//				resetEditors ();
-//			}
-//		});
+		super.createChildWidgets ();
+		
+		/* Add TableEditors */
+		comboEditor = new TableEditor (table);
+		table.addSelectionListener (new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				resetEditors ();
+				index = table.getSelectionIndex ();
+				if (index == -1) return;
+				TableItem oldItem = comboEditor.getItem ();
+				newItem = table.getItem (index);
+				if (newItem == oldItem || newItem != lastSelected) {
+					lastSelected = newItem;
+					return;
+				}
+				table.showSelection ();
+				
+				combo = new CCombo (table, SWT.READ_ONLY);
+				createComboEditor (combo, comboEditor);
+			}
+		});
+		
+		
+		/* Add listener to add an element to the table */
+		add.addSelectionListener(new SelectionAdapter () {
+			public void widgetSelected(SelectionEvent e) {
+				TableItem item = new TableItem (table, 0);
+				item.setText (0, String.valueOf (table.indexOf (item)));
+				item.setText (1, "Button");
+				data.addElement ("Button");
+				resetEditors ();
+			}
+		});
 	}
 	
 	/**
 	 * Creates the control widgets.
 	 */
 	void createControlWidgets () {
+
 		/* Controls the type of FillLayout */
-		Group typeGroup = new Group (controlGroup, SWT.NONE);
-		typeGroup.setText (BPMainWindow.getResourceString ("Type"));
-		typeGroup.setLayout (new GridLayout ());
-		typeGroup.setLayoutData (new GridData (GridData.FILL_HORIZONTAL));
-		horizontal = new Button (typeGroup, SWT.RADIO);
-		horizontal.setText ("SWT.HORIZONTAL");
-		horizontal.setLayoutData(new GridData (GridData.FILL_HORIZONTAL));
-		horizontal.setSelection(true);
-		horizontal.addSelectionListener (selectionListener);
-		vertical = new Button (typeGroup, SWT.RADIO);
-		vertical.setText ("SWT.VERTICAL");
-		vertical.setLayoutData(new GridData (GridData.FILL_HORIZONTAL));
-		vertical.addSelectionListener (selectionListener); 
+		Group bpGroup = new Group (controlGroup, SWT.NONE);
+		bpGroup.setText (BPMainWindow.getResourceString ("Options"));
+		bpGroup.setLayout (new GridLayout (2,true));
+		bpGroup.setLayoutData (new GridData (GridData.FILL_HORIZONTAL));
 		
+		Label label1 = new Label(bpGroup, SWT.NONE);
+		label1.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
+				false));
+		label1.setText("SBP");
+		
+		Text text = new Text(bpGroup, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
+		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		text.setText("0");
+		
+		
+		Label label2 = new Label(bpGroup, SWT.NONE);
+		label2.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
+				false));
+		label2.setText("DBP");
+		
+		Text text2 = new Text(bpGroup, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
+		text2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		text2.setText("0");
+		
+		
+		Label label3 = new Label(bpGroup, SWT.NONE);
+		label3.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
+				false));
+		label3.setText("HR");
+		
+		
+		Text text3 = new Text(bpGroup, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
+		text3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		text3.setText("0");
+		
+
+		Label label5 = new Label(controlGroup, SWT.NONE);
+		label5.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
+				false));
+		label5.setText("");
+		
+		
+		
+		Label label4 = new Label(controlGroup, SWT.NONE);
+		label4.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
+				false));
+		label4.setText("Notes:");
+		
+		Text text4 = new Text(controlGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+		text4.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		text4.setText("Comment on the blood pressure");
+	text4.computeSize(100,500);
+				
+		Group optionGroup = new Group (controlGroup, SWT.NONE);
+		optionGroup.setText (BPMainWindow.getResourceString ("Options"));
+		optionGroup.setLayout (new GridLayout ());
+		optionGroup.setLayoutData (new GridData (GridData.FILL_HORIZONTAL));
+				
+		newMeasure = new Button (optionGroup, SWT.BUTTON1);
+		newMeasure.setText ("New Measure");
+		newMeasure.setLayoutData(new GridData (GridData.FILL_HORIZONTAL));
+		newMeasure.setSelection(true);
+		newMeasure.addSelectionListener (selectionListener);
+		
+		createCSV = new Button (optionGroup, SWT.CHECK);
+		createCSV.setText ("create CSV File");
+		createCSV.setLayoutData(new GridData (GridData.FILL_HORIZONTAL));
+			
+		saveMeasure = new Button (optionGroup, SWT.BUTTON1);
+		saveMeasure.setText ("Save");
+		saveMeasure.setLayoutData(new GridData (GridData.FILL_HORIZONTAL));
+		saveMeasure.addSelectionListener (selectionListener); 
+			
 		/* Add common controls */
 		//super.createControlWidgets ();
 		
 		/* Position the sash */
-		sash.setWeights (new int [] {4,1});
+		//sash.setWeights (new int [] {4,1});
 	}
 	
 	/**
@@ -135,9 +195,7 @@ class MeasurePageTab extends Tab {
 		ChartComposite frame = new ChartComposite(layoutComposite, SWT.NONE, chart, true);
 		frame.setDisplayToolTips(true);
 		frame.setHorizontalAxisTrace(false);
-		frame.setVerticalAxisTrace(false);
-		
-		
+		frame.setVerticalAxisTrace(false);	
 		
 	}
 	
@@ -182,29 +240,12 @@ class MeasurePageTab extends Tab {
 		return "FillLayout";
 	}
 	
-	/**
-	 * Takes information from TableEditors and stores it.
-	 */
-	void resetEditors () {
-		TableItem oldItem = comboEditor.getItem ();
-		comboEditor.setEditor (null, null, -1);
-		if (oldItem != null) {
-			int row = table.indexOf (oldItem);
-			data.insertElementAt (combo.getText (), row);
-			oldItem.setText (1, data.elementAt (row).toString ());
-			combo.dispose ();
-		}
-		setLayoutState ();
-		refreshLayoutComposite ();
-		layoutComposite.layout (true);
-		layoutGroup.layout (true);
-	}
 	
 	/**
 	 * Sets the state of the layout.
 	 */
 	void setLayoutState () {
-		if (vertical.getSelection()) {
+		if (saveMeasure.getSelection()) {
 			fillLayout.type = SWT.VERTICAL;
 		} else {
 			fillLayout.type = SWT.HORIZONTAL;
