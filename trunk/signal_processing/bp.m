@@ -1,7 +1,7 @@
 clear all
 close all
 
-x2=csvread('asma/marco_asma_with_finger_max_length_2.csv');  
+x2=csvread('asma/carlos_asma_with_finger_max_length_2.csv');  
 
 y_p1_o=abs(x2(:,2)-255);
 x_p1=x2(:,1);
