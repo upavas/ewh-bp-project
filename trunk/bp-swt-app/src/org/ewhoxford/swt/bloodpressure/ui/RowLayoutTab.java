@@ -41,7 +41,7 @@ class RowLayoutTab extends Tab {
 	/**
 	 * Creates the Tab within a given instance of LayoutExample.
 	 */
-	RowLayoutTab(LayoutExample instance) {
+	RowLayoutTab(BPMainWindow instance) {
 		super(instance);
 	}
 	
@@ -123,7 +123,7 @@ class RowLayoutTab extends Tab {
 	void createControlWidgets () {
 		/* Controls the type of RowLayout */
 		Group typeGroup = new Group (controlGroup, SWT.NONE);
-		typeGroup.setText (LayoutExample.getResourceString ("Type"));
+		typeGroup.setText (BPMainWindow.getResourceString ("Type"));
 		typeGroup.setLayout (new GridLayout ());
 		GridData data = new GridData (GridData.FILL_HORIZONTAL);
 		typeGroup.setLayoutData (data);
@@ -140,7 +140,7 @@ class RowLayoutTab extends Tab {
 		/* Controls the margins and spacing of the RowLayout */
 		String [] marginValues = new String [] {"0","3","5","10"};
 		Group marginGroup = new Group (controlGroup, SWT.NONE);
-		marginGroup.setText (LayoutExample.getResourceString ("Margins_Spacing"));
+		marginGroup.setText (BPMainWindow.getResourceString ("Margins_Spacing"));
 		data = new GridData (GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 		data.verticalSpan = 2;
 		marginGroup.setLayoutData (data);
@@ -185,7 +185,7 @@ class RowLayoutTab extends Tab {
 		
 		/* Controls other parameters of the RowLayout */
 		Group specGroup = new Group (controlGroup, SWT.NONE);
-		specGroup.setText (LayoutExample.getResourceString ("Properties"));
+		specGroup.setText (BPMainWindow.getResourceString ("Properties"));
 		specGroup.setLayoutData (new GridData (GridData.FILL_HORIZONTAL));
 		specGroup.setLayout (new GridLayout ());
 		wrap = new Button (specGroup, SWT.CHECK);

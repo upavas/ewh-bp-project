@@ -20,7 +20,7 @@ import org.eclipse.swt.events.*;
 import java.text.*;
 import java.util.*;
 
-public class LayoutExample {
+public class BPMainWindow {
 	private static ResourceBundle resourceBundle = ResourceBundle.getBundle("examples_layout");
 	private TabFolder tabFolder;
 	
@@ -30,10 +30,10 @@ public class LayoutExample {
 	 * 
 	 * @param parent the container of the example
 	 */
-	public LayoutExample(Composite parent) {
+	public BPMainWindow(Composite parent) {
 		tabFolder = new TabFolder (parent, SWT.NONE);
 		Tab [] tabs = new Tab [] {
-			new FillLayoutTab (this),
+			new MeasurePageTab (this),
 			new RowLayoutTab (this),
 			new GridLayoutTab (this),
 			new FormLayoutTab (this),
@@ -67,7 +67,7 @@ public class LayoutExample {
 		final Display display = new Display();
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
-		new LayoutExample(shell);
+		new BPMainWindow(shell);
 		shell.setText(getResourceString("window.title"));
 		shell.addShellListener (new ShellAdapter () {
 			public void shellClosed(ShellEvent e) {
