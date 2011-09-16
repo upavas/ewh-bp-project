@@ -22,3 +22,5 @@ syntax: regexp
 ^trunk/bp-swt-app/\.classpath$
 syntax: regexp
 ^trunk/bp-swt-app/\.classpath$
+syntax: regexp
+^trunk/bp-swt-app/\.classpath$
