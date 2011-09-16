@@ -35,7 +35,6 @@ import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BP
 import com.ewhoxford.android.bloodpressure.exception.BadMeasureException;
 import com.ewhoxford.android.bloodpressure.exception.TempBadMeasureException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
-import com.ewhoxford.android.bloodpressure.pressureInputDevice.SampleDynamicXYDatasource;
 import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDatasource;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
@@ -186,11 +185,12 @@ public class MeasureActivity extends Activity {
 		public void update(Observable o, Object arg) {
 
 			pressureValue = data.getPressureValue();
-						
-			if (data.getBpMeasure().size() == measureSize && measureSize<BOUNDARY_NUMBER_OF_POINTS) {
+
+			if (data.getBpMeasure().size() == measureSize
+					&& measureSize < BOUNDARY_NUMBER_OF_POINTS) {
 				mHandler.post(connectedSensorText);
 			} else {
-				measureSize=data.getBpMeasure().size();
+				measureSize = data.getBpMeasure().size();
 				// check if operator has reached reasonable cuff pressure
 				if (!maxPressureReached) {
 					if (pressureValue > maxPressureValueForMeasure) {
@@ -481,7 +481,7 @@ public class MeasureActivity extends Activity {
 			alert.show();
 		}
 	};
-	
+
 	// Create runnable for chaging messages while pressure is being acquired
 	final Runnable discardTemBadMeasure = new Runnable() {
 		public void run() {
@@ -546,12 +546,12 @@ public class MeasureActivity extends Activity {
 	public void setMeasuresuccessful(boolean measureSuccessful) {
 		this.measureSuccessful = measureSuccessful;
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		Intent i = new Intent(this.getBaseContext(), MainActivity.class);
 		startActivity(i);
-	return;
+		return;
 	}
 
 }

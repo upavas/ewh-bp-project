@@ -219,7 +219,7 @@ class GridLayoutTab extends Tab {
 	 */
 	void createControlWidgets () {
 		/* Rearrange the layout of the control group */
-		size.setLayoutData (new GridData ());
+		//size.setLayoutData (new GridData ());
 		
 		/* Controls the margins and spacing of the GridLayout */
 		String [] marginValues = new String [] {"0","3","5","10"};
