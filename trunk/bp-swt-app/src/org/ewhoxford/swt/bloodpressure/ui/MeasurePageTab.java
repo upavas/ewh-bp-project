@@ -22,7 +22,11 @@ import org.eclipse.swt.custom.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+import org.ewhoxford.swt.bloodpressure.exception.BadMeasureException;
+import org.ewhoxford.swt.bloodpressure.exception.TempBadMeasureException;
+import org.ewhoxford.swt.bloodpressure.model.BloodPressureValue;
 import org.ewhoxford.swt.bloodpressure.signalProcessing.ConvertTommHg;
+import org.ewhoxford.swt.bloodpressure.signalProcessing.SignalProcessing;
 import org.ewhoxford.swt.bloodpressure.signalProcessing.TimeSeriesMod;
 import org.ewhoxford.swt.bloodpressure.utils.ReadCSV;
 import org.jfree.chart.ChartFactory;
@@ -32,6 +36,7 @@ import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.general.Dataset;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.Month;
 import org.jfree.data.time.RegularTimePeriod;
@@ -115,19 +120,20 @@ class MeasurePageTab extends Tab {
 				false));
 		label1.setText("SBP");
 		
-		Text text = new Text(bpGroup, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		text.setText("0");
-		
+		final Text textSBP = new Text(bpGroup, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
+		textSBP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		textSBP.setText("0");
+		textSBP.setEditable(false);
 		
 		Label label2 = new Label(bpGroup, SWT.NONE);
 		label2.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
 				false));
 		label2.setText("DBP");
 		
-		Text text2 = new Text(bpGroup, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
-		text2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		text2.setText("0");
+		final Text textDBP = new Text(bpGroup, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
+		textDBP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		textDBP.setText("0");
+		textDBP.setEditable(false);
 		
 		
 		Label label3 = new Label(bpGroup, SWT.NONE);
@@ -136,10 +142,10 @@ class MeasurePageTab extends Tab {
 		label3.setText("HR");
 		
 		
-		Text text3 = new Text(bpGroup, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
-		text3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		text3.setText("0");
-		
+		final Text textHR = new Text(bpGroup, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
+		textHR.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		textHR.setText("0");
+		textHR.setEditable(false);
 
 		Label label5 = new Label(controlGroup, SWT.NONE);
 		label5.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
@@ -153,10 +159,12 @@ class MeasurePageTab extends Tab {
 				false));
 		label4.setText("Notes:");
 		
-		Text text4 = new Text(controlGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
-		text4.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		text4.setText("Comment on the blood pressure");
-	text4.computeSize(100,500);
+		Text textNotes = new Text(controlGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+		textNotes.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		textNotes.setText("Comment on the blood pressure");
+	    textNotes.computeSize(100,500);
+	    //textNotes.setSize(1000, 500);
+		textNotes.setEnabled(true);
 				
 		Group optionGroup = new Group (controlGroup, SWT.NONE);
 		optionGroup.setText (BPMainWindow.getResourceString ("Options"));
@@ -164,10 +172,58 @@ class MeasurePageTab extends Tab {
 		optionGroup.setLayoutData (new GridData (GridData.FILL_HORIZONTAL));
 				
 		newMeasure = new Button (optionGroup, SWT.BUTTON1);
-		newMeasure.setText ("New Measure");
+		newMeasure.setText("New Measure");
 		newMeasure.setLayoutData(new GridData (GridData.FILL_HORIZONTAL));
 		newMeasure.setSelection(true);
 		newMeasure.addSelectionListener (selectionListener);
+		newMeasure.addSelectionListener (selectionListener);
+		newMeasure.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				
+				//read CSV File and create TimeSeriesMod
+				ReadCSV r= new ReadCSV();
+				
+				int[][] pressureValues =r.readCSV("./", "bp.txt");
+				int l = pressureValues.length;
+				
+				//Conversion
+				TimeSeriesMod pressureValuesMod = ConvertTommHg.convertArrayTommHg(
+						pressureValues, 100);
+				
+				//Apply Initial Filter: if difference between one value and the next is higher than 20, put the next the same as the previous.
+				double[] pressureValuesFloat = pressureValuesMod.getPressure();
+				//float[] arrayTime = new float[l];
+				double[] arrayPressure = new double[l];
+				arrayPressure[0] = pressureValuesFloat[0];
+				int i = 1;
+				while (i<l){
+					if (Math.abs(pressureValuesFloat[i]-pressureValuesFloat[i-1]) > 20) 
+						arrayPressure[i]=pressureValuesFloat[i-1];
+					else
+						arrayPressure[i]=pressureValuesFloat[i];
+				}
+				
+				TimeSeriesMod signal = new TimeSeriesMod();
+				signal.setPressure(arrayPressure);
+				signal.setTime(pressureValuesMod.getTime());
+				BloodPressureValue bloodPressureValue = new BloodPressureValue();
+				SignalProcessing r1 = new SignalProcessing();
+				try {
+					bloodPressureValue = r1.signalProcessing(signal, 100);
+				} catch (BadMeasureException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (TempBadMeasureException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+						
+				textSBP.setText(Integer.toString((int) bloodPressureValue.getSystolicBP()));
+				textDBP.setText(Integer.toString((int) bloodPressureValue.getDiastolicBP()));
+				textHR.setText(Integer.toString((int) bloodPressureValue.getHeartRate()));
+			}
+		});
 		
 		createCSV = new Button (optionGroup, SWT.CHECK);
 		createCSV.setText ("create CSV File");
@@ -324,17 +380,19 @@ class MeasurePageTab extends Tab {
 			k = k + 1;
 		}
 		
+		k = 1;
+		
 		TimeSeries s2 = new TimeSeries("Max Blood Pressure");
 		
 		while (k < l) {
-			s1.add(new Millisecond(k,new Date().getSeconds(),new Date().getMinutes(),new Date().getHours(),new Date().getDay(),new Date().getMonth(),new Date().getYear()), 200);
+			s2.add(new Millisecond(k,new Date().getSeconds(),new Date().getMinutes(),new Date().getHours(),new Date().getDay(),new Date().getMonth(),2011), 200.0);
 				k = k + 1;
 		}
 		
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
 		dataset.addSeries(s1);
 		dataset.addSeries(s2);
-
+						
 		return dataset;
 	}
 	
