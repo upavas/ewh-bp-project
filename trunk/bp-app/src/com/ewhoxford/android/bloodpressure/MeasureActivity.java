@@ -363,7 +363,7 @@ public class MeasureActivity extends Activity {
 		// getInstance and position datasets:
 		data = new TestDatasource(this);
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
-		// "Blood Pressure");
+		// "Blood Pressure");plotUpdater = new MyPlotUpdater(bpMeasureXYPlot);
 
 		bpMeasureXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 		// register plot with plot updater observer
