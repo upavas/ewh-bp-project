@@ -11,7 +11,6 @@ package org.ewhoxford.swt.bloodpressure.ui;
  *******************************************************************************/
 
 
-
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.*;
@@ -421,7 +420,7 @@ class FormLayoutTab extends Tab {
 	 * Takes information from TableEditors and stores it.
 	 */
 	void resetEditors () {
-		resetEditors (false);
+		//resetEditors (false);
 	}
 	
 	void resetEditors (boolean tab) {

@@ -88,7 +88,7 @@ public class BPMainWindow {
 	 * We don't want to crash because of a missing String.
 	 * Returns the key if not found.
 	 */
-	static String getResourceString(String key) {
+	public static String getResourceString(String key) {
 		try {
 			return resourceBundle.getString(key);
 		} catch (MissingResourceException e) {

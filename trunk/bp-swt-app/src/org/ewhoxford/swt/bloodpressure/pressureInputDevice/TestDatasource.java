@@ -100,7 +100,7 @@ public class TestDatasource implements Runnable {
 			// }.start();
 			ReadCSV r = new ReadCSV();
 
-			int[][] pressureValues =new int[10000][2];
+			int[][] pressureValues =r.readCSV("./", "bp.txt");
 			int l = pressureValues.length;
 			TimeSeriesMod pressureValuesMod = ConvertTommHg.convertArrayTommHg(
 					pressureValues, 100);
