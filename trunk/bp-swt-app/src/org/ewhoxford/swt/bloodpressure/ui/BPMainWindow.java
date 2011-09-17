@@ -34,9 +34,9 @@ public class BPMainWindow {
 		tabFolder = new TabFolder (parent, SWT.NONE);
 		Tab [] tabs = new Tab [] {
 			new MeasurePageTab (this),
-			new RowLayoutTab (this),
+			//new RowLayoutTab (this),
 			new GridLayoutTab (this),
-			new FormLayoutTab (this),
+			//new FormLayoutTab (this),
 		};
 		for (int i=0; i<tabs.length; i++) {
 			TabItem item = new TabItem (tabFolder, SWT.NONE);
@@ -69,6 +69,42 @@ public class BPMainWindow {
 		shell.setLayout(new FillLayout());
 		new BPMainWindow(shell);
 		shell.setText(getResourceString("window.title"));
+		
+		Menu menu = new Menu(shell, SWT.BAR);
+		shell.setMenuBar(menu);
+		
+		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
+		mntmFile.setText("File");
+		
+		Menu menu_1 = new Menu(mntmFile);
+		mntmFile.setMenu(menu_1);
+		
+		MenuItem mntmOpen = new MenuItem(menu_1, SWT.NONE);
+		mntmOpen.setText("Open");
+		
+		MenuItem mntmSave = new MenuItem(menu_1, SWT.NONE);
+		mntmSave.setText("Save");
+		
+		MenuItem mntmExit = new MenuItem(menu_1, SWT.NONE);
+		mntmExit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				System.exit(0);
+			}
+		});
+		mntmExit.setText("Exit");
+		
+		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
+		mntmHelp.setText("Help");
+		
+		Menu menu_2 = new Menu(mntmHelp);
+		mntmHelp.setMenu(menu_2);
+		
+		MenuItem mntmAbout = new MenuItem(menu_2, SWT.NONE);
+		mntmAbout.setText("About...");
+		
+		MenuItem mntmProductHelp = new MenuItem(menu_2, SWT.NONE);
+		mntmProductHelp.setText("Product Help");
 		shell.addShellListener (new ShellAdapter () {
 			public void shellClosed(ShellEvent e) {
 				Shell [] shells = display.getShells();

@@ -202,6 +202,7 @@ class MeasurePageTab extends Tab {
 		sbpTextbox
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		sbpTextbox.setText("0");
+		sbpTextbox.setEditable(false);
 
 		Label label2 = new Label(bpGroup, SWT.NONE);
 		label2.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
@@ -212,6 +213,7 @@ class MeasurePageTab extends Tab {
 		dbpTextbox
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		dbpTextbox.setText("0");
+		dbpTextbox.setEditable(false);
 
 		Label label3 = new Label(bpGroup, SWT.NONE);
 		label3.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
@@ -222,6 +224,7 @@ class MeasurePageTab extends Tab {
 		hrTextbox
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		hrTextbox.setText("0");
+		hrTextbox.setEditable(false);
 
 		Label label5 = new Label(controlGroup, SWT.NONE);
 		label5.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
@@ -239,7 +242,7 @@ class MeasurePageTab extends Tab {
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		notesText.setText("Comment on the blood pressure");
 		notesText.computeSize(100, 500);
-
+		notesText.setEnabled(true);
 		final Group optionGroup = new Group(controlGroup, SWT.NONE);
 		optionGroup.setText(BPMainWindow.getResourceString("Options"));
 		optionGroup.setLayout(new GridLayout());
@@ -287,33 +290,29 @@ class MeasurePageTab extends Tab {
 				} else {
 					addNewMeasureAndFile(savedFileName, bloodPressureValue,
 							notes, time);
+
+					if (createCSV.getSelection()) {
+
+						MessageDialog
+								.openInformation(
+										optionGroup.getShell(),
+										"Saved",
+										BPMainWindow
+												.getResourceString("alert_dialog_data_saved_to_database_and_csv"));
+
+					} else {
+
+						MessageDialog
+								.openInformation(
+										optionGroup.getShell(),
+										"Saved",
+										BPMainWindow
+												.getResourceString("alert_dialog_data_saved_to_database"));
+					}
 				}
-
-				if (createCSV.getSelection()) {
-
-					MessageDialog
-							.openInformation(
-									optionGroup.getShell(),
-									"Saved",
-									BPMainWindow
-											.getResourceString("alert_dialog_data_saved_to_database_and_csv"));
-
-				} else {
-
-					MessageDialog
-							.openInformation(
-									optionGroup.getShell(),
-									"Saved",
-									BPMainWindow
-											.getResourceString("alert_dialog_data_saved_to_database"));
-
-				}
-
 			}
 		});
-
-		// #### End of Set up click listeners for all the buttons		;
-
+		// #### End of Set up click listeners for all the buttons
 	}
 
 	/**
@@ -453,7 +452,6 @@ class MeasurePageTab extends Tab {
 		// double[] pressureValuesFloat = pressureValuesMod.getPressure();
 		// int k = 1;
 		TimeSeries s1 = new TimeSeries("BP signal");
-
 		// while (k < l) {
 		// s1.add(new Millisecond(k,new Date().getSeconds(),new
 		// Date().getMinutes(),new Date().getHours(),new Date().getDay(),new
