@@ -37,7 +37,8 @@ import org.ewhoxford.swt.bloodpressure.utils.FileManager;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.plot.Plot;
+import org.jfree.chart.event.ChartChangeEvent;
+import org.jfree.chart.event.ChartChangeListener;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
@@ -104,6 +105,7 @@ class MeasurePageTab extends Tab {
 	private Text sbpTextbox;
 	private Label messageLabel;
 	private ChartComposite frame;
+	private TimeSeriesCollection dataset;
 
 	/**
 	 * Creates the Tab within a given instance of LayoutExample.
@@ -124,10 +126,10 @@ class MeasurePageTab extends Tab {
 	}
 
 	private class MyPlotUpdater implements Observer {
-		Plot plot;
+		XYPlot plot;
 		double pressureValue = 0;
 
-		public MyPlotUpdater(Plot plot) {
+		public MyPlotUpdater(XYPlot plot) {
 			this.plot = plot;
 		}
 
@@ -171,10 +173,17 @@ class MeasurePageTab extends Tab {
 		}
 
 		private void updatePlot() {
-			bpMeasureSeries.add(new Millisecond(), data.getBpMeasure()
-					.getLast());
-
+			Display.getDefault().asyncExec(new Runnable() {
+				
+				@Override
+				public void run() {
+					bpMeasureSeries.add(new Millisecond(), data.getBpMeasure()
+							.getLast());
+				}
+			});
+		
 		}
+
 	}
 
 	/**
@@ -261,7 +270,7 @@ class MeasurePageTab extends Tab {
 		saveButton = new Button(optionGroup, SWT.BUTTON1);
 		saveButton.setText("Save");
 		saveButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
+		saveButton.setEnabled(false);
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				String savedFileName = "";
@@ -322,8 +331,12 @@ class MeasurePageTab extends Tab {
 		fillLayout = new FillLayout();
 		layoutComposite.setLayout(fillLayout);
 
-		final JFreeChart chart = createChart(createDataset(), bpMeasureXYPlot);
+		this.bpMeasureSeries = new TimeSeries("BP signal");
 
+		dataset = new TimeSeriesCollection(this.bpMeasureSeries);
+		// dataset.addSeries(this.bpMeasureSeries);
+
+		final JFreeChart chart = createChart(dataset, bpMeasureXYPlot);
 		frame = new ChartComposite(layoutComposite, SWT.NONE, chart, false,
 				true, true, false, false);
 		// frame.setRangeZoomable(false);
@@ -423,56 +436,18 @@ class MeasurePageTab extends Tab {
 		}
 
 		ValueAxis axis = bpMeasureXYPlot.getDomainAxis();
-		axis.setAutoRange(true);
-		axis.setFixedAutoRange(100000.0); // 60 seconds
+		 axis.setAutoRange(true);
+		axis.setFixedAutoRange(3000); // 60 seconds
 		axis = bpMeasureXYPlot.getRangeAxis();
-		axis.setRange(0.0, 300.0);
-
+		axis.setRange(0, 300.0);
+	
+		
 		// DateAxis axis = (DateAxis) plot.getDomainAxis();
 		// axis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
 		// axis.setRange(0, 1000);
 
 		return chart;
 
-	}
-
-	/**
-	 * Creates a dataset, consisting of two series of monthly data.
-	 * 
-	 * @return The dataset.
-	 */
-	private static XYDataset createDataset() {
-
-		// ReadCSV r= new ReadCSV();
-
-		// int[][] pressureValues =r.readCSV("./", "bp.txt");
-		// int l = pressureValues.length;
-		// TimeSeriesMod pressureValuesMod = ConvertTommHg.convertArrayTommHg(
-		// pressureValues, 100);
-		// double[] pressureValuesFloat = pressureValuesMod.getPressure();
-		// int k = 1;
-		TimeSeries s1 = new TimeSeries("BP signal");
-		// while (k < l) {
-		// s1.add(new Millisecond(k,new Date().getSeconds(),new
-		// Date().getMinutes(),new Date().getHours(),new Date().getDay(),new
-		// Date().getMonth(),2011), pressureValuesFloat[k]);
-		// k = k + 1;
-		// }
-
-		// TimeSeries s2 = new TimeSeries("Max Blood Pressure");
-
-		// while (k < l) {
-		// s1.add(new Millisecond(k,new Date().getSeconds(),new
-		// Date().getMinutes(),new Date().getHours(),new Date().getDay(),new
-		// Date().getMonth(),new Date().getYear()), 200);
-		// k = k + 1;
-		// }
-
-		TimeSeriesCollection dataset = new TimeSeriesCollection();
-		dataset.addSeries(s1);
-		// dataset.addSeries(s2);
-
-		return dataset;
 	}
 
 	// Create runnable for signal processing
@@ -496,7 +471,7 @@ class MeasurePageTab extends Tab {
 			sbpTextbox.setText("" + sPressure);
 			dbpTextbox.setText("" + dPressure);
 			hrTextbox.setText("" + pulse);
-
+			
 			saveButton.setEnabled(true);
 			saveButton.redraw();
 			// mHandler.post(disconnectedSensor);
