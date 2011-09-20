@@ -60,7 +60,7 @@ while repeat == 1
     elseif decide == 's'
 
         COM_number = input('Enter the COM port number, eg 1,2,3\n');
-        COM_name = ['COM' char(COM_number+48)];
+        COM_name = ['/dev/ttyACM0'];
         baud = input('Enter the baud rate (normal = 9600)\n');
         data_bits = input('Enter the number of data bits (normal = 8)\n');
 
