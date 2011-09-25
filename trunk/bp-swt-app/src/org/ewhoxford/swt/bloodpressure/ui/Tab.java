@@ -79,12 +79,12 @@ abstract class Tab {
 	/* Common controls for modifying the example layout */
 	String[] names;
 	Control[] children;
-	Button size, add, delete, clear, code;
+	Button size;
 	/* Common values for working with TableEditors */
 	Table table;
 	int index;
 	TableItem newItem, lastSelected;
-	Vector data = new Vector();
+	
 	/* Controlling instance */
 	final BPMainWindow instance;
 
@@ -116,14 +116,6 @@ abstract class Tab {
 	 * children to the layout. It exists within the controlGroup.
 	 */
 	void createChildGroup() {
-		childGroup = new Group(controlGroup, SWT.NONE);
-		childGroup.setText(BPMainWindow.getResourceString("Children"));
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 3;
-		childGroup.setLayout(layout);
-		GridData data = new GridData(GridData.FILL_BOTH);
-		data.horizontalSpan = 2;
-		childGroup.setLayoutData(data);
 		createChildWidgets();
 	}
 
@@ -132,66 +124,7 @@ abstract class Tab {
 	 * itself. Subclasses override this method to augment the standard table.
 	 */
 	void createChildWidgets() {
-		/* Controls for adding and removing children */
-		add = new Button(childGroup, SWT.PUSH);
-		add.setText(BPMainWindow.getResourceString("Add"));
-		add.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		delete = new Button(childGroup, SWT.PUSH);
-		delete.setText(BPMainWindow.getResourceString("Delete"));
-		delete.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		delete.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				resetEditors();
-				int[] selected = table.getSelectionIndices();
-				table.remove(selected);
-				/* Refresh the control indices of the table */
-				for (int i = 0; i < table.getItemCount(); i++) {
-					table.getItem(i).setText(0, String.valueOf(i));
-				}
-				refreshLayoutComposite();
-				layoutComposite.layout(true);
-				layoutGroup.layout(true);
-			}
-		});
-		clear = new Button(childGroup, SWT.PUSH);
-		clear.setText(BPMainWindow.getResourceString("Clear"));
-		clear.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		clear.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				resetEditors();
-				children = layoutComposite.getChildren();
-				for (int i = 0; i < children.length; i++) {
-					children[i].dispose();
-				}
-				table.removeAll();
-				data.clear();
-				children = new Control[0];
-				layoutGroup.layout(true);
-			}
-		});
-		/* Create the "children" table */
-		table = new Table(childGroup, SWT.MULTI | SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION);
-		table.setLinesVisible(true);
-		table.setHeaderVisible(true);
-		GridData gridData = new GridData(GridData.FILL_BOTH);
-		gridData.horizontalSpan = 3;
-		gridData.heightHint = 150;
-		table.setLayoutData(gridData);
-		table.addTraverseListener(traverseListener);
-
-		/* Add columns to the table */
-		String[] columnHeaders = getLayoutDataFieldNames();
-		for (int i = 0; i < columnHeaders.length; i++) {
-			TableColumn column = new TableColumn(table, SWT.NONE);
-			column.setText(columnHeaders[i]);
-			if (i == 0)
-				column.setWidth(20);
-			else if (i == 1)
-				column.setWidth(80);
-			else
-				column.pack();
-		}
+	
 	}
 
 	/**
@@ -232,7 +165,7 @@ abstract class Tab {
 	 */
 	void createControlGroup() {
 		controlGroup = new Group(sash, SWT.NONE);
-		controlGroup.setText(BPMainWindow.getResourceString("Parameters"));
+		//controlGroup.setText(BPMainWindow.getResourceString("Parameters"));
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		controlGroup.setLayout(layout);
@@ -265,63 +198,7 @@ abstract class Tab {
 	// */
 	void createControlWidgets() {
 		createChildGroup();
-		code = new Button(controlGroup, SWT.PUSH);
-		code.setText(BPMainWindow.getResourceString("Code"));
-		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_CENTER
-				| GridData.GRAB_HORIZONTAL);
-		gridData.horizontalSpan = 2;
-		code.setLayoutData(gridData);
-		code.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				final Shell shell = new Shell();
-				shell.setText(BPMainWindow.getResourceString("Generated_Code"));
-				shell.setLayout(new FillLayout());
-				final StyledText text = new StyledText(shell, SWT.BORDER
-						| SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
-				String layoutCode = generateCode().toString();
-				if (layoutCode.length() == 0)
-					return;
-				text.setText(layoutCode);
 
-				Menu bar = new Menu(shell, SWT.BAR);
-				shell.setMenuBar(bar);
-				MenuItem editItem = new MenuItem(bar, SWT.CASCADE);
-				editItem.setText(BPMainWindow.getResourceString("Edit"));
-				Menu menu = new Menu(bar);
-				MenuItem select = new MenuItem(menu, SWT.PUSH);
-				select.setText(BPMainWindow.getResourceString("Select_All"));
-				select.setAccelerator(SWT.MOD1 + 'A');
-				select.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent e) {
-						text.selectAll();
-					}
-				});
-				MenuItem copy = new MenuItem(menu, SWT.PUSH);
-				copy.setText(BPMainWindow.getResourceString("Copy"));
-				copy.setAccelerator(SWT.MOD1 + 'C');
-				copy.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent e) {
-						text.copy();
-					}
-				});
-				MenuItem exit = new MenuItem(menu, SWT.PUSH);
-				exit.setText(BPMainWindow.getResourceString("Exit"));
-				exit.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent e) {
-						shell.close();
-					}
-				});
-				editItem.setMenu(menu);
-
-				shell.pack();
-				shell.setSize(400, 500);
-				shell.open();
-				Display display = shell.getDisplay();
-				while (!shell.isDisposed())
-					if (!display.readAndDispatch())
-						display.sleep();
-			}
-		});
 	}
 
 	/**
@@ -345,7 +222,7 @@ abstract class Tab {
 	 */
 	void createLayoutGroup() {
 		layoutGroup = new Group(sash, SWT.NONE);
-		layoutGroup.setText(BPMainWindow.getResourceString("Layout"));
+		//layoutGroup.setText(BPMainWindow.getResourceString("Layout"));
 		layoutGroup.setLayout(new GridLayout());
 		createLayoutComposite();
 	}

@@ -101,7 +101,7 @@ public class SampleDynamicXYDatasource implements Runnable {
 			boolean update = false;
 			while (active) {
 
-				Thread.sleep(500); // decrease or remove to speed up the
+				Thread.sleep(1000); // decrease or remove to speed up the
 				// refresh
 				currentPosition = countMiceSamples;
 
@@ -121,7 +121,7 @@ public class SampleDynamicXYDatasource implements Runnable {
 						update = true;
 					}
 
-					j=j+100;
+					j=j+250;
 
 				}
 				// i = i + 100;
