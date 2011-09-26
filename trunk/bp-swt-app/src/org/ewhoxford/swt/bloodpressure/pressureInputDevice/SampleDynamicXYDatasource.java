@@ -41,13 +41,7 @@ public class SampleDynamicXYDatasource implements Runnable {
 	int linearFilterThreshold = 40;
 	int mouseDisconnectedCount=0;
 
-	//final Handler mHandler = new Handler();
-	// Create runnable for posting
-	final Runnable runSignalAcquisition = new Runnable() {
-		public void run() {
-			miceReaderRun();
-		}
-	};
+	
 	final Runnable updataBPResultView = new Runnable() {
 		public void run() {
 

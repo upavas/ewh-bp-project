@@ -30,15 +30,13 @@ import org.eclipse.swt.widgets.Text;
 import org.ewhoxford.swt.bloodpressure.exception.BadMeasureException;
 import org.ewhoxford.swt.bloodpressure.exception.TempBadMeasureException;
 import org.ewhoxford.swt.bloodpressure.model.BloodPressureValue;
-import org.ewhoxford.swt.bloodpressure.pressureInputDevice.TestDatasource;
+import org.ewhoxford.swt.bloodpressure.pressureInputDevice.SerialDynamicXYDatasource;
 import org.ewhoxford.swt.bloodpressure.signalProcessing.SignalProcessing;
 import org.ewhoxford.swt.bloodpressure.signalProcessing.TimeSeriesMod;
 import org.ewhoxford.swt.bloodpressure.utils.FileManager;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.event.ChartChangeEvent;
-import org.jfree.chart.event.ChartChangeListener;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
@@ -61,7 +59,7 @@ class MeasurePageTab extends Tab {
 	// Observer object that is notified by pressure data stream observable file
 	private MyPlotUpdater plotUpdater;
 	// Observable object that notifies observer that new values were acquired.
-	private TestDatasource data;
+	private SerialDynamicXYDatasource data;
 	// pressure time series shown in the real time chart
 	private TimeSeries bpMeasureSeries = null;
 	// array with time points
@@ -148,6 +146,12 @@ class MeasurePageTab extends Tab {
 				if (!maxPressureReached) {
 					if (pressureValue > maxPressureValueForMeasure) {
 						maxPressureReached = true;
+						MessageDialog
+						.openInformation(
+								controlGroup.getShell(),
+								"Saved",
+								BPMainWindow
+										.getResourceString("STOP PUMPING"));
 						Display.getDefault().syncExec(changeTextMessage);
 					} else {
 						Display.getDefault().syncExec(changeTextMessagePump);
@@ -174,14 +178,14 @@ class MeasurePageTab extends Tab {
 
 		private void updatePlot() {
 			Display.getDefault().asyncExec(new Runnable() {
-				
+
 				@Override
 				public void run() {
-					bpMeasureSeries.add(new Millisecond(), data.getBpMeasure()
+					bpMeasureSeries.add(new Millisecond(), data.getBpMeasureHistory()
 							.getLast());
 				}
 			});
-		
+
 		}
 
 	}
@@ -350,7 +354,7 @@ class MeasurePageTab extends Tab {
 		// initialize our XYPlot reference and real time update code:
 
 		// getInstance and position datasets:
-		data = new TestDatasource();
+		data = new SerialDynamicXYDatasource();
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
 		// "Blood Pressure");
 
@@ -436,12 +440,11 @@ class MeasurePageTab extends Tab {
 		}
 
 		ValueAxis axis = bpMeasureXYPlot.getDomainAxis();
-		 axis.setAutoRange(true);
+		axis.setAutoRange(true);
 		axis.setFixedAutoRange(3000); // 60 seconds
 		axis = bpMeasureXYPlot.getRangeAxis();
 		axis.setRange(0, 300.0);
-	
-		
+
 		// DateAxis axis = (DateAxis) plot.getDomainAxis();
 		// axis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
 		// axis.setRange(0, 1000);
@@ -471,7 +474,7 @@ class MeasurePageTab extends Tab {
 			sbpTextbox.setText("" + sPressure);
 			dbpTextbox.setText("" + dPressure);
 			hrTextbox.setText("" + pulse);
-			
+
 			saveButton.setEnabled(true);
 			saveButton.redraw();
 			// mHandler.post(disconnectedSensor);
