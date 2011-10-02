@@ -40,13 +40,13 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.time.Millisecond;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.data.time.DynamicTimeSeriesCollection;
+import org.jfree.data.time.Second;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 
 class MeasurePageTab extends Tab {
+	private static final int COUNT = 2 * 100;
 	/* Controls for setting layout parameters */
 	private Button newMeasure;
 	/* The example layout instance */
@@ -60,8 +60,6 @@ class MeasurePageTab extends Tab {
 	private MyPlotUpdater plotUpdater;
 	// Observable object that notifies observer that new values were acquired.
 	private SerialDynamicXYDatasource data;
-	// pressure time series shown in the real time chart
-	private TimeSeries bpMeasureSeries = null;
 	// array with time points
 	private float[] arrayTime;
 	// array with pressure points
@@ -96,14 +94,13 @@ class MeasurePageTab extends Tab {
 	private boolean measureSuccessful;
 	// measure size
 	private int measureSize = 0;
-	// event count
-	private int totalCount = 0;
 	private Text hrTextbox;
 	private Text dbpTextbox;
 	private Text sbpTextbox;
 	private Label messageLabel;
 	private ChartComposite frame;
-	private TimeSeriesCollection dataset;
+	private DynamicTimeSeriesCollection dataset;
+	private int countShownValues = 0;
 
 	/**
 	 * Creates the Tab within a given instance of LayoutExample.
@@ -181,8 +178,27 @@ class MeasurePageTab extends Tab {
 
 				@Override
 				public void run() {
-					bpMeasureSeries.add(new Millisecond(), data.getBpMeasureHistory()
-							.getLast());
+
+					int l = data.getBpMeasureHistory().size();
+					int i = 0;
+					if (countShownValues > 0)
+						i = countShownValues;
+
+					float[] a = { 0F };
+
+					while (i < l) {
+						
+						dataset.advanceTime();
+						a[0] = data.getBpMeasureHistory().get(i).floatValue();
+						dataset.appendData(a);
+						i = i + 1;
+						countShownValues = countShownValues + 1;
+						
+					}
+
+					// bpMeasureSeries.addOrUpdate(new Second(currentSecond, new
+					// Minute(currentMinute)), data.getBpMeasure()
+					// .getLast());
 				}
 			});
 
@@ -197,7 +213,7 @@ class MeasurePageTab extends Tab {
 
 		/* Controls the type of FillLayout */
 		Group bpGroup = new Group(controlGroup, SWT.NONE);
-		bpGroup.setText(BPMainWindow.getResourceString("Options"));
+		bpGroup.setText(BPMainWindow.getResourceString("BP_and_HR"));
 		bpGroup.setLayout(new GridLayout(2, true));
 		bpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -335,10 +351,14 @@ class MeasurePageTab extends Tab {
 		fillLayout = new FillLayout();
 		layoutComposite.setLayout(fillLayout);
 
-		this.bpMeasureSeries = new TimeSeries("BP signal");
+		// this.bpMeasureSeries = new TimeSeries("BP signal");
 
-		dataset = new TimeSeriesCollection(this.bpMeasureSeries);
-		// dataset.addSeries(this.bpMeasureSeries);
+		dataset = new DynamicTimeSeriesCollection(1, COUNT, new Second());
+		dataset.setTimeBase(new Second(0, 0, 0, 1, 1, 2011));
+		float[] a = { 0F };
+		dataset.addSeries(a, 0, "pressure");
+
+		//dataset.addSeries(this.bpMeasureSeries);
 
 		final JFreeChart chart = createChart(dataset, bpMeasureXYPlot);
 		frame = new ChartComposite(layoutComposite, SWT.NONE, chart, false,
@@ -351,8 +371,6 @@ class MeasurePageTab extends Tab {
 		frame.setVerticalAxisTrace(false);
 		frame.setRangeZoomable(false);
 		// frame.chartChanged(new );
-		// initialize our XYPlot reference and real time update code:
-
 		// getInstance and position datasets:
 		data = new SerialDynamicXYDatasource();
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
@@ -385,7 +403,7 @@ class MeasurePageTab extends Tab {
 	 * Gets the text for the tab folder item.
 	 */
 	String getTabText() {
-		return "FillLayout";
+		return "Measure Page";
 	}
 
 	/**
@@ -440,8 +458,9 @@ class MeasurePageTab extends Tab {
 		}
 
 		ValueAxis axis = bpMeasureXYPlot.getDomainAxis();
+		// axis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
+		// axis.setRange(0, 1000);
 		axis.setAutoRange(true);
-		axis.setFixedAutoRange(3000); // 60 seconds
 		axis = bpMeasureXYPlot.getRangeAxis();
 		axis.setRange(0, 300.0);
 
@@ -481,12 +500,6 @@ class MeasurePageTab extends Tab {
 
 		}
 	};
-
-	{
-		// initialized time series
-		bpMeasureSeries = new TimeSeries("BP time series");
-
-	}
 
 	// Create runnable for chaging messages while pressure is being acquired
 	final Runnable changeTextMessage = new Runnable() {

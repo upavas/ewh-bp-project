@@ -124,7 +124,7 @@ public class SerialDynamicXYDatasource implements Runnable {
 				// }
 				//	
 				// count++;
-				if (true) {
+				if (active) {
 					mouseDisconnectedCount = 0;
 					notifier.notifyObservers();
 				} else {

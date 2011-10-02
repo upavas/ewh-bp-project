@@ -35,7 +35,7 @@ public class BPMainWindow {
 		Tab [] tabs = new Tab [] {
 			new MeasurePageTab (this),
 			//new RowLayoutTab (this),
-			new GridLayoutTab (this),
+			new ListMeasureTab (this),
 			//new FormLayoutTab (this),
 		};
 		for (int i=0; i<tabs.length; i++) {

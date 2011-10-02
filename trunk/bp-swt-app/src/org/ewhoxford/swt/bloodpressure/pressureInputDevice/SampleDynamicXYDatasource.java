@@ -41,7 +41,13 @@ public class SampleDynamicXYDatasource implements Runnable {
 	int linearFilterThreshold = 40;
 	int mouseDisconnectedCount=0;
 
-	
+	//final Handler mHandler = new Handler();
+	// Create runnable for posting
+	final Runnable runSignalAcquisition = new Runnable() {
+		public void run() {
+			miceReaderRun();
+		}
+	};
 	final Runnable updataBPResultView = new Runnable() {
 		public void run() {
 
@@ -95,7 +101,7 @@ public class SampleDynamicXYDatasource implements Runnable {
 			boolean update = false;
 			while (active) {
 
-				Thread.sleep(500); // decrease or remove to speed up the
+				Thread.sleep(1000); // decrease or remove to speed up the
 				// refresh
 				currentPosition = countMiceSamples;
 
@@ -115,7 +121,7 @@ public class SampleDynamicXYDatasource implements Runnable {
 						update = true;
 					}
 
-					j=j+100;
+					j=j+250;
 
 				}
 				// i = i + 100;

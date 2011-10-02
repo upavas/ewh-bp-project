@@ -40,7 +40,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.hsqldb.Trigger;
-import org.hsqldb.error.ErrorCode;
 import org.hsqldb.lib.StringUtil;
 
 // peterhudson@users 20020130 - patch 478657 by peterhudson - new class
@@ -232,7 +231,7 @@ public class TriggerSample implements Trigger {
 
 			// do nothing
 		} else {
-			throw org.hsqldb.error.Error.error(ErrorCode.GENERAL_ERROR, msg);
+		//	throw org.hsqldb.error.Error.error(ErrorCode.GENERAL_ERROR, msg);
 		}
 	}
 

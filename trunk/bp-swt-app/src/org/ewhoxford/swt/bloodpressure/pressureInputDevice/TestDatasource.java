@@ -123,14 +123,14 @@ public class TestDatasource implements Runnable {
 
 			while (active) {
 
-				Thread.sleep(5);
+				Thread.sleep(4);
 
 				int j = 1;
-				while (j < 101) {
+				while (j < 251) {
 
 					// signal processing problem correction
 
-					if (j == 100) {
+					if (j == 250) {
 						if (bpMeasure.size() > MAX_SIZE) {
 							bpMeasure.removeFirst();
 						}
