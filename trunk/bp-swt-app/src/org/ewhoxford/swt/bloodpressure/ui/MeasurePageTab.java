@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Text;
 import org.ewhoxford.swt.bloodpressure.exception.BadMeasureException;
 import org.ewhoxford.swt.bloodpressure.exception.TempBadMeasureException;
 import org.ewhoxford.swt.bloodpressure.model.BloodPressureValue;
-import org.ewhoxford.swt.bloodpressure.pressureInputDevice.TestDatasource;
+import org.ewhoxford.swt.bloodpressure.pressureInputDevice.SerialDynamicXYDatasource;
 import org.ewhoxford.swt.bloodpressure.signalProcessing.SignalProcessing;
 import org.ewhoxford.swt.bloodpressure.signalProcessing.TimeSeriesMod;
 import org.ewhoxford.swt.bloodpressure.utils.FileManager;
@@ -59,7 +59,7 @@ class MeasurePageTab extends Tab {
 	// Observer object that is notified by pressure data stream observable file
 	private MyPlotUpdater plotUpdater;
 	// Observable object that notifies observer that new values were acquired.
-	private TestDatasource data;
+	private SerialDynamicXYDatasource data;
 	// array with time points
 	private float[] arrayTime;
 	// array with pressure points
@@ -143,6 +143,12 @@ class MeasurePageTab extends Tab {
 				if (!maxPressureReached) {
 					if (pressureValue > maxPressureValueForMeasure) {
 						maxPressureReached = true;
+						MessageDialog
+						.openInformation(
+								controlGroup.getShell(),
+								"Saved",
+								BPMainWindow
+										.getResourceString("STOP PUMPING"));
 						Display.getDefault().syncExec(changeTextMessage);
 					} else {
 						Display.getDefault().syncExec(changeTextMessagePump);
@@ -173,7 +179,7 @@ class MeasurePageTab extends Tab {
 				@Override
 				public void run() {
 
-					int l = data.getBpMeasure().size();
+					int l = data.getBpMeasureHistory().size();
 					int i = 0;
 					if (countShownValues > 0)
 						i = countShownValues;
@@ -181,11 +187,13 @@ class MeasurePageTab extends Tab {
 					float[] a = { 0F };
 
 					while (i < l) {
+						
 						dataset.advanceTime();
-						a[0] = data.getBpMeasure().get(i).floatValue();
+						a[0] = data.getBpMeasureHistory().get(i).floatValue();
 						dataset.appendData(a);
 						i = i + 1;
 						countShownValues = countShownValues + 1;
+						
 					}
 
 					// bpMeasureSeries.addOrUpdate(new Second(currentSecond, new
@@ -364,7 +372,7 @@ class MeasurePageTab extends Tab {
 		frame.setRangeZoomable(false);
 		// frame.chartChanged(new );
 		// getInstance and position datasets:
-		data = new TestDatasource();
+		data = new SerialDynamicXYDatasource();
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
 		// "Blood Pressure");
 
