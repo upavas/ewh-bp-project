@@ -250,10 +250,85 @@ public class SerialDynamicXYDatasource implements Runnable {
 	// }
 	// }
 
+	public static boolean isWindows(){
+
+		String os = System.getProperty("os.name").toLowerCase();
+		//windows
+		return (os.indexOf( "win" ) >= 0); 
+
+	}
+
+	public static boolean isMac(){
+
+		String os = System.getProperty("os.name").toLowerCase();
+		//Mac
+		return (os.indexOf( "mac" ) >= 0); 
+
+	}
+
+	public static boolean isUnix(){
+
+		String os = System.getProperty("os.name").toLowerCase();
+		//linux or unix
+		return (os.indexOf( "nix") >=0 || os.indexOf( "nux") >=0);
+
+	}
+
+    static String getPortTypeName ( int portType )
+    {
+        switch ( portType )
+        {
+            case CommPortIdentifier.PORT_I2C:
+                return "I2C";
+            case CommPortIdentifier.PORT_PARALLEL:
+                return "Parallel";
+            case CommPortIdentifier.PORT_RAW:
+                return "Raw";
+            case CommPortIdentifier.PORT_RS485:
+                return "RS485";
+            case CommPortIdentifier.PORT_SERIAL:
+                return "Serial";
+            default:
+                return "unknown type";
+        }
+    }
+
+
+	public void detectPorts(){
+		if(isWindows()){
+
+			java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
+			while ( portEnum.hasMoreElements() ) 
+			{
+				CommPortIdentifier portIdentifier = portEnum.nextElement();
+				System.out.println(portIdentifier.getName()  +  " - " +  getPortTypeName(portIdentifier.getPortType()) );
+			}        
+
+		}
+
+		if (isUnix()){
+			java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
+			while ( portEnum.hasMoreElements() ) 
+			{
+				System.setProperty("gnu.io.rxtx.SerialPorts", serial);
+				CommPortIdentifier portIdentifier = portEnum.nextElement();
+				System.out.println(portIdentifier.getName()  +  " - " +  getPortTypeName(portIdentifier.getPortType()) );
+			} 
+		}
+
+		//serial = 
+	
+	}
+
+
 	void connect(String portName) throws Exception {
-		System.setProperty("gnu.io.rxtx.SerialPorts", serial);
+//		if (isUnix()){
+//		System.setProperty("gnu.io.rxtx.SerialPorts", serial);
+//		}
+		detectPorts();
 		CommPortIdentifier portIdentifier = CommPortIdentifier
 				.getPortIdentifier(portName);
+				
 		if (portIdentifier.isCurrentlyOwned()) {
 			System.out.println("Error: Port is currently in use");
 		} else {
@@ -336,6 +411,11 @@ public class SerialDynamicXYDatasource implements Runnable {
 								x = aux;
 								y = aux1;
 								aux2 = ConvertTommHg.convertTommHg(x, y);
+								
+								if(aux2>1000){
+									System.out.println("everything is gonna be alright!");
+								}
+								
 								bpMeasureHistory.add(aux2);
 								pressureValue = aux2;
 								System.out.println(aux2);
