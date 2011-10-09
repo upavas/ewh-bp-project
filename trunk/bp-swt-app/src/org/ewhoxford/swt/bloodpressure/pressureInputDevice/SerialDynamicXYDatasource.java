@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.ewhoxford.swt.bloodpressure.exception.NoDeviceException;
 import org.ewhoxford.swt.bloodpressure.signalProcessing.ConvertTommHg;
 
 /**
@@ -43,7 +44,7 @@ public class SerialDynamicXYDatasource implements Runnable {
 	int countMiceSamples = 0;
 	int linearFilterThreshold = 40;
 	int mouseDisconnectedCount = 0;
-	private static String serial = "/dev/ttyACM0";
+	private static String serial = "";
 	SerialPort serialPort;
 	// final Handler mHandler = new Handler();
 
@@ -86,7 +87,10 @@ public class SerialDynamicXYDatasource implements Runnable {
 			new Thread() {
 				public void run() {
 					try {
+						if(detectPorts())
 						connect(serial);
+						else
+							throw new NoDeviceException(this.getClass().getName());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -274,27 +278,29 @@ public class SerialDynamicXYDatasource implements Runnable {
 
 	}
 
-    static String getPortTypeName ( int portType )
-    {
-        switch ( portType )
-        {
-            case CommPortIdentifier.PORT_I2C:
-                return "I2C";
-            case CommPortIdentifier.PORT_PARALLEL:
-                return "Parallel";
-            case CommPortIdentifier.PORT_RAW:
-                return "Raw";
-            case CommPortIdentifier.PORT_RS485:
-                return "RS485";
-            case CommPortIdentifier.PORT_SERIAL:
-                return "Serial";
-            default:
-                return "unknown type";
-        }
-    }
+	static String getPortTypeName ( int portType )
+	{
+		switch ( portType )
+		{
+		case CommPortIdentifier.PORT_I2C:
+			return "I2C";
+		case CommPortIdentifier.PORT_PARALLEL:
+			return "Parallel";
+		case CommPortIdentifier.PORT_RAW:
+			return "Raw";
+		case CommPortIdentifier.PORT_RS485:
+			return "RS485";
+		case CommPortIdentifier.PORT_SERIAL:
+			return "Serial";
+		default:
+			return "unknown type";
+		}
+	}
 
 
-	public void detectPorts(){
+	public boolean detectPorts(){
+		String aux = "";
+		//Boolean confirm = false;
 		if(isWindows()){
 
 			java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
@@ -302,33 +308,51 @@ public class SerialDynamicXYDatasource implements Runnable {
 			{
 				CommPortIdentifier portIdentifier = portEnum.nextElement();
 				System.out.println(portIdentifier.getName()  +  " - " +  getPortTypeName(portIdentifier.getPortType()) );
+				serial = portIdentifier.getName();
+				//TODO confirm = confirmSerialPort(serial);
+				//if (confirm)
+				//break;
+				return true;
 			}        
-
 		}
 
 		if (isUnix()){
 			java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
 			while ( portEnum.hasMoreElements() ) 
 			{
-				System.setProperty("gnu.io.rxtx.SerialPorts", serial);
 				CommPortIdentifier portIdentifier = portEnum.nextElement();
 				System.out.println(portIdentifier.getName()  +  " - " +  getPortTypeName(portIdentifier.getPortType()) );
-			} 
-		}
-
-		//serial = 
-	
+				aux = portIdentifier.getName();
+				if (aux.contains("/dev/ttyACM")){
+					serial = portIdentifier.getName();
+					//TODO confirm = confirmSerialPort(serial);
+					//if (confirm)
+					return true;
+				}
+			}
+		} 
+		return false;
 	}
-
-
+/*
+	void confirmSerialPort(String portName){
+		try {
+			connect(portName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        InputStream in = serialPort.getInputStream();
+        OutputStream out = serialPort.getOutputStream();
+       
+        (new Thread(new SimpleSerialWriter(out))).start();
+        (new Thread(new SimpleSerialReader(in))).start();
+       
+	}
+*/
 	void connect(String portName) throws Exception {
-//		if (isUnix()){
-//		System.setProperty("gnu.io.rxtx.SerialPorts", serial);
-//		}
-		detectPorts();
-		CommPortIdentifier portIdentifier = CommPortIdentifier
-				.getPortIdentifier(portName);
-				
+
+		CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
+
 		if (portIdentifier.isCurrentlyOwned()) {
 			System.out.println("Error: Port is currently in use");
 		} else {
@@ -348,11 +372,64 @@ public class SerialDynamicXYDatasource implements Runnable {
 
 			} else {
 				System.out
-						.println("Error: Only serial ports are handled by this example.");
+				.println("Error: Only serial ports are handled by this example.");
 			}
 		}
 	}
 
+    public static class SimpleSerialWriter implements Runnable 
+    {
+        OutputStream out;
+        
+        public SimpleSerialWriter ( OutputStream out )
+        {
+            this.out = out;
+        }
+        
+        public void run ()
+        {
+            try
+            {                
+                int c = 0;
+                while ( ( c = System.in.read()) > -1 )
+                {
+                    this.out.write(c);
+                }                
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }            
+        }
+    }	
+	
+    public static class SimpleSerialReader implements Runnable 
+    {
+        InputStream in;
+        
+        public SimpleSerialReader ( InputStream in )
+        {
+            this.in = in;
+        }
+        
+        public void run ()
+        {
+            byte[] buffer = new byte[1024];
+            int len = -1;
+            try
+            {
+                while ( ( len = this.in.read(buffer)) > -1 )
+                {
+                    System.out.print(new String(buffer,0,len));
+                }
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }            
+        }
+    }
+    
 	/** */
 	public class SerialReader implements Runnable {
 		InputStream in;
@@ -411,11 +488,11 @@ public class SerialDynamicXYDatasource implements Runnable {
 								x = aux;
 								y = aux1;
 								aux2 = ConvertTommHg.convertTommHg(x, y);
-								
+
 								if(aux2>1000){
 									System.out.println("everything is gonna be alright!");
 								}
-								
+
 								bpMeasureHistory.add(aux2);
 								pressureValue = aux2;
 								System.out.println(aux2);
