@@ -258,6 +258,7 @@
 #pragma udata
 char USB_In_Buffer[4];
 char USB_Out_Buffer[3];
+char USB_Temp_Buffer[3];
 BYTE numBytesRead;
 
 BOOL stringPrinted;
@@ -381,9 +382,17 @@ void UserInit(void);
 			if (FLAG == 0)
 			{
 				numBytesRead = getsUSBUSART(USB_Out_Buffer,sizeof(USB_Out_Buffer));
-				if(numBytesRead == sizeof(USB_Out_Buffer))
-				{
-					if (USB_Out_Buffer[0] == 'w' & USB_Out_Buffer[1] == 'h' & USB_Out_Buffer[2] == 'o')
+				//if(numBytesRead == sizeof(USB_Out_Buffer))
+				//{
+					if (USB_Out_Buffer[0] == 'w' || USB_Out_Buffer[1] == 'w' || USB_Out_Buffer[2] == 'w')
+						USB_Temp_Buffer[0] = 'w';
+					if (USB_Out_Buffer[0] == 'h' || USB_Out_Buffer[1] == 'h' || USB_Out_Buffer[2] == 'h')
+						USB_Temp_Buffer[1] = 'h';
+					if (USB_Out_Buffer[0] == 'o' || USB_Out_Buffer[1] == 'o' || USB_Out_Buffer[2] == 'o')
+						USB_Temp_Buffer[2] = 'o';
+
+					//if (USB_Out_Buffer[0] == 'w' & USB_Out_Buffer[1] == 'h' & USB_Out_Buffer[2] == 'o')
+					if (USB_Temp_Buffer[0] == 'w' & USB_Temp_Buffer[1] == 'h' & USB_Temp_Buffer[2] == 'o')
 					{
 						FLAG = 1;
 		
@@ -393,19 +402,7 @@ void UserInit(void);
 						USB_In_Buffer[3] = 'a';
 						putUSBUSART(USB_In_Buffer,numBytesRead);
 					}
-				}
-
-//			getsUSBUSART(USB_Out_Buffer,sizeof(USB_Out_Buffer));
-//			if(USB_Out_Buffer[0] == 9)
-//			{
-//				FLAG = 1;
-//
-//				USB_In_Buffer[0] = 's';
-//				USB_In_Buffer[1] = 'a';
-//				USB_In_Buffer[2] = 'n';				//ADRESH+1;			//horizontal (X vector) displacement+1 to cover usb issues with values 0 and 256
-//				USB_In_Buffer[3] = 'a';
-//
-//				putUSBUSART(USB_In_Buffer,4);								//putUSBUSART(USB_In_Buffer,numBytesRead);
+				//}
 			}
 			else if(FLAG == 1)
 			{
