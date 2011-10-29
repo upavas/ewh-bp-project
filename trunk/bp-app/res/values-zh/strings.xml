@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">血压</string>
+	<string name="measure_title">措施</string>
+
+	<string name="help_title">说明</string>
+
+	<string name="help_subtitle1">你需要什么</string>
+
+	<string name="help_needed">- 袖口无压力表\n
+		- 血压计\n
+		- Android手机\n
+		- USB电缆</string>
+	<string name="help_before">
+		测量之前注意事项：\n
+		- 不要摄入咖啡因
+		或\n
+		在30分钟内吸烟\n
+		- 除去手臂上的紧身的衣服袖子
+	</string>
+	<string name="help_reading">
+		读数时\n
+		- 将手臂放在桌子上，使其与你的心脏处在同一水平高度 
+   </string>
+
+	<string name="help_record">
+		保存读数\n
+		-按‘保存’键以保存读数\n
+		- 当次数据将被保存在 bp_measure_timeInMilliseconds.csv 文件中
+	</string>
+
+	<string name="new_measure_button">新的血压测量</string>
+	<string name="view_measure_button">查看保存的测量</string>
+	<string name="help_button">帮助</string>
+	<string name="delete_button">删除</string>
+	<string name="discard_button">放弃</string>
+	<string name="measure_list_no_items">没有项目</string>
+	<string name="empty_measure_list">没有血压措施</string>
+	<string name="save_button">保存</string>
+
+	<!--measure list	-->
+	<string name="number">号码</string>
+	<string name="date_time">日期 时间</string>
+	<string name="sys">SYS</string>
+	<string name="dia">DIA</string>
+	<string name="pulse">心率 </string>
+
+	<!--measure view page -->
+	<string name="view_measure_header">查看血压测量记录</string>
+	<string name="has_csv_file_no">csv文件有：否</string>
+	<string name="has_csv_file_yes">csv文件有：是</string>
+	<string name="alert_dialog_delete_measure">你确定要删除此项量?</string>
+	<string name="modified_date">修改:</string>
+	<string name="created_date">创建:</string>
+	<string name="alert_dialog_changes_saved">保存更改</string>
+	<!-- measure -->
+	<string name="pump">关闭阀门！反复挤压气泵，直到气压超过红线！</string>
+	<string name="stop_pump">停止泵气！打开阀门，减压缓慢</string>
+	<string name="create_csv_file">创建CSV文件</string>
+	<string name="notes">注释:</string>
+	<string name="alert_dialog_discard_measure">您确定要放弃测量?</string>
+	<string name="alert_dialog_no">否</string>
+	<string name="alert_dialog_yes">是</string>
+	<string name="alert_dialog_data_saved_file_and_database">数据保存为CSV文件和数据库</string>
+	<string name="alert_dialog_data_saved_to_database">数据仅保存到数据库</string>
+	<string name="pressure_x_legend">时间（s）</string>
+	<string name="pressure_y_legend">压力（毫米汞柱)</string>
+	<string name="alert_dialog_processing_data">数据处理中...</string>
+	<string name="alert_dialog_determine_bp">血压测定中...</string>
+	<string name="alert_dialog_discard_changes">你确定要放弃更改?
+	</string>
+
+</resources>
