@@ -54,7 +54,7 @@ ToolArgsString=-pa=4
 TraceCmdString=
 DebugOptions=
 [File004]
-Location=C:\Microchip Solutions v2011-07-14\USB\Device - HID - Mouse\HID - Mouse - Firmware - BP\USB Device - HID - Mouse - C18 - Low Pin Count USB Development Kit.cof
+Location=C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP mouse code\USB Device - HID - Mouse - C18 - Low Pin Count USB Development Kit.cof
 Folder=Output
 DeviceName=PIC18F14K50
 LanguageToolSuiteID={5B7D72DD-9861-47BD-9F60-2BE967BF8416}
@@ -67,7 +67,7 @@ ToolArgsString=/m"$(BINDIR_)$(TARGETBASE).map" /w /o"$(TARGETBASE).cof"
 TraceCmdString=
 DebugOptions=
 [File005]
-Location=C:\Microchip Solutions v2011-07-14\USB\Device - HID - Mouse\HID - Mouse - Firmware - BP\USB Device - HID - Mouse - C18 - Low Pin Count USB Development Kit.hex
+Location=C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP mouse code\USB Device - HID - Mouse - C18 - Low Pin Count USB Development Kit.hex
 Folder=Output
 DeviceName=PIC18F14K50
 LanguageToolSuiteID={5B7D72DD-9861-47BD-9F60-2BE967BF8416}
@@ -80,7 +80,7 @@ ToolArgsString=/m"$(BINDIR_)$(TARGETBASE).map" /w /o"$(TARGETBASE).cof"
 TraceCmdString=
 DebugOptions=
 [File006]
-Location=C:\Microchip Solutions v2011-07-14\USB\Device - HID - Mouse\HID - Mouse - Firmware - BP\USB Device - HID - Mouse - C18 - Low Pin Count USB Development Kit.map
+Location=C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP mouse code\USB Device - HID - Mouse - C18 - Low Pin Count USB Development Kit.map
 Folder=Output
 DeviceName=PIC18F14K50
 LanguageToolSuiteID={5B7D72DD-9861-47BD-9F60-2BE967BF8416}
