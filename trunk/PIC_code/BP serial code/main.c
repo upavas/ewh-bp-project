@@ -257,10 +257,11 @@
 /** V A R I A B L E S ********************************************************/
 #pragma udata
 char USB_In_Buffer[4];
-//char USB_Out_Buffer[2];
+char USB_Out_Buffer[3];
 BYTE numBytesRead;
 
 BOOL stringPrinted;
+BOOL FLAG;
 volatile BOOL buttonPressed;
 volatile BYTE buttonCount;
 
@@ -373,19 +374,51 @@ void UserInit(void);
 		TMR0L = 0x20;
 		ADCON0bits.GO = 1;	}
 	
-	if (PIR1bits.ADIF == 1)	{		PIR1bits.ADIF = 0;                           
+	if (PIR1bits.ADIF == 1)	{		PIR1bits.ADIF = 0;
 
 		if(USBUSARTIsTxTrfReady())
 		{
-			//PORTBbits.RB6 = !PORTBbits.RB6;		//for frequency testing
+			if (FLAG == 0)
+			{
+				numBytesRead = getsUSBUSART(USB_Out_Buffer,sizeof(USB_Out_Buffer));
+				if(numBytesRead == sizeof(USB_Out_Buffer))
+				{
+					if (USB_Out_Buffer[0] == 'w' & USB_Out_Buffer[1] == 'h' & USB_Out_Buffer[2] == 'o')
+					{
+						FLAG = 1;
+		
+						USB_In_Buffer[0] = 's';
+						USB_In_Buffer[1] = 'a';
+						USB_In_Buffer[2] = 'n';				//ADRESH+1;			//horizontal (X vector) displacement+1 to cover usb issues with values 0 and 256
+						USB_In_Buffer[3] = 'a';
+						putUSBUSART(USB_In_Buffer,numBytesRead);
+					}
+				}
 
-			//copy over the data to the USB buffer
-			USB_In_Buffer[0] = 0;
-			USB_In_Buffer[1] = 0;
-			USB_In_Buffer[2] = ADRESH;				//ADRESH+1;			//horizontal (X vector) displacement+1 to cover usb issues with values 0 and 256
-			USB_In_Buffer[3] = ADRESL;	    		//ADRESL;			//vertical (Y vector) displacement			
+//			getsUSBUSART(USB_Out_Buffer,sizeof(USB_Out_Buffer));
+//			if(USB_Out_Buffer[0] == 9)
+//			{
+//				FLAG = 1;
+//
+//				USB_In_Buffer[0] = 's';
+//				USB_In_Buffer[1] = 'a';
+//				USB_In_Buffer[2] = 'n';				//ADRESH+1;			//horizontal (X vector) displacement+1 to cover usb issues with values 0 and 256
+//				USB_In_Buffer[3] = 'a';
+//
+//				putUSBUSART(USB_In_Buffer,4);								//putUSBUSART(USB_In_Buffer,numBytesRead);
+			}
+			else if(FLAG == 1)
+			{
+				//PORTBbits.RB6 = !PORTBbits.RB6;		//for frequency testing
 	
-			putUSBUSART(USB_In_Buffer,4);								//putUSBUSART(USB_In_Buffer,numBytesRead);
+				//copy over the data to the USB buffer
+				USB_In_Buffer[0] = 0;
+				USB_In_Buffer[1] = 0;
+				USB_In_Buffer[2] = ADRESH;				//ADRESH+1;			//horizontal (X vector) displacement+1 to cover usb issues with values 0 and 256
+				USB_In_Buffer[3] = ADRESL;	    		//ADRESL;			//vertical (Y vector) displacement			
+		
+				putUSBUSART(USB_In_Buffer,4);								//putUSBUSART(USB_In_Buffer,numBytesRead);
+			}
 		}
 	}
 
@@ -513,6 +546,7 @@ static void InitializeSystem(void)
     #if (defined(__18CXX) & !defined(PIC18F87J50_PIM))
 		
 		//TRISBbits.TRISB6 = 0;						//frequency testing on osciloscope
+		FLAG = 0;
 
 		//configure (inc. ADC) ports: PORTB only has from RB4 to RB7   ->> ANSEL or ANSELH don't comprise RB7
 		TRISCbits.TRISC7 = 1;
