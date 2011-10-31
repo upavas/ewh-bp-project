@@ -1,3 +1,13 @@
+%-----------------------------------|
+% BP Interface: Oxford University   |
+%-----------------------------------|
+% Configure the HyperTerminal application for the following 
+% default Configuration:
+% - Baud Rate = 19200
+% - Data Bits = 8
+% - Parity Type = None
+% - Stop Bits = One
+
 function varargout = BP_Interface_iTab(varargin)
 % BP_INTERFACE_ITAB MATLAB code for BP_Interface_iTab.fig
 %      BP_INTERFACE_ITAB, by itself, creates a new BP_INTERFACE_ITAB or raises the existing
@@ -22,7 +32,7 @@ function varargout = BP_Interface_iTab(varargin)
 
 % Edit the above text to modify the response to help BP_Interface_iTab
 
-% Last Modified by GUIDE v2.5 29-Oct-2011 21:47:02
+% Last Modified by GUIDE v2.5 31-Oct-2011 16:40:14
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -43,7 +53,6 @@ else
 end
 % End initialization code - DO NOT EDIT
 
-
 % --- Executes just before BP_Interface_iTab is made visible.
 function BP_Interface_iTab_OpeningFcn(hObject, ~, handles, varargin)
 % This function has no output args, see OutputFcn.
@@ -61,12 +70,13 @@ guidata(hObject, handles);
 % UIWAIT makes BP_Interface_iTab wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
+global port
 global SBP_RATIO
 global DBP_RATIO
 global time_array
 global pressure_array
 global Fs
-global checkbox2
+global checkbox
 global FLAG
 global Pname
 global Page
@@ -77,7 +87,7 @@ global numMeasures
 global mySessionData
 global numSessionRecords
 
-checkbox2 = 0;
+checkbox = 0;
 SBP_RATIO = 0.4;
 DBP_RATIO = 0.7;
 time_array = 0;
@@ -86,7 +96,7 @@ pressure_array = 0;
 FLAG = 0;
 Pname = '';
 Page = '';
-Psex = '';
+Psex = 'Male';
 PcuffSize = 'Adult';
 Parm = 'Left';
 
@@ -96,17 +106,65 @@ numSessionRecords = 100;
 mySessionData = cell(numSessionRecords,11);
 for x = 1:numSessionRecords
     for z = 1:11
-    mySessionData{x,z} = '            -';
+        mySessionData{x,z} = '            -';
     end
 end
 
 set(handles.uitable1,'data',mySessionData);
 
 infos = instrhwinfo('serial');                                              %instrument control toolbox! instrhwinfo: information about available hardware
-coms = size(infos.SerialPorts);
-if (coms(1,1) ~= 1)
-    msgbox('No COM port or more than one COM port was found in the system. In case there is more than one, choose the COM port to be used!','Help Box:','warn');
+ports = size(infos.SerialPorts);
+if ports(1,1) == 0
+    msgbox('No COM port was found in the system. Please plug the device in and connect to it!','Help Box:','error');
     return
+end
+
+t_port = 1;
+while t_port <= ports(1,1)
+    port = char(infos.SerialPorts);
+    if ports(1,1) == 1
+        port = char(infos.SerialPorts);
+    else
+        port = port(t_port:2:end);
+    end
+
+    s = serial(port);
+    set(s, 'InputBufferSize', 1024);                %number of bytes in input buffer
+    set(s, 'BaudRate', 19200);
+    set(s, 'Parity', 'none');
+    set(s, 'DataBits', 8);
+    set(s, 'StopBit', 1);
+    set(s, 'Timeout',10);
+    set(s, 'RequestToSend','on');
+    
+    fopen(s);                                       %opens the serial port
+    
+    fwrite(s,119);                                  % fprintf(s,'%s','w');
+    fwrite(s,104);                                  % fprintf(s,'%s','h');
+    fwrite(s,111);                                  % fprintf(s,'%s','o');
+    
+    a = fread(s);                                   % reads the data from the serial port and stores it to the matrix a
+    
+    fclose(s);
+    delete(s);
+    
+    t = 1;
+    rsp = '';
+    buffer_len = size(a);
+    
+    while t <= 4 && buffer_len(1,1) >= 4                                    % 'ADMP' has 4 chars: answer from the PCB
+        rsp = strcat(rsp,char(a(t,1)));
+        t = t+1;
+    end
+    
+    if strcmp(rsp,'ADMP')
+        return
+    elseif ports(1,1) == 1
+        msgbox('The connected device is not the BP monitor device! Please connect the correct device.','Help Box:','error');
+        return
+    end
+    
+    t_port = t_port+1;
 end
 
 % --- Outputs from this function are returned to the command line.
@@ -120,17 +178,23 @@ function varargout = BP_Interface_iTab_OutputFcn(~, ~, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on button press in checkbox2.
+% --- Executes on button press in checkbox1.
 function checkbox1_Callback(hObject, ~, ~)
 % hObject    handle to checkbox1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of checkbox2
+% Hint: get(hObject,'Value') returns toggle state of checkbox1
 
-global checkbox2
+global checkbox
 
-checkbox2 = get(hObject,'Value');
+checkbox = get(hObject,'Value');
+
+% --- Executes during object creation, after setting all properties.
+function checkbox1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to checkbox1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
 
 
 % --- Executes on button press in pushbutton1.
@@ -145,7 +209,7 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
-global checkbox2
+global checkbox
 global Pname
 global Page
 global Psex
@@ -154,7 +218,7 @@ global Parm
 global SBP_RATIO
 global DBP_RATIO
 global FLAG
-global time
+global time_array
 global pressure_array
 global SBP
 global DBP
@@ -189,17 +253,17 @@ if numMeasures > numSessionRecords
 end
 
 mySessionData{numMeasures,1} = Pname;
-if isnan(str2double(Page))
+if isempty(Page) || isnan(Page)
     Page = '            -';
 end
 mySessionData{numMeasures,2} = Page;
-% if isempty(Psex)
-%     Psex = '            -';
-% end
+if isempty(Psex)
+    Psex = '            -';
+end
 mySessionData{numMeasures,3} = Psex;
-mySessionData{numMeasures,4} = Parm;
-mySessionData{numMeasures,5} = datestr(clock);
-mySessionData{numMeasures,6} = PcuffSize;
+mySessionData{numMeasures,4} = datestr(clock);
+mySessionData{numMeasures,5} = PcuffSize;
+mySessionData{numMeasures,6} = Parm;
 mySessionData{numMeasures,7} = SBP_RATIO;
 mySessionData{numMeasures,8} = DBP_RATIO;
 mySessionData{numMeasures,9} = SBP;
@@ -214,8 +278,8 @@ if (exist(Foldername) ~= 7)
 end
 oldFolder = cd(sprintf('%s%s%s%s',pwd,filesep,'BP Data',filesep));
 
-if checkbox2 == 1
-    M = [time' pressure_array];
+if checkbox
+    M = [time_array pressure_array];
     FileName = [Pname 'Data.csv'];
     csvwrite(FileName,M);
 end
@@ -223,10 +287,10 @@ end
 Filename = 'Record.xls';
 
 if (exist(Filename) == 0)
-    d = {'Name','Age','Sex','Used arm','Time','Cuff Size','SBP Ratio','DBP Ratio','Systolic BP','Diastolic BP','Heart Rate';Pname,Page,Psex,Parm,datestr(clock),PcuffSize,SBP_RATIO,DBP_RATIO,SBP,DBP,HR};
+    d = {'Name','Age','Sex','Time','Cuff Size','Used arm','SBP Ratio','DBP Ratio','Systolic BP','Diastolic BP','Heart Rate';Pname,Page,Psex,datestr(clock),PcuffSize,Parm,SBP_RATIO,DBP_RATIO,SBP,DBP,HR};
     xlswrite(Filename, d, 1);
 else
-    d = {Pname,Page,Psex,Parm,datestr(clock),PcuffSize,SBP_RATIO,DBP_RATIO,SBP,DBP,HR};
+    d = {Pname,Page,Psex,datestr(clock),PcuffSize,Parm,SBP_RATIO,DBP_RATIO,SBP,DBP,HR};
     A = xlsread(Filename);
     range = ['A' num2str(size(A,1)+2)];
     xlswrite(Filename, d, 1, range);
@@ -243,55 +307,30 @@ function pushbutton2_Callback(~, ~, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 %global Cont_or_Quit
+global port
 global SBP_RATIO
 global DBP_RATIO
 global FLAG
-global time
+global time_array
 global pressure_array
 global Fs
 global SBP
 global DBP
 global HR
 
-infos = instrhwinfo('serial');                                              %instrument control toolbox! instrhwinfo: information about available hardware
-coms = size(infos.SerialPorts);
-if (coms(1,1) ~= 1)
-    msgbox('No COM port or more than one COM port was found in the system. In case there is more than one, choose the COM port to be used!','Help Box:','error');
-    return
-end
-
 cla(handles.axes1,'reset')
 
-infos = instrhwinfo('serial');
-port = char(infos.SerialPorts); %assigns the object s to serial port COM3
 s = serial(port);
-set(s, 'InputBufferSize', 1024); %number of bytes in inout buffer
-set(s, 'FlowControl', 'hardware');
-set(s, 'BaudRate', 9600);
+set(s, 'InputBufferSize', 1024);                                %number of bytes in inout buffer
+set(s, 'BaudRate', 19200);
 set(s, 'Parity', 'none');
 set(s, 'DataBits', 8);
 set(s, 'StopBit', 1);
 set(s, 'Timeout',10);
+set(s, 'RequestToSend','on');
 
-fopen(s);           %opens the serial port
-%%-------------------------------------------------------------------------
-%     fprintf(s,'%s','w');
-%     fprintf(s,'%s','h');
-%     fprintf(s,'%s','o');
-    fwrite(s,119);
-    fwrite(s,104);
-    fwrite(s,111);
+fopen(s);                                           %opens the serial port
 
-    a = fread(s); %reads the data from the serial port and stores it to the matrix a
-    if strcmp(a,'sana') == 0
-        msgbox('The connected device is not the BP measure device! Please connect the correct device.','Help Box:','error');
-        fclose(s);
-        delete(s);
-        return
-    end
-%%-------------------------------------------------------------------------
-
-%x = 0;
 initial_time = cputime;
 b = [];
 k = 1;
@@ -300,18 +339,6 @@ t = 1;
 set(gcf,'currentcharacter','C')
 %Cont_or_Quit = get(gcf,'currentcharacter');
 
-% state = 1;
-% lb = 0;
-% i = 1;
-% %FLAG = 0;
-% aux = 999; x = 999;
-% aux1 = 999; y = 999;
-% 
-% aux2 = 0;
-% 
-% l = 0;
-% y_down = [];
-% t_down = [];
 j = 0;
 myFLAG = 1;
 
@@ -500,8 +527,8 @@ end
 [SBP,DBP,HR] = SignalProcessing(pressure_array,Fs,SBP_RATIO,DBP_RATIO,handles);
 
 set(handles.edit1,'String',SBP);
-set(handles.edit2,'String',SBP);
-set(handles.edit3,'String',SBP);
+set(handles.edit2,'String',DBP);
+set(handles.edit3,'String',HR);
 
 FLAG = 1;
 
@@ -650,7 +677,7 @@ function text15_CreateFcn(~, ~, ~)
 % handles    empty - handles not created until after all CreateFcns called
 
 
-% --- Executes on selection change in popupmenu2.
+% --- Executes on selection change in popupmenu1.
 function popupmenu1_Callback(hObject, ~, handles)
 % hObject    handle to popupmenu1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -659,12 +686,6 @@ function popupmenu1_Callback(hObject, ~, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu1
 
-% Choose default command line output for BP_Interface_iTab
-handles.output = hObject;
-
-% Update handles structure
-guidata(hObject, handles);
-
 global SBP_RATIO
 global DBP_RATIO
 global pressure_array
@@ -673,17 +694,16 @@ global SBP
 global DBP
 global HR
 
-popupcontents = get(hObject,'String');
+popupcontents = cellstr(get(hObject,'String'));
 SBP_RATIO = popupcontents{get(hObject,'Value')};
 
 [SBP,DBP,HR] = SignalProcessing(pressure_array,Fs,SBP_RATIO,DBP_RATIO,handles);
 
 set(handles.edit1,'String',SBP);
-set(handles.edit2,'String',SBP);
-set(handles.edit3,'String',SBP);
+set(handles.edit2,'String',DBP);
+set(handles.edit3,'String',HR);
 
-
-% --- Executes on selection change in popupmenu3.
+% --- Executes on selection change in popupmenu2.
 function popupmenu2_Callback(hObject, ~, handles)
 % hObject    handle to popupmenu2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -692,12 +712,6 @@ function popupmenu2_Callback(hObject, ~, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu2 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu2
 
-% Choose default command line output for BP_Interface_iTab
-handles.output = hObject;
-
-% Update handles structure
-guidata(hObject, handles);
-
 global SBP_RATIO
 global DBP_RATIO
 global pressure_array
@@ -706,14 +720,14 @@ global SBP
 global DBP
 global HR
 
-popupcontents = get(hObject,'String');
+popupcontents = cellstr(get(hObject,'String'));
 DBP_RATIO = popupcontents{get(hObject,'Value')};
 
 [SBP,DBP,HR] = SignalProcessing(pressure_array,Fs,SBP_RATIO,DBP_RATIO,handles);
 
 set(handles.edit1,'String',SBP);
-set(handles.edit2,'String',SBP);
-set(handles.edit3,'String',SBP);
+set(handles.edit2,'String',DBP);
+set(handles.edit3,'String',HR);
 
 % --- Executes on selection change in popupmenu3.
 function popupmenu3_Callback(hObject, ~, ~)
@@ -726,11 +740,11 @@ function popupmenu3_Callback(hObject, ~, ~)
 
 global PcuffSize
 
-PcuffSize = str2double(get(hObject,'String'));
-
+popupcontents = cellstr(get(hObject,'String'));
+PcuffSize = popupcontents{get(hObject,'Value')};
 
 % --- Executes on selection change in popupmenu4.
-function popupmenu4_Callback(hObject, eventdata, handles)
+function popupmenu4_Callback(hObject, ~, ~)
 % hObject    handle to popupmenu4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -739,10 +753,11 @@ function popupmenu4_Callback(hObject, eventdata, handles)
 %        contents{get(hObject,'Value')} returns selected item from popupmenu4
 global Parm
 
-Parm = str2double(get(hObject,'String'));
+popupcontents = cellstr(get(hObject,'String'));
+Parm = popupcontents{get(hObject,'Value')};
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu4_CreateFcn(hObject, eventdata, handles)
+function popupmenu4_CreateFcn(hObject, ~, ~)
 % hObject    handle to popupmenu4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -754,7 +769,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 % --- Executes on selection change in popupmenu5.
-function popupmenu5_Callback(hObject, eventdata, handles)
+function popupmenu5_Callback(hObject, ~, ~)
 % hObject    handle to popupmenu5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -764,4 +779,34 @@ function popupmenu5_Callback(hObject, eventdata, handles)
 
 global Psex
 
-Psex = str2double(get(hObject,'String'));
+popupcontents = cellstr(get(hObject,'String'));
+Psex = popupcontents{get(hObject,'Value')};
+
+
+%%%For robustness:
+% global t_aquisicao
+% global flag
+% global t_aquisi_aux
+%     
+% t_aquisi_aux = t_aquisicao;
+% t_aquisicao = get(hObject,'String');
+% t_aquisicao(t_aquisicao == ',') = '.';                                      %change commas to dots
+% t_aquisicao = str2double(t_aquisicao);
+% if (t_aquisicao <= 0 || isnan(t_aquisicao) == 1)
+%     h1 = msgbox('Aquisition time (s or ms) must be an integer or decimal value superior to 0!','Help Box:','error');
+%     t_aquisicao = t_aquisi_aux;                             
+%     set(handles.t_aquisicao,'String',t_aquisicao);
+% else
+%     flag = 1;
+% end
+
+% if (strcmp(escala_temporal,'ms') == 1 && t_aquisicao1 < 0.5)
+%     h1 = msgbox('Aquisition time value must be higher than 100ms (lower possible value)!','Help Box:','error');
+%     t_aquisicao = 100;
+%     set(handles.t_aquisicao,'String',t_aquisicao);
+% elseif (t_aquisicao1 > 65535)
+%     h1 = msgbox('The maximum aquisition time value allowed by the program is 6553 seconds ~ 109 minutes!','Help Box:','error');
+%     t_aquisicao = out/10;                                                   %é o últmo out recebido! neste caso ele volta a meter o valor do último out!
+%     set(handles.t_aquisicao,'String',t_aquisicao)
+% end
+
