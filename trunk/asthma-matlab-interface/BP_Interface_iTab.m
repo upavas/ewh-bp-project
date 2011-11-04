@@ -71,41 +71,31 @@ guidata(hObject, handles);
 % uiwait(handles.figure1);
 
 global port
-global SBP_RATIO
-global DBP_RATIO
 global time_array
 global pressure_array
-global Fs
 global checkbox
 global FLAG
 global Pname
-global Page
-global Psex
-global PcuffSize
-global Parm
+global Ppump
 global numMeasures
 global mySessionData
 global numSessionRecords
+global Fs
 
 checkbox = 0;
-SBP_RATIO = 0.4;
-DBP_RATIO = 0.7;
 time_array = 0;
-Fs = 250; % Hz
 pressure_array = 0;
 FLAG = 0;
 Pname = '';
-Page = '';
-Psex = 'Male';
-PcuffSize = 'Adult';
-Parm = 'Left';
+Ppump = '1 L';
+Fs = 250;  %Hz
 
 numMeasures = 0;
 numSessionRecords = 100;
 
-mySessionData = cell(numSessionRecords,11);
+mySessionData = cell(numSessionRecords,3);
 for x = 1:numSessionRecords
-    for z = 1:11
+    for z = 1:3
         mySessionData{x,z} = '            -';
     end
 end
@@ -123,11 +113,6 @@ uports = infos.SerialPorts;
 t_port = 1;
 while t_port <= ports(1,1)
     port = uports{t_port};
-%     if ports(1,1) == 1
-%         port = char(infos.SerialPorts);
-%     else
-%         port = port(t_port:2:end);
-%     end
 
     s = serial(port);
     set(s, 'InputBufferSize', 1024);                %number of bytes in input buffer
@@ -212,18 +197,10 @@ guidata(hObject, handles);
 
 global checkbox
 global Pname
-global Page
-global Psex
-global PcuffSize
-global Parm
-global SBP_RATIO
-global DBP_RATIO
+global Ppump
 global FLAG
 global time_array
 global pressure_array
-global SBP
-global DBP
-global HR
 global numMeasures
 global mySessionData
 global numSessionRecords
@@ -236,7 +213,7 @@ else
         msgbox('A name must be given to the patient in order to save the acquired measurements!','Help Box:','error');
         return
     end
-    if size(PcuffSize,1) == 0
+    if size(Ppump,1) == 0
         msgbox('A cuff size must be given in order to save the acquired measurements!','Help Box:','error');
         return
     end
@@ -247,40 +224,23 @@ numMeasures = numMeasures+1;
 if numMeasures > numSessionRecords
     numMeasures = 1;
     for x = 2:numSessionRecords
-        for z = 2:11
+        for z = 2:3
             mySessionData{x,z} = '            -';
         end
     end
 end
 
 mySessionData{numMeasures,1} = Pname;
-if isempty(Page)
-    Page = '            -';
-end
-if isnan(Page)
-    Page = '            -';
-end
-mySessionData{numMeasures,2} = Page;
-if isempty(Psex)
-    Psex = '            -';
-end
-mySessionData{numMeasures,3} = Psex;
-mySessionData{numMeasures,4} = datestr(clock);
-mySessionData{numMeasures,5} = PcuffSize;
-mySessionData{numMeasures,6} = Parm;
-mySessionData{numMeasures,7} = SBP_RATIO;
-mySessionData{numMeasures,8} = DBP_RATIO;
-mySessionData{numMeasures,9} = SBP;
-mySessionData{numMeasures,10} = DBP;
-mySessionData{numMeasures,11} = HR;
+mySessionData{numMeasures,2} = Ppump;
+mySessionData{numMeasures,3} = datestr(clock);
 
 set(handles.uitable1,'data',mySessionData);
 
-Foldername = 'BP Data';
-if (exist(Foldername) ~= 7)
+Foldername = 'Asthma Data';
+if (exist(Foldername) ~= 10)
     mkdir(pwd,Foldername);
 end
-oldFolder = cd(sprintf('%s%s%s%s',pwd,filesep,'BP Data',filesep));
+oldFolder = cd(sprintf('%s%s%s%s',pwd,filesep,'Asthma Data',filesep));
 
 if checkbox
     M = [time_array pressure_array];
@@ -291,10 +251,10 @@ end
 Filename = 'Record.xls';
 
 if (exist(Filename) == 0)
-    d = {'Name','Age','Sex','Time','Cuff Size','Used arm','SBP Ratio','DBP Ratio','Systolic BP','Diastolic BP','Heart Rate';Pname,Page,Psex,datestr(clock),PcuffSize,Parm,SBP_RATIO,DBP_RATIO,SBP,DBP,HR};
+    d = {'Test name','Pump capacity','Time';Pname,Ppump,datestr(clock)};
     xlswrite(Filename, d, 1);
 else
-    d = {Pname,Page,Psex,datestr(clock),PcuffSize,Parm,SBP_RATIO,DBP_RATIO,SBP,DBP,HR};
+    d = {Pname,Ppump,datestr(clock)};
     A = xlsread(Filename);
     range = ['A' num2str(size(A,1)+2)];
     xlswrite(Filename, d, 1, range);
@@ -312,16 +272,11 @@ function pushbutton2_Callback(~, ~, handles)
 
 %global Cont_or_Quit
 global port
-global SBP_RATIO
-global DBP_RATIO
 global FLAG
 global time_array
 global pressure_array
 global time
 global Fs
-global SBP
-global DBP
-global HR
 
 cla(handles.axes1,'reset')
 
@@ -461,7 +416,7 @@ while t
             
             val = bitshift(double(x), 8) + double(y);                 %to convert the wanted number (that we receive), we do: the sum of the most significant byte changed to the right with the one less significant
             
-            y_pressure=((val*3.72/(1024*5))-0.04)/0.018 * 7.5;
+            y_pressure=((val*3.72/(1024*5))-0.04)/0.018; % * 7.5;
             
             time = cputime - initial_time;
             
@@ -517,35 +472,19 @@ fclose(s);
 delete(s);
 myFLAG = 1;
 
-if (max(pressure_array) < 180)
-    errordlg('Acquire new signal! Pressure must be above 180 mmHg.');
-    return
-end
+% if (max(pressure_array) < 180)
+%     errordlg('Acquire new signal! Pressure must be above 180 mmHg.');
+%     return
+% end
 
-% bp_wave_f = medfilt1(pressure_array,5);
-% 
-% plot(handles.axes1,time,bp_wave_f), axis tight
-% title('Cuff Pressure Wave after median filter'), xlabel('Time (secs)'), ylabel('Pressure (mmHg)')
-
-%--------------------------------------------------------------------------
-%Signal Procesing!
-bp_wave_f = medfilt1(pressure_array,5);
-% figure,
-% plot(time,bp_wave_f), axis tight
-% title('Cuff Pressure Wave after median filter'), xlabel('Time (secs)'), ylabel('Pressure (mmHg)')
+%bp_wave_f = medfilt1(pressure_array,5);
 
 time = (1:length(pressure_array))/Fs;
 plot(handles.axes1,time,pressure_array);
 xlabel('Time (s)');
-ylabel('Pressure (mmHg)');
+ylabel('Pressure (kPa)');
 
-pressure_array = bp_wave_f;
-
-[SBP,DBP,HR] = SignalProcessing(pressure_array,time,SBP_RATIO,DBP_RATIO);
-
-set(handles.edit1,'String',SBP);
-set(handles.edit2,'String',DBP);
-set(handles.edit3,'String',HR);
+%pressure_array = bp_wave_f;
 
 FLAG = 1;
 
@@ -554,71 +493,10 @@ catch exception
         fclose(s);
         delete(s);
     end
-    %cla(handles.axes1,'reset')
     time_array = [];
     pressure_array = [];
 end
 
-
-function edit1_Callback(~, ~, ~)
-% hObject    handle to edit1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit1 as text
-%        str2double(get(hObject,'String')) returns contents of edit1 as a double
-
-% --- Executes during object creation, after setting all properties.
-function edit1_CreateFcn(hObject, ~, ~)
-% hObject    handle to edit1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-function edit2_Callback(~, ~, ~)
-% hObject    handle to edit2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit2 as text
-%        str2double(get(hObject,'String')) returns contents of edit2 as a double
-
-% --- Executes during object creation, after setting all properties.
-function edit2_CreateFcn(hObject, ~, ~)
-% hObject    handle to edit2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-function edit3_Callback(~, ~, ~)
-% hObject    handle to edit3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit3 as text
-%        str2double(get(hObject,'String')) returns contents of edit3 as a double
-
-% --- Executes during object creation, after setting all properties.
-function edit3_CreateFcn(hObject, ~, ~)
-% hObject    handle to edit3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
 
 function edit4_Callback(hObject, ~, ~)
 % hObject    handle to edit4 (see GCBO)
@@ -644,30 +522,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-function edit5_Callback(hObject, ~, ~)
-% hObject    handle to edit5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit5 as text
-%        str2double(get(hObject,'String')) returns contents of edit5 as a double
-
-global Page
-
-Page = str2double(get(hObject,'String'));
-
-% --- Executes during object creation, after setting all properties.
-function edit5_CreateFcn(hObject, ~, ~)
-% hObject    handle to edit5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
 
 % --- Executes during object creation, after setting all properties.
 function text1_CreateFcn(~, ~, ~)
@@ -676,75 +530,17 @@ function text1_CreateFcn(~, ~, ~)
 % handles    empty - handles not created until after all CreateFcns called
 
 % --- Executes during object creation, after setting all properties.
-function text3_CreateFcn(~, ~, ~)
-% hObject    handle to text3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% --- Executes during object creation, after setting all properties.
 function text13_CreateFcn(~, ~, ~)
 % hObject    handle to text13 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % --- Executes during object creation, after setting all properties.
+
 function text15_CreateFcn(~, ~, ~)
 % hObject    handle to text15 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
-
-% --- Executes on selection change in popupmenu1.
-function popupmenu1_Callback(hObject, ~, handles)
-% hObject    handle to popupmenu1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu1
-
-global SBP_RATIO
-global DBP_RATIO
-global pressure_array
-global time
-global SBP
-global DBP
-global HR
-
-popupcontents = cellstr(get(hObject,'String'));
-SBP_RATIO = popupcontents{get(hObject,'Value')};
-
-[SBP,DBP,HR] = SignalProcessing(pressure_array,time,SBP_RATIO,DBP_RATIO);
-
-set(handles.edit1,'String',SBP);
-set(handles.edit2,'String',DBP);
-set(handles.edit3,'String',HR);
-
-% --- Executes on selection change in popupmenu2.
-function popupmenu2_Callback(hObject, ~, handles)
-% hObject    handle to popupmenu2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu2 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu2
-
-global SBP_RATIO
-global DBP_RATIO
-global pressure_array
-global time
-global SBP
-global DBP
-global HR
-
-popupcontents = cellstr(get(hObject,'String'));
-DBP_RATIO = popupcontents{get(hObject,'Value')};
-
-[SBP,DBP,HR] = SignalProcessing(pressure_array,time,SBP_RATIO,DBP_RATIO);
-
-set(handles.edit1,'String',SBP);
-set(handles.edit2,'String',DBP);
-set(handles.edit3,'String',HR);
 
 % --- Executes on selection change in popupmenu3.
 function popupmenu3_Callback(hObject, ~, ~)
@@ -755,74 +551,7 @@ function popupmenu3_Callback(hObject, ~, ~)
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu3 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu3
 
-global PcuffSize
+global Ppump
 
 popupcontents = cellstr(get(hObject,'String'));
-PcuffSize = popupcontents{get(hObject,'Value')};
-
-% --- Executes on selection change in popupmenu4.
-function popupmenu4_Callback(hObject, ~, ~)
-% hObject    handle to popupmenu4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu4 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu4
-global Parm
-
-popupcontents = cellstr(get(hObject,'String'));
-Parm = popupcontents{get(hObject,'Value')};
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu4_CreateFcn(hObject, ~, ~)
-% hObject    handle to popupmenu4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-% --- Executes on selection change in popupmenu5.
-function popupmenu5_Callback(hObject, ~, ~)
-% hObject    handle to popupmenu5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu5 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu5
-
-global Psex
-
-popupcontents = cellstr(get(hObject,'String'));
-Psex = popupcontents{get(hObject,'Value')};
-
-
-%%%For robustness:
-% global t_aquisicao
-% global flag
-% global t_aquisi_aux
-%     
-% t_aquisi_aux = t_aquisicao;
-% t_aquisicao = get(hObject,'String');
-% t_aquisicao(t_aquisicao == ',') = '.';                                      %change commas to dots
-% t_aquisicao = str2double(t_aquisicao);
-% if (t_aquisicao <= 0 || isnan(t_aquisicao) == 1)
-%     h1 = msgbox('Aquisition time (s or ms) must be an integer or decimal value superior to 0!','Help Box:','error');
-%     t_aquisicao = t_aquisi_aux;                             
-%     set(handles.t_aquisicao,'String',t_aquisicao);
-% else
-%     flag = 1;
-% end
-
-% if (strcmp(escala_temporal,'ms') == 1 && t_aquisicao1 < 0.5)
-%     h1 = msgbox('Aquisition time value must be higher than 100ms (lower possible value)!','Help Box:','error');
-%     t_aquisicao = 100;
-%     set(handles.t_aquisicao,'String',t_aquisicao);
-% elseif (t_aquisicao1 > 65535)
-%     h1 = msgbox('The maximum aquisition time value allowed by the program is 6553 seconds ~ 109 minutes!','Help Box:','error');
-%     t_aquisicao = out/10;                                                   %é o últmo out recebido! neste caso ele volta a meter o valor do último out!
-%     set(handles.t_aquisicao,'String',t_aquisicao)
-% end
+Ppump = popupcontents{get(hObject,'Value')};
