@@ -1,19 +1,9 @@
-function [SBP,DBP,HR] = SignalProcessing(pressure_array,Fs,SBP_RATIO,DBP_RATIO,handles)
-
-bp_wave_f = medfilt1(pressure_array,5);
-% figure,
-% plot(time,bp_wave_f), axis tight
-% title('Cuff Pressure Wave after median filter'), xlabel('Time (secs)'), ylabel('Pressure (mmHg)')
-
-time = (1:length(pressure_array))/Fs;
-plot(handles.axes1,time,pressure_array);
-xlabel('Time (s)');
-ylabel('Pressure (mmHg)');
+function [SBP,DBP,HR] = SignalProcessing(bp_wave_f,time,SBP_RATIO,DBP_RATIO)
 
 %% Get decreasing part of the curve
 bp = bp_wave_f;
 slimit = [50 2400];
-inflim = slimit(1);             % inferior limit (values lower than inflim are discarded
+inflim = slimit(1);         % inferior limit (values lower than inflim are discarded
 suplim = slimit(2);
 [~, indmax]=max(bp);        % calculate max value
 L=length(bp);
@@ -162,8 +152,8 @@ end
 
 close(figure1)
 
-SBP = round(bp_wave_1(sys(1)));
-DBP = round(bp_wave_1(dias(1)));
+SBP = round(bp_wave_1(idxsys(2:length(idxsys))));
+DBP = round(bp_wave_1(idxdia(2:length(idxdia))));
 HR = round(xdata(b)*60);
 
 end
