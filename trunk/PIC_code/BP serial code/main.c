@@ -257,8 +257,9 @@
 /** V A R I A B L E S ********************************************************/
 #pragma udata
 char USB_In_Buffer[4];
-char USB_Out_Buffer[3];
-char USB_Temp_Buffer[3];
+char USB_In_Buffer2[10];
+char USB_Out_Buffer[4];
+char USB_Temp_Buffer[4];
 //char USB_Buffered[6];
 //BYTE numBytesRead;
 
@@ -371,9 +372,9 @@ void UserInit(void);
         #endif
 
 // ************** OUR CODE ***********************************************************************************************************************
-	if (INTCONbits.TMR0IF == 1)	{		INTCONbits.TMR0IF = 0;
-		TMR0H = 0xD1;
-		TMR0L = 0x20;
+	if (INTCONbits.TMR0IF == 1)	{		INTCONbits.TMR0IF = 0;		// sampling frequency:
+		TMR0H = 0x63;				// for 250Hz: 0xD1  ; 75Hz: 0x63  ; 50Hz: 0x15
+		TMR0L = 0xC0;				// for 250Hz: 0x20  ; 75Hz: 0xC0  ; 50Hz: 0xA0
 		ADCON0bits.GO = 1;	}
 	
 	if (PIR1bits.ADIF == 1)	{		PIR1bits.ADIF = 0;
@@ -385,11 +386,11 @@ void UserInit(void);
 				getsUSBUSART(USB_Out_Buffer,sizeof(USB_Out_Buffer));
 				//if(numBytesRead == sizeof(USB_Out_Buffer))
 				//{
-					if (USB_Out_Buffer[0] == 'w' || USB_Out_Buffer[1] == 'w' || USB_Out_Buffer[2] == 'w')
+					if (USB_Out_Buffer[0] == 'w' || USB_Out_Buffer[1] == 'w' || USB_Out_Buffer[2] == 'w' || USB_Out_Buffer[3] == 'w')
 						USB_Temp_Buffer[0] = 'w';
-					if (USB_Out_Buffer[0] == 'h' || USB_Out_Buffer[1] == 'h' || USB_Out_Buffer[2] == 'h')
+					if (USB_Out_Buffer[0] == 'h' || USB_Out_Buffer[1] == 'h' || USB_Out_Buffer[2] == 'h' || USB_Out_Buffer[3] == 'h')
 						USB_Temp_Buffer[1] = 'h';
-					if (USB_Out_Buffer[0] == 'o' || USB_Out_Buffer[1] == 'o' || USB_Out_Buffer[2] == 'o')
+					if (USB_Out_Buffer[0] == 'o' || USB_Out_Buffer[1] == 'o' || USB_Out_Buffer[2] == 'o' || USB_Out_Buffer[3] == 'o')
 						USB_Temp_Buffer[2] = 'o';
 
 					//if (USB_Out_Buffer[0] == 'w' & USB_Out_Buffer[1] == 'h' & USB_Out_Buffer[2] == 'o')
@@ -397,11 +398,12 @@ void UserInit(void);
 					{
 						FLAG = 1;
 		
-						USB_In_Buffer[0] = 'A';
-						USB_In_Buffer[1] = 'D';
-						USB_In_Buffer[2] = 'M';				//ADRESH+1;			//horizontal (X vector) displacement+1 to cover usb issues with values 0 and 256
-						USB_In_Buffer[3] = 'P';
-						putUSBUSART(USB_In_Buffer,sizeof(USB_In_Buffer));
+						putUSBUSART(USB_In_Buffer2,sizeof(USB_In_Buffer2));
+
+						USB_Temp_Buffer[0] = 0;
+						USB_Temp_Buffer[1] = 0;
+						USB_Temp_Buffer[2] = 0;
+						USB_Temp_Buffer[3] = 0;
 					}
 				//}
 			}
@@ -416,6 +418,28 @@ void UserInit(void);
 				USB_In_Buffer[3] = ADRESL;	    		//ADRESL;			//vertical (Y vector) displacement			
 		
 				putUSBUSART(USB_In_Buffer,4);								//putUSBUSART(USB_In_Buffer,numBytesRead);
+
+				getsUSBUSART(USB_Out_Buffer,sizeof(USB_Out_Buffer));
+
+					if (USB_Out_Buffer[0] == 's' || USB_Out_Buffer[1] == 's' || USB_Out_Buffer[2] == 's' || USB_Out_Buffer[3] == 's')
+						USB_Temp_Buffer[0] = 's';
+					if (USB_Out_Buffer[0] == 't' || USB_Out_Buffer[1] == 't' || USB_Out_Buffer[2] == 't' || USB_Out_Buffer[3] == 't')
+						USB_Temp_Buffer[1] = 't';
+					if (USB_Out_Buffer[0] == 'o' || USB_Out_Buffer[1] == 'o' || USB_Out_Buffer[2] == 'o' || USB_Out_Buffer[3] == 'o')
+						USB_Temp_Buffer[2] = 'o';
+					if (USB_Out_Buffer[0] == 'p' || USB_Out_Buffer[1] == 'p' || USB_Out_Buffer[2] == 'p' || USB_Out_Buffer[3] == 'p')
+						USB_Temp_Buffer[3] = 'p';
+
+					if (USB_Temp_Buffer[0] == 's' & USB_Temp_Buffer[1] == 't' & USB_Temp_Buffer[2] == 'o' & USB_Temp_Buffer[3] == 'p')
+					{
+						FLAG = 0;
+
+						USB_Temp_Buffer[0] = 0;
+						USB_Temp_Buffer[1] = 0;
+						USB_Temp_Buffer[2] = 0;
+						USB_Temp_Buffer[3] = 0;
+					}
+
 			}
 		}
 	}
@@ -546,13 +570,24 @@ static void InitializeSystem(void)
 		//TRISBbits.TRISB6 = 0;						//frequency testing on osciloscope
 		FLAG = 0;
 
+		USB_In_Buffer2[0] = 'i';
+		USB_In_Buffer2[1] = 'c';
+		USB_In_Buffer2[2] = 'e';
+		USB_In_Buffer2[3] = 'i';
+		USB_In_Buffer2[4] = 'c';
+		USB_In_Buffer2[5] = 'e';
+		USB_In_Buffer2[6] = 'b';
+		USB_In_Buffer2[7] = 'a';
+		USB_In_Buffer2[8] = 'b';
+		USB_In_Buffer2[9] = 'y';
+
 		//configure (inc. ADC) ports: PORTB only has from RB4 to RB7   ->> ANSEL or ANSELH don't comprise RB7
 		TRISCbits.TRISC7 = 1;
-		TRISCbits.TRISC0 = 1;						//By default his happens already
-		TRISCbits.TRISC1 = 1;						//By default his happens already
+		TRISCbits.TRISC0 = 1;						//By default this happens already
+		TRISCbits.TRISC1 = 1;						//By default this happens already
 		
-		ANSELbits.ANS4 = 1;							//By default his happens already
-		ANSELbits.ANS5 = 1;							//By default his happens already
+		ANSELbits.ANS4 = 1;							//By default this happens already
+		ANSELbits.ANS5 = 1;							//By default this happens already
 		ANSELHbits.ANS9 = 1; 						//Defining RC6 as Analog Input (in devel. board) or RC7 in the prototype PCB
     	//TRISBbits.TRISB5 = 1;						//0 = PORTB pin configured as an output    and    1 = PORTB pin configured as an input
     	//TRISBbits.TRISB7 = 1;						//RB7/TX   and   RB5/RX: serial

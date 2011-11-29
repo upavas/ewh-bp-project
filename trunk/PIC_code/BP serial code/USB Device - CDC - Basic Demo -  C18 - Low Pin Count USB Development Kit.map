@@ -1,5 +1,5 @@
 MPLINK 4.40, Linker
-Linker Map File - Created Fri Nov 04 18:01:02 2011
+Linker Map File - Created Mon Nov 28 03:21:34 2011
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
@@ -13,27 +13,27 @@ REMAPPED_HIGH_INTERRUPT_VECTOR       code   0x001008    program   0x000006
           .idata_main.o_i    romdata   0x00100e    program   0x000002
 REMAPPED_LOW_INTERRUPT_VECTOR       code   0x001018    program   0x000006
                    .cinit    romdata   0x00101e    program   0x00000e
-       .code_usb_device.o       code   0x00102c    program   0x000d02
- .code_usb_function_cdc.o       code   0x001d2e    program   0x0003e8
-             .code_main.o       code   0x002116    program   0x0003e0
-.romdata_usb_descriptors.o    romdata   0x0024f6    program   0x0000c9
-    .idata_usb_device.o_i    romdata   0x0025bf    program   0x000000
-    .romdata_usb_device.o    romdata   0x0025bf    program   0x000000
-        .idata___init.o_i    romdata   0x0025bf    program   0x000000
-        .romdata___init.o    romdata   0x0025bf    program   0x000000
-.romdata_usb_function_cdc.o    romdata   0x0025bf    program   0x000000
-.idata_usb_function_cdc.o_i    romdata   0x0025bf    program   0x000000
-         .idata_c018i.o_i    romdata   0x0025bf    program   0x000000
-         .romdata_c018i.o    romdata   0x0025bf    program   0x000000
-.idata_usb_descriptors.o_i    romdata   0x0025bf    program   0x000000
-          .romdata_main.o    romdata   0x0025bf    program   0x000000
-            .code_c018i.o       code   0x0025c0    program   0x000000
-               _cinit_scn       code   0x0025c0    program   0x00009e
-  .code_usb_descriptors.o       code   0x0025c0    program   0x000000
-                   STRING       code   0x00265e    program   0x000034
-                    .code       code   0x002692    program   0x000020
-             _startup_scn       code   0x0026b2    program   0x00001c
-             .stringtable    romdata   0x0026ce    program   0x000015
+       .code_usb_device.o       code   0x00102c    program   0x001288
+             .code_main.o       code   0x0022b4    program   0x0004f8
+ .code_usb_function_cdc.o       code   0x0027ac    program   0x0004d8
+.romdata_usb_descriptors.o    romdata   0x002c84    program   0x0000c9
+    .idata_usb_device.o_i    romdata   0x002d4d    program   0x000000
+    .romdata_usb_device.o    romdata   0x002d4d    program   0x000000
+        .idata___init.o_i    romdata   0x002d4d    program   0x000000
+        .romdata___init.o    romdata   0x002d4d    program   0x000000
+.romdata_usb_function_cdc.o    romdata   0x002d4d    program   0x000000
+.idata_usb_function_cdc.o_i    romdata   0x002d4d    program   0x000000
+         .idata_c018i.o_i    romdata   0x002d4d    program   0x000000
+         .romdata_c018i.o    romdata   0x002d4d    program   0x000000
+.idata_usb_descriptors.o_i    romdata   0x002d4d    program   0x000000
+          .romdata_main.o    romdata   0x002d4d    program   0x000000
+            .code_c018i.o       code   0x002d4e    program   0x000000
+               _cinit_scn       code   0x002d4e    program   0x00009e
+  .code_usb_descriptors.o       code   0x002d4e    program   0x000000
+                   STRING       code   0x002dec    program   0x000034
+                    .code       code   0x002e20    program   0x000020
+             _startup_scn       code   0x002e40    program   0x00001c
+             .stringtable    romdata   0x002e5c    program   0x000015
     .config_300000_main.o    romdata   0x300000    program   0x000001
     .config_300001_main.o    romdata   0x300001    program   0x000001
     .config_300002_main.o    romdata   0x300002    program   0x000001
@@ -47,20 +47,20 @@ REMAPPED_LOW_INTERRUPT_VECTOR       code   0x001018    program   0x000006
     .config_30000c_main.o    romdata   0x30000c    program   0x000001
     .config_30000d_main.o    romdata   0x30000d    program   0x000001
                 MATH_DATA      udata   0x000000       data   0x00000b
-                 .tmpdata      udata   0x00000b       data   0x000003
-YourHighPriorityISRCode_tmp      udata   0x00000e       data   0x000002
+YourHighPriorityISRCode_tmp      udata   0x00000b       data   0x000003
+                 .tmpdata      udata   0x00000e       data   0x000003
       .udata_usb_device.o      udata   0x000060       data   0x000034
-.udata_usb_function_cdc.o      udata   0x000094       data   0x000019
-            .udata_main.o      udata   0x0000ad       data   0x000010
-           .udata_c018i.o      udata   0x0000bd       data   0x00000a
-            .idata_main.o      idata   0x0000c7       data   0x000002
-          .idata___init.o      idata   0x0000c9       data   0x000000
-          .udata___init.o      udata   0x0000c9       data   0x000000
-      .idata_usb_device.o      idata   0x0000c9       data   0x000000
-.idata_usb_function_cdc.o      idata   0x0000c9       data   0x000000
- .idata_usb_descriptors.o      idata   0x0000c9       data   0x000000
- .udata_usb_descriptors.o      udata   0x0000c9       data   0x000000
-           .idata_c018i.o      idata   0x0000c9       data   0x000000
+            .udata_main.o      udata   0x000094       data   0x00001c
+.udata_usb_function_cdc.o      udata   0x0000b0       data   0x000019
+           .udata_c018i.o      udata   0x0000c9       data   0x00000a
+            .idata_main.o      idata   0x0000d3       data   0x000002
+          .idata___init.o      idata   0x0000d5       data   0x000000
+          .udata___init.o      udata   0x0000d5       data   0x000000
+      .idata_usb_device.o      idata   0x0000d5       data   0x000000
+.idata_usb_function_cdc.o      idata   0x0000d5       data   0x000000
+ .idata_usb_descriptors.o      idata   0x0000d5       data   0x000000
+ .udata_usb_descriptors.o      udata   0x0000d5       data   0x000000
+           .idata_c018i.o      idata   0x0000d5       data   0x000000
                    .stack      udata   0x000100       data   0x000040
                   USB_BDT      udata   0x000200       data   0x000040
                   usbram2      udata   0x000240       data   0x00008f
@@ -76,77 +76,77 @@ YourHighPriorityISRCode_tmp      udata   0x00000e       data   0x000002
                             0x000008    0x00000d      
                             0x000018    0x00001d      
                             0x001000    0x00100f      
-                            0x001018    0x0025be      
-                            0x0025c0    0x0026e2      
+                            0x001018    0x002d4c      
+                            0x002d4e    0x002e70      
                             0x300000    0x300003      
                             0x300005    0x300006      
                             0x300008    0x30000d      
-            5880 out of 16408 program addresses used, program memory utilization is 35%
+            7814 out of 16408 program addresses used, program memory utilization is 47%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-           BlinkUSBStatus   0x00235c    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-                CDCInitEP   0x001dca    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-             CDCTxService   0x001f6a    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+           BlinkUSBStatus   0x002612    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+                CDCInitEP   0x002848    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+             CDCTxService   0x002b36    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
                  High_ISR   0x000008    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-         InitializeSystem   0x0022c8    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+         InitializeSystem   0x002556    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
                   Low_ISR   0x000018    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-                ProcessIO   0x002310    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+                ProcessIO   0x0025c6    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
         Remapped_High_ISR   0x001008    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
          Remapped_Low_ISR   0x001018    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-       USBCBCheckOtherReq   0x002410    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-        USBCBErrorHandler   0x00240e    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-              USBCBInitEP   0x002416    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-          USBCBSendResume   0x00241a    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-    USBCBStdSetDscHandler   0x002414    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-             USBCBSuspend   0x0023da    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-     USBCBWakeFromSuspend   0x0023dc    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-        USBCB_SOF_Handler   0x0023de    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-       USBCDCEventHandler   0x001e0e    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-              USBCancelIO   0x001a46    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-       USBCheckCDCRequest   0x001d2e    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-       USBCheckStdRequest   0x0013be    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-     USBConfigureEndpoint   0x001918    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-  USBCtrlEPAllowDataStage   0x0015dc    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-USBCtrlEPAllowStatusStage   0x001592    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-         USBCtrlEPService   0x00124a    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
- USBCtrlEPServiceComplete   0x001706    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-      USBCtrlTrfInHandler   0x001342    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-     USBCtrlTrfOutHandler   0x001324    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-      USBCtrlTrfRxService   0x0017de    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-   USBCtrlTrfSetupHandler   0x0012ea    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-      USBCtrlTrfTxService   0x001760    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-          USBDeviceAttach   0x001a7c    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-          USBDeviceDetach   0x001a72    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+       USBCBCheckOtherReq   0x0026c6    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+        USBCBErrorHandler   0x0026c4    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+              USBCBInitEP   0x0026cc    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+          USBCBSendResume   0x0026d0    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+    USBCBStdSetDscHandler   0x0026ca    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+             USBCBSuspend   0x002690    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+     USBCBWakeFromSuspend   0x002692    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+        USBCB_SOF_Handler   0x002694    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+       USBCDCEventHandler   0x0028b0    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+              USBCancelIO   0x0021ca    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+       USBCheckCDCRequest   0x0027ac    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+       USBCheckStdRequest   0x001564    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+     USBConfigureEndpoint   0x001ee2    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+  USBCtrlEPAllowDataStage   0x001934    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+USBCtrlEPAllowStatusStage   0x001892    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+         USBCtrlEPService   0x001338    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+ USBCtrlEPServiceComplete   0x001b2c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+      USBCtrlTrfInHandler   0x0014b0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+     USBCtrlTrfOutHandler   0x001466    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+      USBCtrlTrfRxService   0x001cac    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+   USBCtrlTrfSetupHandler   0x001408    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+      USBCtrlTrfTxService   0x001bee    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+          USBDeviceAttach   0x002284    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+          USBDeviceDetach   0x00227a    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
             USBDeviceInit   0x00102c    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-           USBDeviceTasks   0x0010d2    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-        USBEnableEndpoint   0x001972    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-         USBStallEndpoint   0x0019ae    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-          USBStallHandler   0x0011f0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-  USBStdFeatureReqHandler   0x001466    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-      USBStdGetDscHandler   0x001616    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-   USBStdGetStatusHandler   0x001690    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-      USBStdSetCfgHandler   0x0018a6    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-               USBSuspend   0x001218    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-     USBTransferOnePacket   0x0019d2    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-       USBWakeFromSuspend   0x00122e    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-               USB_CD_Ptr   0x0025b7    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
-               USB_SD_Ptr   0x0025b9    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
-USER_USB_CALLBACK_EVENT_HANDLER   0x002462    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-                 UserInit   0x0022fe    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-  YourHighPriorityISRCode   0x002116    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-   YourLowPriorityISRCode   0x002296    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-              _2jContinue   0x00267e    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
-                   _3jEnd   0x002688    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
-       ___return_lbl00000   0x001004    program     static                          
+           USBDeviceTasks   0x00114c    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+        USBEnableEndpoint   0x001f8e    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+         USBStallEndpoint   0x001ffc    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+          USBStallHandler   0x0012ac    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+  USBStdFeatureReqHandler   0x001622    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+      USBStdGetDscHandler   0x0019b0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+   USBStdGetStatusHandler   0x001a6a    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+      USBStdSetCfgHandler   0x001dea    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+               USBSuspend   0x0012e0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+     USBTransferOnePacket   0x0020d8    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+       USBWakeFromSuspend   0x00130a    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+               USB_CD_Ptr   0x002d45    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
+               USB_SD_Ptr   0x002d47    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
+USER_USB_CALLBACK_EVENT_HANDLER   0x002718    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+                 UserInit   0x0025b4    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+  YourHighPriorityISRCode   0x0022b4    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+   YourLowPriorityISRCode   0x002524    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+              _2jContinue   0x002e0c    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
+                   _3jEnd   0x002e16    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
        ___return_lbl00000   0x000004    program     static                          
-       ___return_lbl00001   0x0026cc    program     static                          
+       ___return_lbl00000   0x001004    program     static                          
        ___return_lbl00001   0x00100c    program     static                          
-       ___return_lbl00002   0x00265c    program     static                          
+       ___return_lbl00001   0x002e5a    program     static                          
        ___return_lbl00002   0x00101c    program     static                          
+       ___return_lbl00002   0x002dea    program     static                          
        ___return_lbl00003   0x00000c    program     static                          
        ___return_lbl00004   0x00001c    program     static                          
                __config_0   0x300000    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
@@ -162,102 +162,35 @@ USER_USB_CALLBACK_EVENT_HANDLER   0x002462    program     extern C:\Users\Doming
                __config_8   0x30000a    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
                __config_9   0x30000b    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
                    __init   0x001006    program     extern C:\MCC18\v3_39\src\traditional\stdclib\__init.c
-                   __pa_0   0x00204c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_0   0x001aa0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_1   0x002066    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_1   0x001aa8    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_10   0x001b06    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_10   0x0020e8    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                  __pa_11   0x0020fa    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                  __pa_11   0x001b1a    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_12   0x002108    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                  __pa_12   0x001b24    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_13   0x001b44    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_14   0x001b58    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_15   0x001b6a    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_16   0x001b76    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_17   0x001b90    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_18   0x001b9c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_19   0x001ba8    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_2   0x002076    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_2   0x001ab2    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_20   0x001bb0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_21   0x001bb8    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_22   0x001bc4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_23   0x001bd4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_24   0x001be4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_25   0x001bf4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_26   0x001c02    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_27   0x001c10    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_28   0x001c1e    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_29   0x001c2c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_3   0x002088    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_3   0x001aba    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_30   0x001c3a    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_31   0x001c44    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_32   0x001c5c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_33   0x001c68    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_34   0x001c70    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_35   0x001c84    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_36   0x001c92    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_37   0x001c9c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_38   0x001ca6    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_39   0x001cae    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_4   0x001ac4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_4   0x0020a2    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                  __pa_40   0x001cb4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_41   0x001cc4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_42   0x001cca    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_43   0x001cd8    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_44   0x001ce6    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_45   0x001cf4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_46   0x001cfe    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_47   0x001d08    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_48   0x001d10    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_49   0x001d1c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_5   0x0020ac    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_5   0x001ace    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_50   0x001d26    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_6   0x0020b4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_6   0x001ad8    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_7   0x0020c2    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_7   0x001ae0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_8   0x0020d0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_8   0x001af0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_9   0x0020de    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_9   0x001afa    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-               __string_0   0x0026ce    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-              __tmplbl_24   0x001ad8    program     static                          
-              __tmplbl_33   0x001ad8    program     static                          
-              __tmplbl_36   0x001ad8    program     static                          
-            __zero_memory   0x002692    program     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                _do_cinit   0x0025c0    program     extern C:\MCC18\v3_39\src\traditional\startup\c018i.c
+               __string_0   0x002e5c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+            __zero_memory   0x002e20    program     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                _do_cinit   0x002d4e    program     extern C:\MCC18\v3_39\src\traditional\startup\c018i.c
                    _entry   0x000000    program     extern C:\MCC18\v3_39\src\traditional\startup\c018i.c
                    _reset   0x001000    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-                 _startup   0x0026b2    program     extern C:\MCC18\v3_39\src\traditional\startup\c018i.c
-                compare_l   0x0026a8    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-        configDescriptor1   0x002508    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
-                copy_loop   0x002632    program     static                          
-            copy_one_byte   0x002638    program     static                          
-               device_dsc   0x0024f6    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
-                     done   0x00265c    program     static                          
-             done_copying   0x002646    program     static                          
-             getsUSBUSART   0x001e4a    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                     jEnd   0x002690    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
-                    jLoop   0x002672    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
-                     loop   0x0026c2    program     static                          
-                   loop_h   0x0026a0    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                   loop_l   0x0026aa    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                     main   0x0022b8    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-                   memset   0x00265e    program     extern C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
-              putUSBUSART   0x001ec8    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-            putrsUSBUSART   0x001f26    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-             putsUSBUSART   0x001ee4    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                    sd000   0x00254b    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
-                    sd001   0x00254f    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
-                    sd002   0x002583    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
-                     test   0x0025da    program     static                          
-               zero_block   0x0026a0    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 _startup   0x002e40    program     extern C:\MCC18\v3_39\src\traditional\startup\c018i.c
+                compare_l   0x002e36    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+        configDescriptor1   0x002c96    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
+                copy_loop   0x002dc0    program     static                          
+            copy_one_byte   0x002dc6    program     static                          
+               device_dsc   0x002c84    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
+                     done   0x002dea    program     static                          
+             done_copying   0x002dd4    program     static                          
+             getsUSBUSART   0x00293a    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+                     jEnd   0x002e1e    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
+                    jLoop   0x002e00    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
+                     loop   0x002e50    program     static                          
+                   loop_h   0x002e2e    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                   loop_l   0x002e38    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                     main   0x002546    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+                   memset   0x002dec    program     extern C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
+              putUSBUSART   0x0029fa    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+            putrsUSBUSART   0x002ab0    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+             putsUSBUSART   0x002a2c    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+                    sd000   0x002cd9    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
+                    sd001   0x002cdd    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
+                    sd002   0x002d11    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
+                     test   0x002d68    program     static                          
+               zero_block   0x002e2e    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    ADCON0   0x000fc2       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                ADCON0bits   0x000fc2       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    ADCON1   0x000fc1       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
@@ -277,15 +210,15 @@ USER_USB_CALLBACK_EVENT_HANDLER   0x002462    program     extern C:\Users\Doming
               BAUDCTLbits   0x000fb8       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                       BDT   0x000200       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
                       BSR   0x000fe0       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-              BaudRateGen   0x0000a1       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+              BaudRateGen   0x0000bd       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
        BothEP0OutUOWNsSet   0x000087       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
                   CCP1CON   0x000fbd       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
               CCP1CONbits   0x000fbd       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     CCPR1   0x000fbe       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    CCPR1H   0x000fbf       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    CCPR1L   0x000fbe       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-          CDCDataInHandle   0x00009e       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-         CDCDataOutHandle   0x00009c       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+          CDCDataInHandle   0x0000ba       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+         CDCDataOutHandle   0x0000b8       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
                   CM1CON0   0x000f6d       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
               CM1CON0bits   0x000f6d       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                   CM2CON0   0x000f6b       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
@@ -307,7 +240,7 @@ USER_USB_CALLBACK_EVENT_HANDLER   0x002462    program     extern C:\Users\Doming
                EECON1bits   0x000fa6       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    EECON2   0x000fa7       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    EEDATA   0x000fa8       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                     FLAG   0x0000b8       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+                     FLAG   0x0000ab       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
                      FSR0   0x000fe9       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     FSR0H   0x000fea       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     FSR0L   0x000fe9       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
@@ -497,9 +430,10 @@ USBDeferStatusStagePacket   0x00008f       data     extern C:\Users\Domingos\Doc
 USBStatusStageEnabledFlag1   0x000090       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
 USBStatusStageEnabledFlag2   0x000091       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
 USBStatusStageTimeoutCounter   0x00008e       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-            USB_In_Buffer   0x0000ad       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-           USB_Out_Buffer   0x0000b1       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-          USB_Temp_Buffer   0x0000b4       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+            USB_In_Buffer   0x000094       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+           USB_In_Buffer2   0x000098       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+           USB_Out_Buffer   0x0000a2       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+          USB_Temp_Buffer   0x0000a6       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
                     USTAT   0x000f63       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                 USTATbits   0x000f63       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                 USTATcopy   0x000085       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
@@ -532,42 +466,42 @@ USBStatusStageTimeoutCounter   0x00008e       data     extern C:\Users\Domingos\
                   __REMB1   0x000002       data     extern C:\MCC18\v3_39\src\traditional\math\aarg.asm
                   __REMB2   0x000001       data     extern C:\MCC18\v3_39\src\traditional\math\aarg.asm
                   __REMB3   0x000000       data     extern C:\MCC18\v3_39\src\traditional\math\aarg.asm
-                  __tmp_0   0x00000b       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __tmp_0   0x00000b       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                  __tmp_1   0x00000e       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-              buttonCount   0x0000ba       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-            buttonPressed   0x0000b9       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+                  __tmp_0   0x00000e       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+                  __tmp_0   0x00000e       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+                  __tmp_1   0x00000b       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+              buttonCount   0x0000ad       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+            buttonPressed   0x0000ac       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
               cdc_data_rx   0x000248       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
               cdc_data_tx   0x000288       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-             cdc_mem_type   0x00009b       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+             cdc_mem_type   0x0000b7       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
                cdc_notice   0x000240       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-               cdc_rx_len   0x000094       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-            cdc_trf_state   0x000095       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-               cdc_tx_len   0x00009a       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+               cdc_rx_len   0x0000b0       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+            cdc_trf_state   0x0000b1       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+               cdc_tx_len   0x0000b6       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
      controlTransferState   0x000074       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-    control_signal_bitmap   0x0000a0       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                curr_byte   0x0000c0       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
-               curr_entry   0x0000c2       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
-                 data_ptr   0x0000c4       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
-              delay_count   0x0000bb       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-dummy_encapsulated_cmd_response   0x0000a5       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+    control_signal_bitmap   0x0000bc       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+                curr_byte   0x0000cc       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
+               curr_entry   0x0000ce       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
+                 data_ptr   0x0000d0       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
+              delay_count   0x0000ae       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+dummy_encapsulated_cmd_response   0x0000c1       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
           endpoint_number   0x000086       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
                ep_data_in   0x000088       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
               ep_data_out   0x00008b       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
                   inPipes   0x000075       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                led_count   0x0000c7       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+                led_count   0x0000d3       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
               line_coding   0x0002c8       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
                  outPipes   0x00007a       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
    pBDTEntryEP0OutCurrent   0x000063       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
       pBDTEntryEP0OutNext   0x000065       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
               pBDTEntryIn   0x00006d       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
              pBDTEntryOut   0x000067       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  pCDCDst   0x000098       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                  pCDCSrc   0x000096       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+                  pCDCDst   0x0000b4       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+                  pCDCSrc   0x0000b2       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
                      pDst   0x000081       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                     prom   0x0000bd       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
+                     prom   0x0000c9       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
         shortPacketStatus   0x000073       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-            stringPrinted   0x0000b7       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+            stringPrinted   0x0000aa       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
 
 
 
@@ -588,150 +522,83 @@ dummy_encapsulated_cmd_response   0x0000a5       data     extern C:\Users\Doming
          Remapped_Low_ISR   0x001018    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
        ___return_lbl00002   0x00101c    program     static                          
             USBDeviceInit   0x00102c    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-           USBDeviceTasks   0x0010d2    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-          USBStallHandler   0x0011f0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-               USBSuspend   0x001218    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-       USBWakeFromSuspend   0x00122e    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-         USBCtrlEPService   0x00124a    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-   USBCtrlTrfSetupHandler   0x0012ea    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-     USBCtrlTrfOutHandler   0x001324    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-      USBCtrlTrfInHandler   0x001342    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-       USBCheckStdRequest   0x0013be    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-  USBStdFeatureReqHandler   0x001466    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-USBCtrlEPAllowStatusStage   0x001592    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-  USBCtrlEPAllowDataStage   0x0015dc    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-      USBStdGetDscHandler   0x001616    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-   USBStdGetStatusHandler   0x001690    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
- USBCtrlEPServiceComplete   0x001706    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-      USBCtrlTrfTxService   0x001760    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-      USBCtrlTrfRxService   0x0017de    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-      USBStdSetCfgHandler   0x0018a6    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-     USBConfigureEndpoint   0x001918    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-        USBEnableEndpoint   0x001972    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-         USBStallEndpoint   0x0019ae    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-     USBTransferOnePacket   0x0019d2    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-              USBCancelIO   0x001a46    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-          USBDeviceDetach   0x001a72    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-          USBDeviceAttach   0x001a7c    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_0   0x001aa0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_1   0x001aa8    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_2   0x001ab2    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_3   0x001aba    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_4   0x001ac4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_5   0x001ace    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-              __tmplbl_24   0x001ad8    program     static                          
-              __tmplbl_36   0x001ad8    program     static                          
-              __tmplbl_33   0x001ad8    program     static                          
-                   __pa_6   0x001ad8    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_7   0x001ae0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_8   0x001af0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                   __pa_9   0x001afa    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_10   0x001b06    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_11   0x001b1a    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_12   0x001b24    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_13   0x001b44    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_14   0x001b58    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_15   0x001b6a    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_16   0x001b76    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_17   0x001b90    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_18   0x001b9c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_19   0x001ba8    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_20   0x001bb0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_21   0x001bb8    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_22   0x001bc4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_23   0x001bd4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_24   0x001be4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_25   0x001bf4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_26   0x001c02    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_27   0x001c10    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_28   0x001c1e    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_29   0x001c2c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_30   0x001c3a    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_31   0x001c44    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_32   0x001c5c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_33   0x001c68    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_34   0x001c70    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_35   0x001c84    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_36   0x001c92    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_37   0x001c9c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_38   0x001ca6    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_39   0x001cae    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_40   0x001cb4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_41   0x001cc4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_42   0x001cca    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_43   0x001cd8    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_44   0x001ce6    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_45   0x001cf4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_46   0x001cfe    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_47   0x001d08    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_48   0x001d10    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_49   0x001d1c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __pa_50   0x001d26    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-       USBCheckCDCRequest   0x001d2e    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                CDCInitEP   0x001dca    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-       USBCDCEventHandler   0x001e0e    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-             getsUSBUSART   0x001e4a    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-              putUSBUSART   0x001ec8    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-             putsUSBUSART   0x001ee4    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-            putrsUSBUSART   0x001f26    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-             CDCTxService   0x001f6a    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_0   0x00204c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_1   0x002066    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_2   0x002076    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_3   0x002088    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_4   0x0020a2    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_5   0x0020ac    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_6   0x0020b4    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_7   0x0020c2    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_8   0x0020d0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                   __pa_9   0x0020de    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                  __pa_10   0x0020e8    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                  __pa_11   0x0020fa    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                  __pa_12   0x002108    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-  YourHighPriorityISRCode   0x002116    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-   YourLowPriorityISRCode   0x002296    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-                     main   0x0022b8    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-         InitializeSystem   0x0022c8    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-                 UserInit   0x0022fe    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-                ProcessIO   0x002310    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-           BlinkUSBStatus   0x00235c    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-             USBCBSuspend   0x0023da    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-     USBCBWakeFromSuspend   0x0023dc    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-        USBCB_SOF_Handler   0x0023de    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-        USBCBErrorHandler   0x00240e    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-       USBCBCheckOtherReq   0x002410    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-    USBCBStdSetDscHandler   0x002414    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-              USBCBInitEP   0x002416    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-          USBCBSendResume   0x00241a    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-USER_USB_CALLBACK_EVENT_HANDLER   0x002462    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-               device_dsc   0x0024f6    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
-        configDescriptor1   0x002508    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
-                    sd000   0x00254b    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
-                    sd001   0x00254f    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
-                    sd002   0x002583    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
-               USB_CD_Ptr   0x0025b7    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
-               USB_SD_Ptr   0x0025b9    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
-                _do_cinit   0x0025c0    program     extern C:\MCC18\v3_39\src\traditional\startup\c018i.c
-                     test   0x0025da    program     static                          
-                copy_loop   0x002632    program     static                          
-            copy_one_byte   0x002638    program     static                          
-             done_copying   0x002646    program     static                          
-       ___return_lbl00002   0x00265c    program     static                          
-                     done   0x00265c    program     static                          
-                   memset   0x00265e    program     extern C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
-                    jLoop   0x002672    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
-              _2jContinue   0x00267e    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
-                   _3jEnd   0x002688    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
-                     jEnd   0x002690    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
-            __zero_memory   0x002692    program     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                   loop_h   0x0026a0    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-               zero_block   0x0026a0    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                compare_l   0x0026a8    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                   loop_l   0x0026aa    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                 _startup   0x0026b2    program     extern C:\MCC18\v3_39\src\traditional\startup\c018i.c
-                     loop   0x0026c2    program     static                          
-       ___return_lbl00001   0x0026cc    program     static                          
-               __string_0   0x0026ce    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+           USBDeviceTasks   0x00114c    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+          USBStallHandler   0x0012ac    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+               USBSuspend   0x0012e0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+       USBWakeFromSuspend   0x00130a    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+         USBCtrlEPService   0x001338    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+   USBCtrlTrfSetupHandler   0x001408    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+     USBCtrlTrfOutHandler   0x001466    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+      USBCtrlTrfInHandler   0x0014b0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+       USBCheckStdRequest   0x001564    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+  USBStdFeatureReqHandler   0x001622    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+USBCtrlEPAllowStatusStage   0x001892    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+  USBCtrlEPAllowDataStage   0x001934    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+      USBStdGetDscHandler   0x0019b0    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+   USBStdGetStatusHandler   0x001a6a    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+ USBCtrlEPServiceComplete   0x001b2c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+      USBCtrlTrfTxService   0x001bee    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+      USBCtrlTrfRxService   0x001cac    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+      USBStdSetCfgHandler   0x001dea    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+     USBConfigureEndpoint   0x001ee2    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+        USBEnableEndpoint   0x001f8e    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+         USBStallEndpoint   0x001ffc    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+     USBTransferOnePacket   0x0020d8    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+              USBCancelIO   0x0021ca    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+          USBDeviceDetach   0x00227a    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+          USBDeviceAttach   0x002284    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+  YourHighPriorityISRCode   0x0022b4    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+   YourLowPriorityISRCode   0x002524    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+                     main   0x002546    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+         InitializeSystem   0x002556    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+                 UserInit   0x0025b4    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+                ProcessIO   0x0025c6    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+           BlinkUSBStatus   0x002612    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+             USBCBSuspend   0x002690    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+     USBCBWakeFromSuspend   0x002692    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+        USBCB_SOF_Handler   0x002694    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+        USBCBErrorHandler   0x0026c4    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+       USBCBCheckOtherReq   0x0026c6    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+    USBCBStdSetDscHandler   0x0026ca    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+              USBCBInitEP   0x0026cc    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+          USBCBSendResume   0x0026d0    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+USER_USB_CALLBACK_EVENT_HANDLER   0x002718    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+       USBCheckCDCRequest   0x0027ac    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+                CDCInitEP   0x002848    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+       USBCDCEventHandler   0x0028b0    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+             getsUSBUSART   0x00293a    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+              putUSBUSART   0x0029fa    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+             putsUSBUSART   0x002a2c    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+            putrsUSBUSART   0x002ab0    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+             CDCTxService   0x002b36    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+               device_dsc   0x002c84    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
+        configDescriptor1   0x002c96    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
+                    sd000   0x002cd9    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
+                    sd001   0x002cdd    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
+                    sd002   0x002d11    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
+               USB_CD_Ptr   0x002d45    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
+               USB_SD_Ptr   0x002d47    program     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_descriptors.c
+                _do_cinit   0x002d4e    program     extern C:\MCC18\v3_39\src\traditional\startup\c018i.c
+                     test   0x002d68    program     static                          
+                copy_loop   0x002dc0    program     static                          
+            copy_one_byte   0x002dc6    program     static                          
+             done_copying   0x002dd4    program     static                          
+                     done   0x002dea    program     static                          
+       ___return_lbl00002   0x002dea    program     static                          
+                   memset   0x002dec    program     extern C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
+                    jLoop   0x002e00    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
+              _2jContinue   0x002e0c    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
+                   _3jEnd   0x002e16    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
+                     jEnd   0x002e1e    program     static C:\MCC18\v3_39\src\traditional\stdclib\memset.asm
+            __zero_memory   0x002e20    program     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+               zero_block   0x002e2e    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                   loop_h   0x002e2e    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                compare_l   0x002e36    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                   loop_l   0x002e38    program     static C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 _startup   0x002e40    program     extern C:\MCC18\v3_39\src\traditional\startup\c018i.c
+                     loop   0x002e50    program     static                          
+       ___return_lbl00001   0x002e5a    program     static                          
+               __string_0   0x002e5c    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
                __config_0   0x300000    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
                __config_1   0x300001    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
                __config_2   0x300002    program     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
@@ -760,9 +627,9 @@ USER_USB_CALLBACK_EVENT_HANDLER   0x002462    program     extern C:\Users\Doming
                      SIGN   0x000009       data     extern C:\MCC18\v3_39\src\traditional\math\cmath18.asm
                 __FPFLAGS   0x00000a       data     extern C:\MCC18\v3_39\src\traditional\math\cmath18.asm
             __FPFLAGSbits   0x00000a       data     extern C:\MCC18\v3_39\src\traditional\math\cmath18.asm
-                  __tmp_0   0x00000b       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-                  __tmp_0   0x00000b       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                  __tmp_1   0x00000e       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+                  __tmp_1   0x00000b       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+                  __tmp_0   0x00000e       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
+                  __tmp_0   0x00000e       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
            USBDeviceState   0x000060       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
    USBActiveConfiguration   0x000061       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
     USBAlternateInterface   0x000062       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
@@ -788,30 +655,31 @@ USBStatusStageEnabledFlag1   0x000090       data     extern C:\Users\Domingos\Do
 USBStatusStageEnabledFlag2   0x000091       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
 USBDeferINDataStagePackets   0x000092       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
 USBDeferOUTDataStagePackets   0x000093       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
-               cdc_rx_len   0x000094       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-            cdc_trf_state   0x000095       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                  pCDCSrc   0x000096       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                  pCDCDst   0x000098       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-               cdc_tx_len   0x00009a       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-             cdc_mem_type   0x00009b       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-         CDCDataOutHandle   0x00009c       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-          CDCDataInHandle   0x00009e       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-    control_signal_bitmap   0x0000a0       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-              BaudRateGen   0x0000a1       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-dummy_encapsulated_cmd_response   0x0000a5       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-            USB_In_Buffer   0x0000ad       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-           USB_Out_Buffer   0x0000b1       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-          USB_Temp_Buffer   0x0000b4       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-            stringPrinted   0x0000b7       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-                     FLAG   0x0000b8       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-            buttonPressed   0x0000b9       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-              buttonCount   0x0000ba       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-              delay_count   0x0000bb       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
-                     prom   0x0000bd       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
-                curr_byte   0x0000c0       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
-               curr_entry   0x0000c2       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
-                 data_ptr   0x0000c4       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
-                led_count   0x0000c7       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+            USB_In_Buffer   0x000094       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+           USB_In_Buffer2   0x000098       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+           USB_Out_Buffer   0x0000a2       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+          USB_Temp_Buffer   0x0000a6       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+            stringPrinted   0x0000aa       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+                     FLAG   0x0000ab       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+            buttonPressed   0x0000ac       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+              buttonCount   0x0000ad       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+              delay_count   0x0000ae       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
+               cdc_rx_len   0x0000b0       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+            cdc_trf_state   0x0000b1       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+                  pCDCSrc   0x0000b2       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+                  pCDCDst   0x0000b4       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+               cdc_tx_len   0x0000b6       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+             cdc_mem_type   0x0000b7       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+         CDCDataOutHandle   0x0000b8       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+          CDCDataInHandle   0x0000ba       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+    control_signal_bitmap   0x0000bc       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+              BaudRateGen   0x0000bd       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+dummy_encapsulated_cmd_response   0x0000c1       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
+                     prom   0x0000c9       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
+                curr_byte   0x0000cc       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
+               curr_entry   0x0000ce       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
+                 data_ptr   0x0000d0       data     static C:\MCC18\v3_39\src\traditional\startup\c018i.c
+                led_count   0x0000d3       data     static C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\main.c
                       BDT   0x000200       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
                  SetupPkt   0x000230       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
               CtrlTrfData   0x000238       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_device.c
@@ -819,26 +687,26 @@ dummy_encapsulated_cmd_response   0x0000a5       data     extern C:\Users\Doming
               cdc_data_rx   0x000248       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
               cdc_data_tx   0x000288       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
               line_coding   0x0002c8       data     extern C:\Users\Domingos\Documents\BP-EWH project Google Code\trunk\PIC_code\BP serial code\usb_function_cdc.c
-                 UEP0bits   0x000f53       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      UEP0   0x000f53       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                 UEP1bits   0x000f54       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 UEP0bits   0x000f53       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      UEP1   0x000f54       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                 UEP2bits   0x000f55       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 UEP1bits   0x000f54       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      UEP2   0x000f55       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 UEP2bits   0x000f55       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  UEP3bits   0x000f56       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      UEP3   0x000f56       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                     UEP4   0x000f57       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  UEP4bits   0x000f57       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                     UEP5   0x000f58       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                     UEP4   0x000f57       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  UEP5bits   0x000f58       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                     UEP6   0x000f59       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                     UEP5   0x000f58       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  UEP6bits   0x000f59       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                 UEP7bits   0x000f5a       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                     UEP6   0x000f59       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      UEP7   0x000f5a       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 UEP7bits   0x000f5a       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      UEIE   0x000f5b       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  UEIEbits   0x000f5b       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                    UADDR   0x000f5c       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                 UADDRbits   0x000f5c       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                    UADDR   0x000f5c       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                 UFRMLbits   0x000f5d       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     UFRML   0x000f5d       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     UFRMH   0x000f5e       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
@@ -859,115 +727,115 @@ dummy_encapsulated_cmd_response   0x0000a5       data     extern C:\Users\Doming
                    SRCON0   0x000f68       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                SRCON1bits   0x000f69       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    SRCON1   0x000f69       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                  CM2CON0   0x000f6b       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
               CM2CON0bits   0x000f6b       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                  CM2CON1   0x000f6c       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                  CM2CON0   0x000f6b       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
               CM2CON1bits   0x000f6c       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                  CM2CON1   0x000f6c       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
               CM1CON0bits   0x000f6d       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                   CM1CON0   0x000f6d       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    SSPMSK   0x000f6f       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                SSPMSKbits   0x000f6f       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                   SLRCON   0x000f76       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                SLRCONbits   0x000f76       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                   SLRCON   0x000f76       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  WPUAbits   0x000f77       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      WPUA   0x000f77       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  WPUBbits   0x000f78       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      WPUB   0x000f78       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                 IOCAbits   0x000f79       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      IOCA   0x000f79       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                 IOCBbits   0x000f7a       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 IOCAbits   0x000f79       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      IOCB   0x000f7a       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 IOCBbits   0x000f7a       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                 ANSELbits   0x000f7e       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     ANSEL   0x000f7e       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                ANSELHbits   0x000f7f       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    ANSELH   0x000f7f       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                    PORTA   0x000f80       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                 PORTAbits   0x000f80       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                    PORTA   0x000f80       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                 PORTBbits   0x000f81       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     PORTB   0x000f81       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                 PORTCbits   0x000f82       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     PORTC   0x000f82       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  LATAbits   0x000f89       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      LATA   0x000f89       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                 LATBbits   0x000f8a       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      LATB   0x000f8a       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                 LATCbits   0x000f8b       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 LATBbits   0x000f8a       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      LATC   0x000f8b       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 LATCbits   0x000f8b       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                TRISAbits   0x000f92       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                    TRISA   0x000f92       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  DDRAbits   0x000f92       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      DDRA   0x000f92       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                    TRISA   0x000f92       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                TRISAbits   0x000f92       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     TRISB   0x000f93       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                 TRISBbits   0x000f93       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                     DDRB   0x000f93       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  DDRBbits   0x000f93       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                     DDRC   0x000f94       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                     DDRB   0x000f93       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  DDRCbits   0x000f94       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                     DDRC   0x000f94       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                 TRISCbits   0x000f94       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     TRISC   0x000f94       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                  OSCTUNE   0x000f9b       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
               OSCTUNEbits   0x000f9b       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                 PIE1bits   0x000f9d       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                  OSCTUNE   0x000f9b       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      PIE1   0x000f9d       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                     PIR1   0x000f9e       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 PIE1bits   0x000f9d       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  PIR1bits   0x000f9e       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                     IPR1   0x000f9f       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                     PIR1   0x000f9e       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  IPR1bits   0x000f9f       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                 PIE2bits   0x000fa0       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                     IPR1   0x000f9f       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      PIE2   0x000fa0       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 PIE2bits   0x000fa0       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  PIR2bits   0x000fa1       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      PIR2   0x000fa1       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                      IPR2   0x000fa2       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                  IPR2bits   0x000fa2       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-               EECON1bits   0x000fa6       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    EECON1   0x000fa6       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+               EECON1bits   0x000fa6       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    EECON2   0x000fa7       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    EEDATA   0x000fa8       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                 EEADRbits   0x000fa9       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     EEADR   0x000fa9       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                    RCSTA   0x000fab       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                 RCSTAbits   0x000fab       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                    RCSTA   0x000fab       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                 TXSTAbits   0x000fac       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     TXSTA   0x000fac       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     TXREG   0x000fad       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     RCREG   0x000fae       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     SPBRG   0x000faf       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    SPBRGH   0x000fb0       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                T3CONbits   0x000fb1       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     T3CON   0x000fb1       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                T3CONbits   0x000fb1       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     TMR3L   0x000fb2       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     TMR3H   0x000fb3       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                  ECCP1AS   0x000fb6       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
               ECCP1ASbits   0x000fb6       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                  PWM1CON   0x000fb7       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                  ECCP1AS   0x000fb6       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
               PWM1CONbits   0x000fb7       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                  BAUDCON   0x000fb8       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-              BAUDCONbits   0x000fb8       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                  PWM1CON   0x000fb7       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
               BAUDCTLbits   0x000fb8       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                   BAUDCTL   0x000fb8       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+              BAUDCONbits   0x000fb8       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                  BAUDCON   0x000fb8       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                   PSTRCON   0x000fb9       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
               PSTRCONbits   0x000fb9       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                 VREFCON0   0x000fba       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                  REFCON0   0x000fba       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-              REFCON0bits   0x000fba       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
              VREFCON0bits   0x000fba       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 VREFCON0   0x000fba       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+              REFCON0bits   0x000fba       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                  REFCON0   0x000fba       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
              VREFCON1bits   0x000fbb       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 VREFCON1   0x000fbb       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
               REFCON1bits   0x000fbb       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                   REFCON1   0x000fbb       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                 VREFCON1   0x000fbb       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-              REFCON2bits   0x000fbc       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                   REFCON2   0x000fbc       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                 VREFCON2   0x000fbc       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+              REFCON2bits   0x000fbc       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
              VREFCON2bits   0x000fbc       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                  CCP1CON   0x000fbd       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                 VREFCON2   0x000fbc       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
               CCP1CONbits   0x000fbd       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                  CCP1CON   0x000fbd       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     CCPR1   0x000fbe       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    CCPR1L   0x000fbe       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    CCPR1H   0x000fbf       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                   ADCON2   0x000fc0       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                ADCON2bits   0x000fc0       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
-                   ADCON1   0x000fc1       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                   ADCON2   0x000fc0       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                ADCON1bits   0x000fc1       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
+                   ADCON1   0x000fc1       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                    ADCON0   0x000fc2       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                ADCON0bits   0x000fc2       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm
                     ADRES   0x000fc3       data     extern C:\MCC18\v3_39\src\traditional\proc\p18F14K50.asm

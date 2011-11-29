@@ -67,6 +67,10 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
+set(gcf,'CloseRequestFcn',@my_closefcn)
+% setLanguage(char(java.util.Locale.getDefault().getLanguage()))
+
+
 % UIWAIT makes BP_Interface_iTab wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
@@ -115,7 +119,7 @@ set(handles.uitable1,'data',mySessionData);
 infos = instrhwinfo('serial');                                              %instrument control toolbox! instrhwinfo: information about available hardware
 ports = size(infos.SerialPorts);
 if ports(1,1) == 0
-    msgbox('No COM port was found in the system. Please connect the BP monitor device and restart the Interface.','Help Box:','error');
+    msgbox('No serial port was found in the system. Please connect the BP monitor device and restart the Interface.','Help Box:','error');
     return
 end
 
@@ -123,12 +127,8 @@ uports = infos.SerialPorts;
 t_port = 1;
 while t_port <= ports(1,1)
     port = uports{t_port};
-%     if ports(1,1) == 1
-%         port = char(infos.SerialPorts);
-%     else
-%         port = port(t_port:2:end);
-%     end
-
+    %port = '/dev/ttyS101';
+    
     s = serial(port);
     set(s, 'InputBufferSize', 1024);                %number of bytes in input buffer
     set(s, 'BaudRate', 19200);
@@ -153,12 +153,12 @@ while t_port <= ports(1,1)
     rsp = '';
     buffer_len = size(a);
     
-    while t <= 4 && buffer_len(1,1) >= 4                                    % 'ADMP' has 4 chars: answer from the PCB
-        rsp = strcat(rsp,char(a(t,1)));
+    while t <= 10 && buffer_len(1,1) >= 10                                  % 'ADPS' has 4 chars: answer from the PCB
+        rsp = strcat(rsp,char(a(t,1)));                                     % 'iceicebaby' has 10 chars
         t = t+1;
     end
     
-    if strcmp(rsp,'ADMP')
+    if strcmp(rsp,'iceicebaby')
         return
     elseif t_port == ports(1,1)
         msgbox('There are (virtual) serial devices connected to the computer but none is the BP device! Please connect the BP monitor device and restart the Interface.','Help Box:','error');
@@ -288,7 +288,8 @@ if checkbox
     csvwrite(FileName,M);
 end
 
-Filename = 'Record.xls';
+%Filename = 'Record.xls';
+Filename = 'Record.csv';
 
 if (exist(Filename) == 0)
     d = {'Name','Age','Sex','Time','Cuff Size','Used arm','SBP Ratio','DBP Ratio','Systolic BP','Diastolic BP','Heart Rate';Pname,Page,Psex,datestr(clock),PcuffSize,Parm,SBP_RATIO,DBP_RATIO,SBP,DBP,HR};
@@ -473,6 +474,11 @@ while t
             if (jjj == 64 || jjj == 128 || jjj == 192 || jjj == 256)
                 plot(handles.axes1,k,y_pressure, '*')
                 hold on
+                
+                hline = refline([0 200]);
+                set(hline,'Color','r')
+                ylim([0 250]);
+
                 drawnow
             end
             
@@ -558,6 +564,27 @@ catch exception
     time_array = [];
     pressure_array = [];
 end
+
+
+% --- Executes on button press in pushbutton2.
+function pushbutton3_Callback(~, ~, handles)
+% hObject    handle to pushbutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+global SBP_RATIO
+global DBP_RATIO
+global pressure_array
+global time
+global SBP
+global DBP
+global HR
+
+[SBP,DBP,HR] = SignalProcessing(pressure_array,time,SBP_RATIO,DBP_RATIO);
+
+set(handles.edit1,'String',SBP);
+set(handles.edit2,'String',DBP);
+set(handles.edit3,'String',HR);
 
 
 function edit1_Callback(~, ~, ~)
@@ -704,21 +731,21 @@ function popupmenu1_Callback(hObject, ~, handles)
 %        contents{get(hObject,'Value')} returns selected item from popupmenu1
 
 global SBP_RATIO
-global DBP_RATIO
-global pressure_array
-global time
-global SBP
-global DBP
-global HR
+% global DBP_RATIO
+% global pressure_array
+% global time
+% global SBP
+% global DBP
+% global HR
 
 popupcontents = cellstr(get(hObject,'String'));
 SBP_RATIO = popupcontents{get(hObject,'Value')};
 
-[SBP,DBP,HR] = SignalProcessing(pressure_array,time,SBP_RATIO,DBP_RATIO);
+% [SBP,DBP,HR] = SignalProcessing(pressure_array,time,SBP_RATIO,DBP_RATIO);
 
-set(handles.edit1,'String',SBP);
-set(handles.edit2,'String',DBP);
-set(handles.edit3,'String',HR);
+% set(handles.edit1,'String',SBP);
+% set(handles.edit2,'String',DBP);
+% set(handles.edit3,'String',HR);
 
 % --- Executes on selection change in popupmenu2.
 function popupmenu2_Callback(hObject, ~, handles)
@@ -729,22 +756,22 @@ function popupmenu2_Callback(hObject, ~, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu2 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu2
 
-global SBP_RATIO
+% global SBP_RATIO
 global DBP_RATIO
-global pressure_array
-global time
-global SBP
-global DBP
-global HR
+% global pressure_array
+% global time
+% global SBP
+% global DBP
+% global HR
 
 popupcontents = cellstr(get(hObject,'String'));
 DBP_RATIO = popupcontents{get(hObject,'Value')};
 
-[SBP,DBP,HR] = SignalProcessing(pressure_array,time,SBP_RATIO,DBP_RATIO);
+% [SBP,DBP,HR] = SignalProcessing(pressure_array,time,SBP_RATIO,DBP_RATIO);
 
-set(handles.edit1,'String',SBP);
-set(handles.edit2,'String',DBP);
-set(handles.edit3,'String',HR);
+% set(handles.edit1,'String',SBP);
+% set(handles.edit2,'String',DBP);
+% set(handles.edit3,'String',HR);
 
 % --- Executes on selection change in popupmenu3.
 function popupmenu3_Callback(hObject, ~, ~)
@@ -798,6 +825,23 @@ global Psex
 
 popupcontents = cellstr(get(hObject,'String'));
 Psex = popupcontents{get(hObject,'Value')};
+
+
+% function setLanguage(lang)
+% % h = guidata(gcf);
+% % set(h.peppers,'String',getLabel(lang,'peppers'));
+% % set(h.children,'String',getLabel(lang,'children'));
+% % set(h.canoe,'String',getLabel(lang,'canoe'));
+% % 
+% % set(h.peppers,'String',getLabel(lang,'peppers'));
+% 
+% 
+% set(handles.uipanel2,'String',SBP)
+% set(handles.edit2,'String',DBP);
+% set(handles.edit3,'String',HR);
+% 
+% drawnow;
+
 
 
 %%%For robustness:
