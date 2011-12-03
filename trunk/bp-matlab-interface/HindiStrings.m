@@ -1,9 +1,9 @@
-classdef FrenchStrings
+classdef HindiStrings
     properties (Constant)
-        language = 'Langue';
-        english = 'Anglais';
-        french = 'Francais';
-        portuguese = 'Portugais';
+        language = 'Language';
+        english = 'English';
+        french = 'French';
+        portuguese = 'Portuguese';
         spanish = 'Spanish';
         nepalese = 'Nepali';
         hindi = 'Standard Hindi';
