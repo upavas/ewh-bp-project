@@ -35,7 +35,7 @@ function varargout = BP_Interface_iTab(varargin)
 
 % Edit the above text to modify the response to help BP_Interface_iTab
 
-% Last Modified by GUIDE v2.5 03-Dec-2011 14:31:50
+% Last Modified by GUIDE v2.5 04-Nov-2011 18:57:18
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -71,6 +71,8 @@ handles.output = hObject;
 guidata(hObject, handles);
 
 set(gcf,'CloseRequestFcn',@my_closefcn)
+% setLanguage(char(java.util.Locale.getDefault().getLanguage()))
+
 
 % UIWAIT makes BP_Interface_iTab wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
@@ -81,7 +83,7 @@ global DBP_RATIO
 global time_array
 global pressure_array
 global Fs
-%global checkbox
+global checkbox
 global FLAG
 global Pname
 global Page
@@ -91,12 +93,8 @@ global Parm
 global numMeasures
 global mySessionData
 global numSessionRecords
-global language
 
-language = char(java.util.Locale.getDefault().getLanguage());
-setLanguage(language)
-
-%checkbox = 0;
+checkbox = 0;
 SBP_RATIO = 0.4;
 DBP_RATIO = 0.7;
 time_array = 0;
@@ -132,7 +130,7 @@ uports = infos.SerialPorts;
 t_port = 1;
 while t_port <= ports(1,1)
     port = uports{t_port};
-    %port = '/dev/ttyS101';     %Linux
+    %port = '/dev/ttyS101';
     
     s = serial(port);
     set(s, 'InputBufferSize', 1024);                %number of bytes in input buffer
@@ -184,23 +182,23 @@ function varargout = BP_Interface_iTab_OutputFcn(~, ~, handles)
 varargout{1} = handles.output;
 
 
-% % --- Executes on button press in checkbox1.
-% function checkbox1_Callback(hObject, ~, ~)
-% % hObject    handle to checkbox1 (see GCBO)
-% % eventdata  reserved - to be defined in a future version of MATLAB
-% % handles    structure with handles and user data (see GUIDATA)
-% 
-% % Hint: get(hObject,'Value') returns toggle state of checkbox1
-% 
-% global checkbox
-% 
-% checkbox = get(hObject,'Value');
-% 
-% % --- Executes during object creation, after setting all properties.
-% function checkbox1_CreateFcn(~, ~, ~)
-% % hObject    handle to checkbox1 (see GCBO)
-% % eventdata  reserved - to be defined in a future version of MATLAB
-% % handles    empty - handles not created until after all CreateFcns called
+% --- Executes on button press in checkbox1.
+function checkbox1_Callback(hObject, ~, ~)
+% hObject    handle to checkbox1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox1
+
+global checkbox
+
+checkbox = get(hObject,'Value');
+
+% --- Executes during object creation, after setting all properties.
+function checkbox1_CreateFcn(~, ~, ~)
+% hObject    handle to checkbox1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
 
 
 % --- Executes on button press in pushbutton1.
@@ -215,7 +213,7 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
-%global checkbox
+global checkbox
 global Pname
 global Page
 global Psex
@@ -287,25 +285,26 @@ if (exist(Foldername) ~= 7)
 end
 oldFolder = cd(sprintf('%s%s%s%s',pwd,filesep,'BP Data',filesep));
 
-%if checkbox
+if checkbox
     M = [time_array pressure_array];
     FileName = [Pname 'Data.csv'];
     csvwrite(FileName,M);
-%end
+end
 
+%Filename = 'Record.xls';
 FileName = ['Record_Session ' datestr(clock) '.csv'];
 
-if (exist(Filename) == 0)
-   d = {'Name','Age','Sex','Time','Cuff Size','Used arm','SBP Ratio','DBP Ratio','Systolic BP','Diastolic BP','Heart Rate';Pname,Page,Psex,datestr(clock),PcuffSize,Parm,SBP_RATIO,DBP_RATIO,SBP,DBP,HR};
+%if (exist(Filename) == 0)
+   d = [Pname,Page,Psex,datestr(clock),PcuffSize,Parm,SBP_RATIO,DBP_RATIO,SBP,DBP,HR];
+   %'Name','Age','Sex','Time','Cuff Size','Used arm','SBP Ratio','DBP Ratio','Systolic BP','Diastolic BP','Heart Rate';
    %any2csv(d,'|',1);
-   %csvwrite(FileName, d);
-   xlswrite(Filename, d, 1);
-else
-    d = {Pname,Page,Psex,datestr(clock),PcuffSize,Parm,SBP_RATIO,DBP_RATIO,SBP,DBP,HR};
-    A = xlsread(Filename);
-    range = ['A' num2str(size(A,1)+2)];
-    xlswrite(Filename, d, 1, range);
-end
+   csvwrite(FileName, d);
+%else
+%     d = {Pname,Page,Psex,datestr(clock),PcuffSize,Parm,SBP_RATIO,DBP_RATIO,SBP,DBP,HR};
+%     A = xlsread(Filename);
+%     range = ['A' num2str(size(A,1)+2)];
+%     xlswrite(Filename, d, 1, range);
+%end
 
 cd(oldFolder)
 clear oldFolder;
@@ -701,55 +700,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-function edit6_Callback(hObject, ~, ~)
-% hObject    handle to edit6 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit6 as text
-%        str2double(get(hObject,'String')) returns contents of edit6 as a double
-
-global Pobservername
-
-Pobservername = get(hObject,'String');
-
-
-% --- Executes during object creation, after setting all properties.
-function edit6_CreateFcn(hObject, ~, ~)
-% hObject    handle to edit6 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-function edit7_Callback(hObject, ~, ~)
-% hObject    handle to edit7 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit7 as text
-%        str2double(get(hObject,'String')) returns contents of edit7 as a double
-
-global Pobservations
-
-Pobservations = get(hObject,'String');
-
-% --- Executes during object creation, after setting all properties.
-function edit7_CreateFcn(hObject, ~, ~)
-% hObject    handle to edit7 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
 
 % --- Executes during object creation, after setting all properties.
 function text1_CreateFcn(~, ~, ~)
@@ -777,7 +727,7 @@ function text15_CreateFcn(~, ~, ~)
 
 
 % --- Executes on selection change in popupmenu1.
-function popupmenu1_Callback(hObject, ~, ~)
+function popupmenu1_Callback(hObject, ~, handles)
 % hObject    handle to popupmenu1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -785,97 +735,48 @@ function popupmenu1_Callback(hObject, ~, ~)
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu1
 
-global language
-global lang
+global SBP_RATIO
+% global DBP_RATIO
+% global pressure_array
+% global time
+% global SBP
+% global DBP
+% global HR
 
 popupcontents = cellstr(get(hObject,'String'));
-lang = popupcontents{get(hObject,'Value')};
+SBP_RATIO = popupcontents{get(hObject,'Value')};
 
-if strcmp(lang,getLabel(language,'english'))
-    language = 'en';
-elseif strcmp(lang,getLabel(language,'portuguese'))
-    language = 'pt';
-elseif strcmp(lang,getLabel(language,'french'))
-    language = 'fr';
-elseif strcmp(lang,getLabel(language,'hindi'))
-    language = 'hi';
-elseif strcmp(lang,getLabel(language,'nepalese'))
-    language = 'ne';
-% elseif strcmp(lang,getLabel(language,'spanish'))
-%     language = 'es';
-% elseif strcmp(lang,getLabel(language,'chinese'))
-%     language = 'zh';
-% elseif strcmp(lang,getLabel(language,'ethiopian'))
-%     language = 'am';
-% elseif strcmp(lang,getLabel(language,'arabic_egypt'))
-%     language = 'ar';
-end
-setLanguage(language);
+% [SBP,DBP,HR] = SignalProcessing(pressure_array,time,SBP_RATIO,DBP_RATIO);
 
+% set(handles.edit1,'String',SBP);
+% set(handles.edit2,'String',DBP);
+% set(handles.edit3,'String',HR);
 
-% --- Executes during object creation, after setting all properties.
-function popupmenu1_CreateFcn(hObject, ~, ~)
-% hObject    handle to popupmenu1 (see GCBO)
+% --- Executes on selection change in popupmenu2.
+function popupmenu2_Callback(hObject, ~, handles)
+% hObject    handle to popupmenu2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
+% handles    structure with handles and user data (see GUIDATA)
 
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu2 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu2
 
-% % --- Executes on selection change in popupmenu1.
-% function popupmenu1_Callback(hObject, ~, handles)
-% % hObject    handle to popupmenu1 (see GCBO)
-% % eventdata  reserved - to be defined in a future version of MATLAB
-% % handles    structure with handles and user data (see GUIDATA)
-% 
-% % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
-% %        contents{get(hObject,'Value')} returns selected item from popupmenu1
-% 
 % global SBP_RATIO
-% % global DBP_RATIO
-% % global pressure_array
-% % global time
-% % global SBP
-% % global DBP
-% % global HR
-% 
-% popupcontents = cellstr(get(hObject,'String'));
-% SBP_RATIO = popupcontents{get(hObject,'Value')};
-% 
-% % [SBP,DBP,HR] = SignalProcessing(pressure_array,time,SBP_RATIO,DBP_RATIO);
-% 
-% % set(handles.edit1,'String',SBP);
-% % set(handles.edit2,'String',DBP);
-% % set(handles.edit3,'String',HR);
-% 
-% % --- Executes on selection change in popupmenu2.
-% function popupmenu2_Callback(hObject, ~, handles)
-% % hObject    handle to popupmenu2 (see GCBO)
-% % eventdata  reserved - to be defined in a future version of MATLAB
-% % handles    structure with handles and user data (see GUIDATA)
-% 
-% % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu2 contents as cell array
-% %        contents{get(hObject,'Value')} returns selected item from popupmenu2
-% 
-% % global SBP_RATIO
-% global DBP_RATIO
-% % global pressure_array
-% % global time
-% % global SBP
-% % global DBP
-% % global HR
-% 
-% popupcontents = cellstr(get(hObject,'String'));
-% DBP_RATIO = popupcontents{get(hObject,'Value')};
-% 
-% % [SBP,DBP,HR] = SignalProcessing(pressure_array,time,SBP_RATIO,DBP_RATIO);
-% 
-% % set(handles.edit1,'String',SBP);
-% % set(handles.edit2,'String',DBP);
-% % set(handles.edit3,'String',HR);
+global DBP_RATIO
+% global pressure_array
+% global time
+% global SBP
+% global DBP
+% global HR
+
+popupcontents = cellstr(get(hObject,'String'));
+DBP_RATIO = popupcontents{get(hObject,'Value')};
+
+% [SBP,DBP,HR] = SignalProcessing(pressure_array,time,SBP_RATIO,DBP_RATIO);
+
+% set(handles.edit1,'String',SBP);
+% set(handles.edit2,'String',DBP);
+% set(handles.edit3,'String',HR);
 
 % --- Executes on selection change in popupmenu3.
 function popupmenu3_Callback(hObject, ~, ~)
@@ -931,53 +832,21 @@ popupcontents = cellstr(get(hObject,'String'));
 Psex = popupcontents{get(hObject,'Value')};
 
 
-    function setLanguage(language)
-        
-        handles = guidata(gcf);
-        
-        set(handles.text1,'String',getLabel(language,'text1txt'));
-        set(handles.text2,'String',getLabel(language,'text2txt'));
-        set(handles.text3,'String',getLabel(language,'text3txt'));
-        set(handles.text4,'String',getLabel(language,'text4txt'));
-        set(handles.text5,'String',getLabel(language,'text5txt'));
-        set(handles.text6,'String',getLabel(language,'text6txt'));
-        set(handles.text7,'String',getLabel(language,'text7txt'));
-        set(handles.text9,'String',getLabel(language,'text9txt'));
-        set(handles.text10,'String',getLabel(language,'text10txt'));
-        set(handles.text11,'String',getLabel(language,'text11txt'));
-        set(handles.text12,'String',getLabel(language,'text12txt'));
-        set(handles.text13,'String',getLabel(language,'text13txt'));
-        set(handles.text14,'String',getLabel(language,'text14txt'));
-        set(handles.text15,'String',getLabel(language,'text15txt'));
-        set(handles.text16,'String',getLabel(language,'text16txt'));
-        set(handles.text17,'String',getLabel(language,'text17txt'));
-        set(handles.text18,'String',getLabel(language,'text18txt'));
-        
-        set(handles.uipanel2,'Title',getLabel(language,'uipanel2txt'));
-        set(handles.uipanel3,'Title',getLabel(language,'uipanel3txt'));
-        set(handles.uipanel4,'Title',getLabel(language,'uipanel4txt'));
-        set(handles.uipanel5,'Title',getLabel(language,'uipanel5txt'));
-        set(handles.uipanel6,'Title',getLabel(language,'uipanel6txt'));
-        set(handles.uipanel7,'Title',getLabel(language,'uipanel7txt'));
-        set(handles.uipanel8,'Title',getLabel(language,'uipanel8txt'));
-        
-        %set(handles.checkbox1,'String',getLabel(language,'checkbox1txt'));
-        
-        set(handles.uitable1,'ColumnName',getLabel(language,'cnames'));
-        
-        set(handles.pushbutton1,'String',getLabel(language,'pushbutton1txt'));
-        set(handles.pushbutton2,'String',getLabel(language,'pushbutton2txt'));
-        %set(handles.pushbutton3,'String',getLabel(language,'pushbutton3txt'));
-        
-        set(handles.popupmenu3,'String',getLabel(language,'popmenu3txt'));
-        set(handles.popupmenu4,'String',getLabel(language,'popmenu4txt'));
-        
-        % set(handles.tp291b36a5_1f32_483a_9eba_dffa9082686d,'String',getLabel(language,'tab1'));
-        % set(handles.tp4d0a0d52_59e1_4953_8dc7_e59f4a18bc72,'String',getLabel(language,'tab2'));
-        % set(handles.tp314274bc_f25d_46bc_be76_2c3e86bb68a6,'String',getLabel(language,'tab3'));
-        
-        drawnow;
-        
+% function setLanguage(lang)
+% % h = guidata(gcf);
+% % set(h.peppers,'String',getLabel(lang,'peppers'));
+% % set(h.children,'String',getLabel(lang,'children'));
+% % set(h.canoe,'String',getLabel(lang,'canoe'));
+% % 
+% % set(h.peppers,'String',getLabel(lang,'peppers'));
+% 
+% 
+% set(handles.uipanel2,'String',SBP)
+% set(handles.edit2,'String',DBP);
+% set(handles.edit3,'String',HR);
+% 
+% drawnow;
+
 
 
 %%%For robustness:
