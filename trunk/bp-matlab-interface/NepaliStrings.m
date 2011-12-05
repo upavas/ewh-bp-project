@@ -1,6 +1,5 @@
 classdef NepaliStrings
     properties (Constant)
-        language = 'Language';
         english = 'English';
         french = 'French';
         portuguese = 'Portuguese';
@@ -13,7 +12,7 @@ classdef NepaliStrings
         
         uipanel2txt = 'Current BP measure:  PUMP OVER THE RED LINE!';
         %uipanel3txt = 'Define the SBP and DBP ratios (oscillometric method)';
-        uipanel3txt = language;
+        uipanel3txt = 'Language';
         uipanel4txt = 'Last BP measurement';
         uipanel5txt = 'Save BP measure';
         uipanel6txt = 'Patient credentials';
@@ -38,10 +37,10 @@ classdef NepaliStrings
         text15txt = 'Cuff Size';
         text16txt = 'University of Oxford: Engineering World Health';
         text17txt = 'This programme is intended to be used only with the Low-cost Blood Pressure Monitor device developed by the Oxford BP team. The device is not intended for medical use, pending validation and simultaneous optimization. The BP team, Oxford University or Oxford Chapter shall not be held accountable for any outcome of medical assessment or any other kind of evaluation with this device and/or interface.';
-        text18txt = 'The BP team: Carlos Arteta, João Domingos, Marco Pimentel, Mauro Santos';
+        text18txt = 'The BP team: Carlos Arteta, Joao Domingos, Marco Pimentel, Mauro Santos';
         
-        %popmenu1txt = {english; portuguese; french; indian; nepalese; spanish; chinese; ethiopian; arabic_egypt};
-        popmenu1txt = {english; portuguese; french; indian; nepalese};
+        %popmenu1txt = {'English'; 'Portuguese'; 'French'; 'Standard Hindi'; 'Nepali'; 'Spanish'; 'Chinese'; 'Amharic'; 'Arabic Egypt'};
+        popmenu1txt = {'English'; 'Portuguese'; 'French'; 'Standard Hindi'; 'Nepali'};
         popmenu3txt = {'Adult'; 'Paediatric'; 'Newborn'; 'Large Adult'; 'Extra Large Adult'};
         popmenu4txt = {'Left'; 'Right'}
         
@@ -61,7 +60,7 @@ classdef NepaliStrings
         tab2 = 'Session Record';
         tab3 = 'About';
         
-        cnames = {'text12txt','text13txt','text14txt','columnname_1','text15txt','text1txt','text22txt','text33txt','columnname_2','columnname_3','columnname_4'};
+        cnames = {'Name','Age','Sex','Time','Cuff Size','Used Arm','SBP RATIO','DBP RATIO','Systolic BP','Diastolic BP','Heart Rate'};
     end
 end
 

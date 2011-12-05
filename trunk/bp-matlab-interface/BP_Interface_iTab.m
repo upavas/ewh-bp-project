@@ -969,6 +969,7 @@ Psex = popupcontents{get(hObject,'Value')};
         set(handles.pushbutton2,'String',getLabel(language,'pushbutton2txt'));
         %set(handles.pushbutton3,'String',getLabel(language,'pushbutton3txt'));
         
+        set(handles.popupmenu1,'String',getLabel(language,'popmenu1txt'));
         set(handles.popupmenu3,'String',getLabel(language,'popmenu3txt'));
         set(handles.popupmenu4,'String',getLabel(language,'popmenu4txt'));
         
