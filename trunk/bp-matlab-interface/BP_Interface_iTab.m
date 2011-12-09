@@ -439,9 +439,9 @@ pressure_array = bp_wave_f;
 
 [SBP,DBP,HR] = SignalProcessing(pressure_array,time,SBP_RATIO,DBP_RATIO);
 
-set(handles.edit1,'String',SBP);
-set(handles.edit2,'String',DBP);
-set(handles.edit3,'String',HR);
+set(handles.edit1,'String',DBP);
+set(handles.edit2,'String',HR);
+set(handles.edit3,'String',SBP);
 
 FLAG = 1;
 
@@ -455,6 +455,10 @@ catch exception
     pressure_array = [];
 end
 
+function pushbutton1_CreateFcn(~, ~, ~)
+% hObject    handle to pushbutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
 % --- Executes on button press in pushbutton2.
 function pushbutton2_Callback(~, ~, ~)
@@ -479,6 +483,10 @@ global time_manual_device
 
 time_manual_device = datestr(now);
 
+function pushbutton2_CreateFcn(~, ~, ~)
+% hObject    handle to pushbutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
 % --- Executes on button press in pushbutton3.
 function pushbutton3_Callback(hObject, ~, handles)
@@ -525,12 +533,8 @@ if FLAG == 0
     msgbox('A new acquisition needs to be performed before saving the values!','Help Box:','warn');
     return
 else
-    if size(Pname,1) == 0
-        msgbox('A name must be given to the patient in order to save the acquired measurements!','Help Box:','error');
-        return
-    end
-    if size(PcuffSize,1) == 0
-        msgbox('A cuff size must be given in order to save the acquired measurements!','Help Box:','error');
+    if (size(Pname,1) == 0 || size(PcuffSize,1) == 0)
+        msgbox('Compulsory patient details must be given in order to save the acquired measurements.','Help Box:','error');
         return
     end
     FLAG = 0;
@@ -592,29 +596,47 @@ end
 oldFolder = cd(sprintf('%s%s%s%s',pwd,filesep,'BP Data',filesep));
 
 M = [time_array pressure_array];
-FileName = [num2str(study_number) '_' Pname '_' datestr(now) '.csv'];
+FileName = [num2str(study_number) '_' Pname '_' num2str(now) '.csv'];       %With datestr(now), : cannot be saved in the file name.
 csvwrite(FileName,M);
 
-FileName = ['Record_Session ' datestr(clock) '.csv'];
-
-%if (exist(FileName) == 0)
-   %d = {'Study Number','Observer Name','Name/ID','Measure Number (same patient)','Age','Sex','Cuff Size','Used arm','Arm Circumference (cm)','Smoker?','Time of measurement (TD)','Systolic BP (TD)','Diastolic BP (TD)','Heart Rate (TD)','Time of measurement','SBP Ratio','DBP Ratio','Systolic BP','Diastolic BP','Heart Rate','Patient status (medical condition)','Anti-hypertensive medication','Observations/Comments'; ...
-   d = [study_number,Pobservername,Pname,Pmeasure_num,Page,Psex,PcuffSize,Parm,Parmcircunf,Psmokes,time_manual_device,Ptraditional_SBP,Ptraditional_DBP,Ptraditional_HR,datestr(clock),SBP_RATIO,DBP_RATIO,SBP,DBP,HR,Pstatus,Pmedication,Pobservations];
-   %any2csv(d,'|',1);
-   csvwrite(FileName, d);
-   %xlswrite(FileName, d, 1);
-% else
-%     d = {study_number,Pobservername,Pname,Pmeasure_num,Page,Psex,PcuffSize,Parm,Parmcircunf,Psmokes,time_manual_device,Ptraditional_SBP,Ptraditional_DBP,Ptraditional_HR,datestr(clock),SBP_RATIO,DBP_RATIO,SBP,DBP,HR,Pstatus,Pmedication,Pobservations};
-%     A = xlsread(FileName);
-%     range = ['A' num2str(size(A,1)+2)];
-%     xlswrite(FileName, d, 1, range);
-% end
+if isunix
+    FileName = ['Record_Session' num2str(now) '.csv'];
+    %if (exist(FileName) == 0)
+    %d = {'Study Number','Observer Name','Name/ID','Measure Number (same patient)','Age','Sex','Cuff Size','Used arm','Arm Circumference (cm)','Smoker?','Time of measurement (TD)','Systolic BP (TD)','Diastolic BP (TD)','Heart Rate (TD)','Time of measurement','SBP Ratio','DBP Ratio','Systolic BP','Diastolic BP','Heart Rate','Patient status (medical condition)','Anti-hypertensive medication','Observations/Comments'; ...
+    d = [study_number,Pobservername,Pname,Pmeasure_num,Page,Psex,PcuffSize,Parm,Parmcircunf,Psmokes,time_manual_device,Ptraditional_SBP,Ptraditional_DBP,Ptraditional_HR,datestr(clock),SBP_RATIO,DBP_RATIO,SBP,DBP,HR,Pstatus,Pmedication,Pobservations];
+    %any2csv(d,'|',1);
+    csvwrite(FileName, d);
+    %xlswrite(FileName, d, 1);
+    % else
+    %     d = {study_number,Pobservername,Pname,Pmeasure_num,Page,Psex,PcuffSize,Parm,Parmcircunf,Psmokes,time_manual_device,Ptraditional_SBP,Ptraditional_DBP,Ptraditional_HR,datestr(clock),SBP_RATIO,DBP_RATIO,SBP,DBP,HR,Pstatus,Pmedication,Pobservations};
+    %     A = xlsread(FileName);
+    %     range = ['A' num2str(size(A,1)+2)];
+    %     xlswrite(FileName, d, 1, range);
+    % end
+elseif ispc
+    FileName = ['Record_Session ' num2str(now) '.xls'];       %With datestr(now), : cannot be saved in the file name.
+    if (exist(FileName) == 0)
+        d = {'Study Number','Observer Name','Name/ID','Measure Number (same patient)','Age','Sex','Cuff Size','Used arm','Arm Circumference (cm)','Smoker?','Time of measurement (TD)','Systolic BP (TD)','Diastolic BP (TD)','Heart Rate (TD)','Time of measurement','SBP Ratio','DBP Ratio','Systolic BP','Diastolic BP','Heart Rate','Patient status (medical condition)','Anti-hypertensive medication','Observations/Comments'; ...
+            study_number,Pobservername,Pname,Pmeasure_num,Page,Psex,PcuffSize,Parm,Parmcircunf,Psmokes,time_manual_device,Ptraditional_SBP,Ptraditional_DBP,Ptraditional_HR,datestr(clock),SBP_RATIO,DBP_RATIO,SBP,DBP,HR,Pstatus,Pmedication,Pobservations};
+        xlswrite(FileName, d, 1);
+    else
+        d = {study_number,Pobservername,Pname,Pmeasure_num,Page,Psex,PcuffSize,Parm,Parmcircunf,Psmokes,time_manual_device,Ptraditional_SBP,Ptraditional_DBP,Ptraditional_HR,datestr(clock),SBP_RATIO,DBP_RATIO,SBP,DBP,HR,Pstatus,Pmedication,Pobservations};
+        A = xlsread(FileName);
+        range = ['A' num2str(size(A,1)+2)];
+        xlswrite(FileName, d, 1, range);
+    end
+end
 
 cd(oldFolder)
 clear oldFolder;
 
+function pushbutton3_CreateFcn(~, ~, ~)
+% hObject    handle to pushbutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
-function edit1_Callback(hObject, ~, ~)
+
+function edit1_Callback(~, ~, ~)
 % hObject    handle to edit1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -634,7 +656,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-function edit2_Callback(hObject, ~, ~)
+function edit2_Callback(~, ~, ~)
 % hObject    handle to edit2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -654,7 +676,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-function edit3_Callback(hObject, ~, ~)
+function edit3_Callback(~, ~, ~)
 % hObject    handle to edit3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -681,9 +703,9 @@ function edit4_Callback(hObject, ~, ~)
 
 % Hints: get(hObject,'String') returns contents of edit1 as text
 %        str2double(get(hObject,'String')) returns contents of edit1 as a double
-global Ptraditional_SBP
+global Pname
 
-Ptraditional_SBP = str2double(get(hObject,'String'));
+Pname = get(hObject,'String');
 
 % --- Executes during object creation, after setting all properties.
 function edit4_CreateFcn(hObject, ~, ~)
@@ -704,9 +726,9 @@ function edit5_Callback(hObject, ~, ~)
 
 % Hints: get(hObject,'String') returns contents of edit2 as text
 %        str2double(get(hObject,'String')) returns contents of edit2 as a double
-global Ptraditional_DBP
+global Page
 
-Ptraditional_DBP = str2double(get(hObject,'String'));
+Page = str2double(get(hObject,'String'));
 
 % --- Executes during object creation, after setting all properties.
 function edit5_CreateFcn(hObject, ~, ~)
@@ -727,9 +749,9 @@ function edit6_Callback(hObject, ~, ~)
 
 % Hints: get(hObject,'String') returns contents of edit3 as text
 %        str2double(get(hObject,'String')) returns contents of edit3 as a double
-global Ptraditional_HR
+global Ptraditional_DBP
 
-Ptraditional_HR = str2double(get(hObject,'String'));
+Ptraditional_DBP = str2double(get(hObject,'String'));
 
 % --- Executes during object creation, after setting all properties.
 function edit6_CreateFcn(hObject, ~, ~)
@@ -750,10 +772,9 @@ function edit7_Callback(hObject, ~, ~)
 
 % Hints: get(hObject,'String') returns contents of edit4 as text
 %        str2double(get(hObject,'String')) returns contents of edit4 as a double
+global Ptraditional_HR
 
-global Pname
-
-Pname = get(hObject,'String');
+Ptraditional_HR = str2double(get(hObject,'String'));
 
 % --- Executes during object creation, after setting all properties.
 function edit7_CreateFcn(hObject, ~, ~)
@@ -774,10 +795,9 @@ function edit8_Callback(hObject, ~, ~)
 
 % Hints: get(hObject,'String') returns contents of edit5 as text
 %        str2double(get(hObject,'String')) returns contents of edit5 as a double
+global Ptraditional_SBP
 
-global Page
-
-Page = str2double(get(hObject,'String'));
+Ptraditional_SBP = str2double(get(hObject,'String'));
 
 % --- Executes during object creation, after setting all properties.
 function edit8_CreateFcn(hObject, ~, ~)
@@ -798,7 +818,6 @@ function edit9_Callback(hObject, ~, ~)
 
 % Hints: get(hObject,'String') returns contents of edit7 as text
 %        str2double(get(hObject,'String')) returns contents of edit7 as a double
-
 global Pstatus
 
 Pstatus = get(hObject,'String');
@@ -822,7 +841,6 @@ function edit10_Callback(hObject, ~, ~)
 
 % Hints: get(hObject,'String') returns contents of edit7 as text
 %        str2double(get(hObject,'String')) returns contents of edit7 as a double
-
 global Pmedication
 
 Pmedication = get(hObject,'String');
@@ -846,7 +864,6 @@ function edit11_Callback(hObject, ~, ~)
 
 % Hints: get(hObject,'String') returns contents of edit7 as text
 %        str2double(get(hObject,'String')) returns contents of edit7 as a double
-
 global Parmcircunf
 
 Parmcircunf = str2double(get(hObject,'String'));
@@ -870,7 +887,6 @@ function edit12_Callback(hObject, ~, ~)
 
 % Hints: get(hObject,'String') returns contents of edit7 as text
 %        str2double(get(hObject,'String')) returns contents of edit7 as a double
-
 global Pobservations
 
 Pobservations = get(hObject,'String');
@@ -894,7 +910,6 @@ function edit13_Callback(hObject, ~, ~)
 
 % Hints: get(hObject,'String') returns contents of edit6 as text
 %        str2double(get(hObject,'String')) returns contents of edit6 as a double
-
 global Pobservername
 
 Pobservername = get(hObject,'String');
@@ -956,12 +971,12 @@ if strcmp(lang,getLabel(language,'english'))
     language = 'en';
 elseif strcmp(lang,getLabel(language,'portuguese'))
     language = 'pt';
-elseif strcmp(lang,getLabel(language,'french'))
-    language = 'fr';
-elseif strcmp(lang,getLabel(language,'hindi'))
-    language = 'hi';
 elseif strcmp(lang,getLabel(language,'nepalese'))
     language = 'ne';
+% elseif strcmp(lang,getLabel(language,'hindi'))
+%     language = 'hi';
+% elseif strcmp(lang,getLabel(language,'french'))
+%     language = 'fr';
 % elseif strcmp(lang,getLabel(language,'spanish'))
 %     language = 'es';
 % elseif strcmp(lang,getLabel(language,'chinese'))
@@ -1129,43 +1144,61 @@ Psmokes = popupcontents{get(hObject,'Value')};
         
         handles = guidata(gcf);
         
-%         set(handles.text1,'String',getLabel(language,'text1txt'));
-%         set(handles.text2,'String',getLabel(language,'text2txt'));
-%         set(handles.text3,'String',getLabel(language,'text3txt'));
-%         set(handles.text4,'String',getLabel(language,'text4txt'));
-%         set(handles.text5,'String',getLabel(language,'text5txt'));
-%         set(handles.text6,'String',getLabel(language,'text6txt'));
-%         set(handles.text7,'String',getLabel(language,'text7txt'));
-%         set(handles.text9,'String',getLabel(language,'text9txt'));
-%         set(handles.text10,'String',getLabel(language,'text10txt'));
-%         set(handles.text11,'String',getLabel(language,'text11txt'));
-%         set(handles.text12,'String',getLabel(language,'text12txt'));
-%         set(handles.text13,'String',getLabel(language,'text13txt'));
-%         set(handles.text14,'String',getLabel(language,'text14txt'));
-%         set(handles.text15,'String',getLabel(language,'text15txt'));
-%         set(handles.text16,'String',getLabel(language,'text16txt'));
-%         set(handles.text17,'String',getLabel(language,'text17txt'));
-%         set(handles.text18,'String',getLabel(language,'text18txt'));
-%         
-%         set(handles.uipanel2,'Title',getLabel(language,'uipanel2txt'));
-%         set(handles.uipanel3,'Title',getLabel(language,'uipanel3txt'));
-%         set(handles.uipanel4,'Title',getLabel(language,'uipanel4txt'));
-%         set(handles.uipanel5,'Title',getLabel(language,'uipanel5txt'));
-%         set(handles.uipanel6,'Title',getLabel(language,'uipanel6txt'));
-%         set(handles.uipanel7,'Title',getLabel(language,'uipanel7txt'));
-%         set(handles.uipanel8,'Title',getLabel(language,'uipanel8txt'));
-%         
+        set(handles.text1,'String',getLabel(language,'text1txt'));
+        set(handles.text2,'String',getLabel(language,'text2txt'));
+        set(handles.text3,'String',getLabel(language,'text3txt'));
+        set(handles.text4,'String',getLabel(language,'text4txt'));
+        set(handles.text5,'String',getLabel(language,'text5txt'));
+        set(handles.text6,'String',getLabel(language,'text5txt'));
+        set(handles.text7,'String',getLabel(language,'text7txt'));
+        set(handles.text8,'String',getLabel(language,'text5txt'));
+        set(handles.text9,'String',getLabel(language,'text5txt'));
+        set(handles.text10,'String',getLabel(language,'text7txt'));
+        set(handles.text11,'String',getLabel(language,'text2txt'));
+        set(handles.text12,'String',getLabel(language,'text3txt'));
+        set(handles.text13,'String',getLabel(language,'text4txt'));
+        set(handles.text14,'String',getLabel(language,'text14txt'));
+        set(handles.text15,'String',getLabel(language,'text15txt'));
+        set(handles.text16,'String',getLabel(language,'text16txt'));
+        set(handles.text17,'String',getLabel(language,'text17txt'));
+        set(handles.text18,'String',getLabel(language,'text18txt'));
+        set(handles.text19,'String',getLabel(language,'text19txt'));
+        set(handles.text20,'String',getLabel(language,'text20txt'));
+        set(handles.text211,'String',getLabel(language,'text20txt'));
+        set(handles.text21,'String',getLabel(language,'text21txt'));
+        set(handles.text22,'String',getLabel(language,'text22txt'));
+        set(handles.text23,'String',getLabel(language,'text23txt'));
+        set(handles.text24,'String',getLabel(language,'text24txt'));
+        set(handles.text25,'String',getLabel(language,'text25txt'));
+        set(handles.text26,'String',getLabel(language,'text26txt'));
+        set(handles.text27,'String',getLabel(language,'text27txt'));
+        set(handles.text29,'String',getLabel(language,'text29txt'));
+        set(handles.text30,'String',getLabel(language,'text30txt'));
+        set(handles.text31,'String',getLabel(language,'text31txt'));
+        
+        set(handles.uipanel1,'Title',getLabel(language,'uipanel1txt'));
+        set(handles.uipanel2,'Title',getLabel(language,'uipanel2txt'));
+        set(handles.uipanel3,'Title',getLabel(language,'uipanel3txt'));
+        set(handles.uipanel4,'Title',getLabel(language,'uipanel4txt'));
+        set(handles.uipanel5,'Title',getLabel(language,'uipanel5txt'));
+        set(handles.uipanel6,'Title',getLabel(language,'uipanel6txt'));
+        set(handles.uipanel7,'Title',getLabel(language,'uipanel7txt'));
+        set(handles.uipanel8,'Title',getLabel(language,'uipanel8txt'));
+        set(handles.uipanel9,'Title',getLabel(language,'uipanel9txt'));
+        
 %         %set(handles.checkbox1,'String',getLabel(language,'checkbox1txt'));
-%         
-%         set(handles.uitable1,'ColumnName',getLabel(language,'cnames'));
-%         
-%         set(handles.pushbutton1,'String',getLabel(language,'pushbutton1txt'));
-%         set(handles.pushbutton2,'String',getLabel(language,'pushbutton2txt'));
-%         %set(handles.pushbutton3,'String',getLabel(language,'pushbutton3txt'));
-%         
-%         set(handles.popupmenu1,'String',getLabel(language,'popmenu1txt'));
-%         set(handles.popupmenu3,'String',getLabel(language,'popmenu3txt'));
-%         set(handles.popupmenu4,'String',getLabel(language,'popmenu4txt'));
+        
+        set(handles.uitable1,'ColumnName',getLabel(language,'cnames'));
+        
+        set(handles.pushbutton1,'String',getLabel(language,'pushbutton1txt'));
+        set(handles.pushbutton2,'String',getLabel(language,'pushbutton2txt'));
+        set(handles.pushbutton3,'String',getLabel(language,'pushbutton3txt'));
+        
+        set(handles.popupmenu1,'String',getLabel(language,'popmenu1txt'));
+        set(handles.popupmenu2,'String',getLabel(language,'popmenu2txt'));
+        set(handles.popupmenu3,'String',getLabel(language,'popmenu3txt'));
+        set(handles.popupmenu4,'String',getLabel(language,'popmenu4txt'));
+        set(handles.popupmenu5,'String',getLabel(language,'popmenu5txt'));
         
         % set(handles.tp291b36a5_1f32_483a_9eba_dffa9082686d,'String',getLabel(language,'tab1'));
         % set(handles.tp4d0a0d52_59e1_4953_8dc7_e59f4a18bc72,'String',getLabel(language,'tab2'));
