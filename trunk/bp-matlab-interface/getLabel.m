@@ -6,12 +6,12 @@ switch lang
         xlatedString = EnglishStrings.(label);
     case 'pt'
         xlatedString = PortugueseStrings.(label);
-    case 'fr'
-        xlatedString = FrenchStrings.(label);
-    case 'hi'
-        xlatedString = HindiStrings.(label);
     case 'ne'
         xlatedString = NepaliStrings.(label);
+%     case 'hi'
+%         xlatedString = HindiStrings.(label);
+%     case 'fr'
+%         xlatedString = FrenchStrings.(label);
 %     case 'es'
 %         xlatedString = SpanishStrings.(label);
 %     case 'zh'

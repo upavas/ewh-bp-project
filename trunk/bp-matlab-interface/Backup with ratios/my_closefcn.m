@@ -10,27 +10,36 @@
       switch selection, 
          case 'Yes',
              
-             s = serial(port);
-             set(s, 'InputBufferSize', 1024);                %number of bytes in input buffer
-             set(s, 'BaudRate', 19200);
-             set(s, 'Parity', 'none');
-             set(s, 'DataBits', 8);
-             set(s, 'StopBit', 1);
-             set(s, 'Timeout',10);
-             set(s, 'RequestToSend','on');
+             try
+             
+                 s = serial(port);
+                 set(s, 'InputBufferSize', 1024);                %number of bytes in input buffer
+                 set(s, 'BaudRate', 19200);
+                 set(s, 'Parity', 'none');
+                 set(s, 'DataBits', 8);
+                 set(s, 'StopBit', 1);
+                 set(s, 'Timeout',10);
+                 set(s, 'RequestToSend','on');
 
-             fopen(s);                                       %opens the serial port
+                 fopen(s);                                       %opens the serial port
 
-             fwrite(s,115);                                  % fprintf(s,'%s','s');
-             fwrite(s,116);                                  % fprintf(s,'%s','t');
-             fwrite(s,111);                                  % fprintf(s,'%s','o');
-             fwrite(s,112);                                  % fprintf(s,'%s','p');
+                 fwrite(s,115);                                  % fprintf(s,'%s','s');
+                 fwrite(s,116);                                  % fprintf(s,'%s','t');
+                 fwrite(s,111);                                  % fprintf(s,'%s','o');
+                 fwrite(s,112);                                  % fprintf(s,'%s','p');
 
-             fclose(s);
-             delete(s);
+                 fclose(s);
+                 delete(s);
+                 
+                 delete(gcf)
+                 
+             catch exception
+                 
+                 delete(gcf)
+                 msgbox('No serial port was found in the system or a serial comunication problem occured. Please disconnect the BP monitor device and re-connect it to the computer before opening the BP Interface again.','Help Box:','error');
 
-             delete(gcf)
-            
+             end
+             
          case 'No'      
          return 
       end
