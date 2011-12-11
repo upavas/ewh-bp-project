@@ -2,7 +2,7 @@ function [SBP,DBP,HR] = SignalProcessing(bp_wave_f,time,SBP_RATIO,DBP_RATIO)
 
 %% Get decreasing part of the curve
 bp = bp_wave_f;
-slimit = [50 2400];
+slimit = [50 200];
 inflim = slimit(1);         % inferior limit (values lower than inflim are discarded
 suplim = slimit(2);
 [~, indmax]=max(bp);        % calculate max value
@@ -54,7 +54,7 @@ FLAG11=0;
 while FLAG11==0
     [~, indx] = max(MAXTAB(:,2));
     gg = time_1 == MAXTAB(indx,1);
-    if bp_wave_1(gg) > 150
+    if bp_wave_1(gg) > 125
         MAXTAB(indx,2)=0;
     else
         FLAG11 = 1;
