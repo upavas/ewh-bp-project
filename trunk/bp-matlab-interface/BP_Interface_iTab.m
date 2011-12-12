@@ -620,7 +620,7 @@ if isunix
     %     xlswrite(FileName, d, 1, range);
     % end
 elseif ispc
-    FileName = ['Record_Session ' num2str(now) '.xls'];       %With datestr(now), : cannot be saved in the file name.
+    FileName = ['Record_Session.xls'];       %With datestr(now), : cannot be saved in the file name.
     if (exist(FileName) == 0)
         d = {'Study Number','Observer Name','Name/ID','Measure Number (same patient)','Age','Sex','Cuff Size','Used arm','Arm Circumference (cm)','Smoker?','Time of measurement (TD)','Systolic BP (TD)','Diastolic BP (TD)','Heart Rate (TD)','Time of measurement','SBP Ratio','DBP Ratio','Systolic BP','Diastolic BP','Heart Rate','Patient status (medical condition)','Anti-hypertensive medication','Observations/Comments'; ...
             study_number,Pobservername,Pname,Pmeasure_num,Page,Psex,PcuffSize,Parm,Parmcircunf,Psmokes,time_manual_device,Ptraditional_SBP,Ptraditional_DBP,Ptraditional_HR,time_our_device,SBP_RATIO,DBP_RATIO,SBP,DBP,HR,Pstatus,Pmedication,Pobservations}; 
@@ -828,6 +828,7 @@ global Pmeasure_num
 
 popupcontents = cellstr(get(hObject,'String'));
 Pmeasure_num = popupcontents{get(hObject,'Value')};
+
 
 function popupmenu5_CreateFcn(hObject, ~, ~)
 % hObject    handle to edit1 (see GCBO)
