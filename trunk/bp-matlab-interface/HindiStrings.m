@@ -1,83 +1,65 @@
 classdef HindiStrings
     properties (Constant)
+        language = 'भाषा';
+        english = 'अंग्रेज़ी';
+        french = 'फ्रेंच';
+        portuguese = 'पोर्तुगेसे';
+        spanish = 'स्पेनिश';
+        nepalese = 'नेपाली';
+        indian = 'हिंदी';
+        chinese = 'चिनेसे';
+        ethiopian = 'अम्हारिक';
+        Arabic_Egypt = 'एग्य्प्तियन';
         
-        english = 'English';
-        french = 'French';
-        portuguese = 'Portuguese';
-        spanish = 'Spanish';
-        nepalese = 'Nepali';
-        hindi = 'Standard Hindi';
-        chinese = 'Chinese';
-        ethiopian = 'Amharic';
-        arabic_egypt = 'Arabic Egypt';
+        uipanel2txt = 'रक्तचाप (ब्लड प्रेशर) माप :  लाल रेखा से अधिक पंप करे';
+        uipanel3txt = 'सिस्टोलिक रक्तचाप (ब्लड प्रेशर) और दिअस्तोलिक रक्तचाप (ब्लड प्रेशर) अनुपात का परिभाषा (ओस्सिल्लोमेत्रिक तरीका)';
+        uipanel4txt = 'पिछले रक्तचाप माप (ब्लड प्रेशर) माप ';
+        uipanel5txt = 'सेव रक्तचाप माप (ब्लड प्रेशर) माप';
+        uipanel6txt = 'रोगी विवरण';
+        uipanel7txt = 'अधिवेशन लेख पत्र';
+        uipanel8txt = 'सस्ते रक्तचाप डिवाइस के बारे में जानकारी';
         
-        uipanel1txt = 'Current BP measure:  PUMP OVER THE RED LINE!';
-        %uipanel31txt = 'Define the SBP and DBP ratios (oscillometric method)';
-        uipanel4txt = 'Language';
-        uipanel2txt = 'BP measurement with low-cost BP monitor';
-        uipanel6txt = 'Save BP measure';
-        uipanel3txt = 'Patient credentials';
-        uipanel8txt = 'Session record details';
-        uipanel9txt = 'About the Low-cost BP monitor device';
-        uipanel5txt = 'BP measurement with traditional device';
-        uipanel7txt = 'Patient data (not compulsory)';
+        text1txt = 'बांह - बाएँ या दाएँ';
+        text2txt = 'सिस्टोलिक रक्तचाप (ब्लड प्रेशर) अनुपात';
+        text3txt = 'दिअस्तोलिक रक्तचाप (ब्लड प्रेशर) अनुपात';
+        text4txt = 'सिस्टोलिक रक्तचाप (ब्लड प्रेशर)';       %Systolic Blood Pressure 
+        text5txt = 'दिअस्तोलिक रक्तचाप (ब्लड प्रेशर)';       %Diastolic Blood Pressure 
+        text6txt = 'हृदय दर';        %Heart Rate 
+        text7txt = 'पारा के मिलीमीटर';      %Millimeters (mm) of mercury (Hg)
+        text9txt = 'दिल की धड़कन प्रति मिनट';
+        text10txt = 'अगर आप किसी भी बटन दबाएँ तो नाप खत्म हो जाएगा';
+        text11txt = 'आवश्यक';       %* Compulsory
+        text12txt = 'नाम*';
+        text13txt = 'उम्र';
+        text14txt = 'लिंग';
+        text15txt = 'कफ माप';
+        text16txt = 'ऑक्सफोर्ड विश्वविद्यालय: इंजीनियरिंग वर्ल्ड हेअलथ';
+        text17txt = 'अस्वीकरण: यह प्रोग्राम केवल सस्ते रक्त दबाव नाप ऑक्सफोर्ड बी.पी. टीम द्वारा बनाया डिवाइस के साथ इस्तेमाल किये जाने का इरादा है. यह किसी भी मेडिकल उपयोग के लिए नहीं है और अभी भी सत्यापन और अनुकूलन की जरूरत है. ऑक्सफोर्ड बी पी टीम, ऑक्सफोर्ड विश्वविद्यालय या ऑक्सफोर्ड चप्टर इस डिवाइस के साथ मेडिकल मूल्यांकन के किसी भी परिणाम के लिए जिम्मेदार नहीं होगा.';
+        text18txt = 'बी पी टीम : Carlos Arteta, João Domingos, Marco Pimentel, Mauro Santos';
+	text19txt = 'पर्यवेक्षक नाम';
         
-        text19txt = 'Used Arm';
-        %text21txt = 'SBP RATIO';
-        %text31txt = 'DBP RATIO';
-        text2txt = 'SBP';       %Systolic Blood Pressure 
-        text3txt = 'DBP';       %Diastolic Blood Pressure 
-        text4txt = 'HR';        %Heart Rate 
-        text5txt = 'mmHg';      %Millimeters (mm) of mercury (Hg)
-        text7txt = 'bpm';
-        %text10txt = 'DO NOT press a keyboard key unless you want to finish the acquisition';
-        text1txt = 'Press ENTER to finish the acquisition';
-        text20txt = 'Compulsory';       %* Compulsory
-        text14txt = 'Name / ID';
-        text15txt = 'Age';
-        text16txt = 'Sex';
-        text18txt = 'Cuff Size';
-        text29txt = 'University of Oxford: Engineering World Health';
-        text30txt = 'This programme is intended to be used only with the Low-cost Blood Pressure Monitor device developed by the Oxford BP team. The device is not intended for medical use, pending validation and simultaneous optimization. The BP team, Oxford University or Oxford Chapter shall not be held accountable for any outcome of medical assessment or any other kind of evaluation with this device and/or interface.';
-        text31txt = 'The BP team: Carlos Arteta, Joao Domingos, Marco Pimentel, Mauro Santos';
-        text17txt = 'Measurement Number';
-        text21txt = 'Patient Status (functional limitations)';
-        text22txt = 'Patient smokes?';
-        text23txt = 'Anti-hypertensive medication';
-        text24txt = 'Arm circunference';
-        text25txt = 'Observations / Comments';
-        text26txt = 'Observer Name';
-        text27txt = 'cm';       %centimeters
+        popmenu3txt_1 = 'वयस्क';                    %popmenu3txt{1} = 'वयस्क';
+        popmenu3txt_2 = 'बच्चा';
+        popmenu3txt_3 = 'नवजात';
+        popmenu3txt_4 = 'बड़ी वयस्क';
+        popmenu3txt_5 = 'अतिरिक्त बड़ी वयस्क';
+        popmenu4txt_1 = 'बाएं';
+        popmenu4txt_2 = 'दाईं';
         
-        %popmenu5txt = {'English'; 'Portuguese'; 'Nepali'; 'Standard Hindi'; 'French'; 'Spanish'; 'Chinese'; 'Amharic'; 'Arabic Egypt'};
-        popmenu5txt = {'English'; 'Portuguese'; 'Nepali'};
-        popmenu3txt = {'Adult'; 'Paediatric'; 'Newborn'; 'Large Adult'; 'Extra Large Adult'};
-        popmenu2txt = {'Left'; 'Right'}
-        popmenu1txt = {'Male'; 'Female'}
-        popmenu4txt = {'1'; '2'; '3'; '4'; '5'}
+        checkbox1txt = '.सी.एस.वे फाइल';
         
-        checkbox1txt = 'file';
+        pushbutton1txt = 'सेव';
+        pushbutton2txt = 'नया रक्तचाप (ब्लड प्रेशर) नाप ';
+        pushbutton3txt = 'नवीनीकरण';
         
-        pushbutton3txt = 'SAVE';
-        pushbutton1txt = 'NEW BP MEASUREMENT';
-        %pushbutton3txt = 'Update';
-        pushbutton2txt = 'Extract measurement time';
+        columnname_1 = 'समय';
+        columnname_2 = 'सिस्टोलिक रक्तचाप (ब्लड प्रेशर)';       %Systolic Blood Pressure
+        columnname_3 = 'दिअस्तोलिक रक्तचाप (ब्लड प्रेशर)';      %Diastolic Blood Pressure
+        columnname_4 = 'हृदय दर';
+        columnname_5 = 'रक्तचाप (ब्लड प्रेशर)';
         
-        tab1 = 'BP Measurements';      % Blood Pressure Measurements
-        tab11 = 'BP Measurements 2';
-        tab2 = 'Session Record';
-        tab3 = 'About';
-        
-        warning1 = 'No serial port was found in the system. Please connect the BP monitor device and restart the Interface.';
-        warning2 = 'Help Box:';
-        warning3 = 'There are (virtual) serial devices connected to the computer but none is the BP device! Please connect the BP monitor device and restart the Interface.';
-        warning4 = 'Please, acquire a new signal! Pressure must be above 180 mmHg.';
-        warning5 = 'A new acquisition needs to be performed before saving the values!';
-        warning6 = 'Compulsory patient details must be given in order to save the acquired measurements.';
-        
-        cnames_xls = {'Study Number','Observer Name','Name/ID','Measure Number (same patient)','Age','Sex','Cuff Size','Used arm','Arm Circumference (cm)','Smoker?','Time of measurement (TD)','Systolic BP (TD)','Diastolic BP (TD)','Heart Rate (TD)','Time of measurement','SBP Ratio','DBP Ratio','Systolic BP','Diastolic BP','Heart Rate','Patient status (medical condition)','Anti-hypertensive medication','Observations/Comments'};  %TD stands for Traditional Device
-        cnames = {'Name/ID','Age','Sex','Time of measurement','Cuff Size','Used arm','SBP Ratio','DBP Ratio','Systolic BP','Diastolic BP','Heart Rate'};
-        
+        tab1 = 'रक्तचाप (ब्लड प्रेशर) नाप';      % Blood Pressure Measurements
+        tab2 = 'अधिवेशन लेख पत्र';
+        tab3 = 'जानकारी';
     end
 end
-
