@@ -62,46 +62,67 @@ public class ConvertTommHg {
 		return valsOut;
 	}
 
-	public static double convertTommHg(int xValue, int yValue) {
+//	public static double convertTommHg(int xValue, int yValue) {
+//
+//		
+//		float aux1 = 0, aux2 = 0;
+//
+//	    double pressureValue = 0;
+//
+//	    
+//	    if (yValue != 0){
+//	    	yValue = Math.abs(yValue-256);
+//	    }
+//	    
+//	    if (xValue == 20){
+//	    	xValue = 0;
+//	    	yValue = 128;
+//	    }
+//
+//	    if (xValue == 21){
+//	    	xValue = 1;
+//	    	yValue = 128;
+//	    }
+//	    
+//	    if (xValue == 22){
+//	    	xValue = 2;
+//	    	yValue = 128;
+//	    }
+//	    
+//	    if (xValue == 23){
+//	    	xValue = 3;
+//	    	yValue = 128;
+//	    }
+//	    
+//	    aux1 = (float) ( (xValue<<8) | yValue)/1347; 
+//
+//	    aux2 = (float) (aux1-0.04);
+//
+//	    pressureValue = (double) (aux2*7.50061683/(0.018));
+//
+//	    return pressureValue;
+//			
+//	}
+	
+	public static double convertTommHg(int x, int y) {
 
-		
 		float aux1 = 0, aux2 = 0;
 
-	    double pressureValue = 0;
+		double pressureValue = 0;
 
-	    
-	    if (yValue != 0){
-	    	yValue = Math.abs(yValue-256);
-	    }
-	    
-	    if (xValue == 20){
-	    	xValue = 0;
-	    	yValue = 128;
-	    }
+		if (x < 0)
+			x += 256;
+		if (y < 0)
+			y += 256;
 
-	    if (xValue == 21){
-	    	xValue = 1;
-	    	yValue = 128;
-	    }
-	    
-	    if (xValue == 22){
-	    	xValue = 2;
-	    	yValue = 128;
-	    }
-	    
-	    if (xValue == 23){
-	    	xValue = 3;
-	    	yValue = 128;
-	    }
-	    
-	    aux1 = (float) ( (xValue<<8) | yValue)/1347; 
+		aux1 = (float) ((x << 8) | y) / (1024 * 5);
 
-	    aux2 = (float) (aux1-0.04);
+		aux2 = (float) ((3.72 * aux1) - 0.04);
 
-	    pressureValue = (double) (aux2*7.50061683/(0.018));
+		pressureValue = (double) (aux2 * 7.50061683 / (0.018));
 
-	    return pressureValue;
-			
+		return pressureValue;
+
 	}
 
 }

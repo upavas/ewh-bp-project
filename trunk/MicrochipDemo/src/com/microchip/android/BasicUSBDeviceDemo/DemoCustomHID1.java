@@ -59,6 +59,7 @@ public class DemoCustomHID1 extends Demo implements Runnable, DemoInterface1 {
 	LinkedList<Number> history1= new LinkedList<Number>();
 	LinkedList<Number> history2= new LinkedList<Number>();
 	int a=1;
+	private double pressure;
 	private final static int CUSTOM_HID_DEMO_BUTTON_PRESSED = (int) 0x00;
 
 	/**
@@ -206,7 +207,7 @@ public class DemoCustomHID1 extends Demo implements Runnable, DemoInterface1 {
 			//------------------------------------------------------
 			history1.add(potentiometerResultsString1);
 			history2.add(potentiometerResultsString2);
-			
+			pressure = ConvertTommHg.convertTommHg(potentiometerResultsString1, potentiometerResultsString2);
 			/*
 			 * If the new results are different from the previous results, then
 			 * send a message to the specified handler containing the new data.
@@ -220,12 +221,12 @@ public class DemoCustomHID1 extends Demo implements Runnable, DemoInterface1 {
 				ps+='(';
 				ps+=history2.getLast();
 				ps+=')';
-				ps+='(';
+		
 			
 			handler.obtainMessage(
 					0,
 					new MessagePotentiometer(
-							0,ps))
+							pressure,ps))
 					.sendToTarget();
 			}
 
