@@ -3,22 +3,28 @@ package com.ewhoxford.android.bloodpressure;
 
 //Import resources
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Handler.Callback;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,7 +32,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.androidplot.Plot;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.LineAndPointRenderer;
 import com.androidplot.xy.SimpleXYSeries;
@@ -35,7 +40,8 @@ import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BP
 import com.ewhoxford.android.bloodpressure.exception.BadMeasureException;
 import com.ewhoxford.android.bloodpressure.exception.TempBadMeasureException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
-import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDatasource;
+import com.ewhoxford.android.bloodpressure.pressureInputDevice.DemoCustomHID;
+import com.ewhoxford.android.bloodpressure.pressureInputDevice.MessageSampledPressure;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 import com.ewhoxford.android.bloodpressure.utils.FileManager;
@@ -55,9 +61,9 @@ public class MeasureActivity extends Activity {
 	// save measure button
 	private Button saveButton;
 	// Observer object that is notified by pressure data stream observable file
-	private MyPlotUpdater plotUpdater;
+	// private MyPlotUpdater plotUpdater;
 	// Observable object that notifies observer that new values were acquired.
-	private TestDatasource data;
+	// private TestDatasource data;
 	// pressure time series shown in the real time chart
 	private SimpleXYSeries bpMeasureSeries = null;
 	// array with time points
@@ -97,6 +103,11 @@ public class MeasureActivity extends Activity {
 	// event count
 	private int totalCount = 0;
 
+	DemoCustomHID demo = null;
+	PendingIntent pendingIntent = null;
+
+	LinkedList<Number> bpHistory = new LinkedList<Number>();
+	LinkedList<Number> plotData = new LinkedList<Number>();
 	// Create runnable for signal processing
 	final Runnable runSignalProcessing = new Runnable() {
 		public void run() {
@@ -173,68 +184,71 @@ public class MeasureActivity extends Activity {
 		}
 	};
 
-	private class MyPlotUpdater implements Observer, Callback {
-		Plot plot;
-		double pressureValue = 0;
-
-		public MyPlotUpdater(Plot plot) {
-			this.plot = plot;
-		}
-
+	/**
+	 * Handler for receiving messages from the USB Manager thread or the LED
+	 * control modules
+	 */
+	private Handler handler = new Handler() {
 		@Override
-		public void update(Observable o, Object arg) {
+		public void handleMessage(Message msg) {
+			/*
+			 * Determine what type of message was sent. And process it
+			 * accordingly
+			 */
+			if (msg.obj.getClass().equals(MessageSampledPressure.class)) {
+				plotData.add(((MessageSampledPressure) msg.obj).pressureValue);
+				bpHistory = ((MessageSampledPressure) msg.obj).bpHistory;
+				update();
+			}
+		} // handleMessage
+	}; // handler
+	double pressureValue = 0;
 
-			pressureValue = data.getPressureValue();
+	public void update() {
 
-			if (data.getBpMeasure().size() == measureSize
-					&& measureSize < BOUNDARY_NUMBER_OF_POINTS) {
-				mHandler.post(connectedSensorText);
-			} else {
-				measureSize = data.getBpMeasure().size();
-				// check if operator has reached reasonable cuff pressure
-				if (!maxPressureReached) {
-					if (pressureValue > maxPressureValueForMeasure) {
-						maxPressureReached = true;
-						mHandler.post(changeTextMessage);
+		//pressureValue = demo.getPressureValue();
 
-					} else {
-						mHandler.post(changeTextMessagePump);
-					}
+		if (plotData.size() == measureSize
+				&& measureSize < BOUNDARY_NUMBER_OF_POINTS) {
+			mHandler.post(connectedSensorText);
+		} else {
+			measureSize = demo.getBpMeasure().size();
+			// check if operator has reached reasonable cuff pressure
+			if (!maxPressureReached) {
+				if (plotData.getLast().doubleValue() > maxPressureValueForMeasure) {
+					maxPressureReached = true;
+					mHandler.post(changeTextMessage);
+
+				} else {
+					mHandler.post(changeTextMessagePump);
 				}
 			}
-			if (maxPressureReached) {
-				// if max pressure reached, check if measurement is now over
-				if (pressureValue < minPressureReached) {
-					// o.deleteObservers();
-					data.setActive(false);
-					// measurement is over, we are prepared to determine blood
-					// pressure
-					mHandler.post(runSignalProcessing);
-				} else {
-					updatePlot();
-				}
+		}
+		if (maxPressureReached) {
+			// if max pressure reached, check if measurement is now over
+			if (pressureValue < minPressureReached) {
+				// o.deleteObservers();
+				demo.setActive(false);
+				// measurement is over, we are prepared to determine blood
+				// pressure
+				mHandler.post(runSignalProcessing);
 			} else {
 				updatePlot();
 			}
-
+		} else {
+			updatePlot();
 		}
 
-		private void updatePlot() {
-			bpMeasureSeries.setModel(data.getBpMeasure(),
-					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-			try {
-				plot.postRedraw();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	}
 
-		}
-
-		@Override
-		public boolean handleMessage(Message arg0) {
-			// TODO Auto-generated method stub
-			return false;
+	private void updatePlot() {
+		bpMeasureSeries.setModel(plotData,
+				SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+		try {
+			bpMeasureXYPlot.postRedraw();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -280,13 +294,14 @@ public class MeasureActivity extends Activity {
 
 		builder = new AlertDialog.Builder(this);
 		builder.setMessage(R.string.alert_dialog_discard_measure)
-				.setCancelable(false).setPositiveButton(
-						R.string.alert_dialog_yes,
+				.setCancelable(false)
+				.setPositiveButton(R.string.alert_dialog_yes,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								MeasureActivity.this.finish();
 							}
-						}).setNegativeButton(R.string.alert_dialog_no,
+						})
+				.setNegativeButton(R.string.alert_dialog_no,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();
@@ -329,10 +344,9 @@ public class MeasureActivity extends Activity {
 
 				if (checkBox.isChecked()) {
 					if (FileManager.checkExternalStorage()) {
-						alert
-								.setMessage(getResources()
-										.getText(
-												R.string.alert_dialog_data_saved_file_and_database));
+						alert.setMessage(getResources()
+								.getText(
+										R.string.alert_dialog_data_saved_file_and_database));
 					} else {
 						alert.setMessage(getResources().getText(
 								R.string.alert_dialog_data_saved_to_database));
@@ -361,13 +375,13 @@ public class MeasureActivity extends Activity {
 		// initialize our XYPlot reference and real time update code:
 
 		// getInstance and position datasets:
-		data = new TestDatasource(this);
+		// data = new TestDatasource(this);
 		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
 		// "Blood Pressure");plotUpdater = new MyPlotUpdater(bpMeasureXYPlot);
 
 		bpMeasureXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 		// register plot with plot updater observer
-		plotUpdater = new MyPlotUpdater(bpMeasureXYPlot);
+		// plotUpdater = new MyPlotUpdater(bpMeasureXYPlot);
 		// freeze the range boundaries:
 		bpMeasureXYPlot.setRangeBoundaries(0, 300, XYPlot.BoundaryMode.FIXED);
 
@@ -397,9 +411,9 @@ public class MeasureActivity extends Activity {
 		bpMeasureXYPlot.getRangeLabelWidget().pack();
 		bpMeasureXYPlot.disableAllMarkup();
 		// hook up the plotUpdater to the data model:
-		data.addObserver(plotUpdater);
+		// data.addObserver(plotUpdater);
 		// start observable datasource thread
-		new Thread(data).start();
+		// new Thread(data).start();
 	}
 
 	// event : click on something
@@ -427,13 +441,13 @@ public class MeasureActivity extends Activity {
 		new Thread() {
 			public void run() {
 
-				int l = data.getBpMeasureHistory().size();
+				int l = bpHistory.size();
 				arrayTime = new float[l];
 				arrayPressure = new double[l];
 				int i = 0;
 				int fs = 100;
 				while (i < l) {
-					arrayPressure[i] = data.getBpMeasureHistory().get(i)
+					arrayPressure[i] = bpHistory.get(i)
 							.doubleValue();
 					arrayTime[i] = ((float) i / (float) fs);
 					i++;
@@ -470,7 +484,8 @@ public class MeasureActivity extends Activity {
 
 			builder = new AlertDialog.Builder(measureContext);
 			builder.setMessage(R.string.alert_dialog_discard_bad_measure)
-					.setCancelable(false).setPositiveButton("OK",
+					.setCancelable(false)
+					.setPositiveButton("OK",
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
@@ -488,7 +503,8 @@ public class MeasureActivity extends Activity {
 
 			builder = new AlertDialog.Builder(measureContext);
 			builder.setMessage(R.string.alert_dialog_discard_temp_bad_measure)
-					.setCancelable(false).setPositiveButton("OK",
+					.setCancelable(false)
+					.setPositiveButton("OK",
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
@@ -553,5 +569,115 @@ public class MeasureActivity extends Activity {
 		startActivity(i);
 		return;
 	}
+
+	@Override
+	public void onPause() {
+		/* If there is a demo running, close it */
+		if (demo != null) {
+			demo.close();
+		}
+		demo = null;
+
+		/* unregister any receivers that we have */
+		unregisterReceiver(receiver);
+
+		super.onPause();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		/*
+		 * Check to see if it was a USB device attach that caused the app to
+		 * start or if the user opened the program manually.
+		 */
+		Intent intent = getIntent();
+		String action = intent.getAction();
+
+		if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
+			/*
+			 * This application is starting as a result of a device being
+			 * attached. Get the device information that caused the app opening
+			 * from the intent, and load the demo that corresponds to that
+			 * device.
+			 */
+			UsbDevice device = (UsbDevice) intent
+					.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+			demo = new DemoCustomHID(this.getApplicationContext(), device,
+					handler);
+		} else {
+			/*
+			 * This application is starting up by a user opening the app
+			 * manually. We need to look through to see if there are any devices
+			 * that are already attached.
+			 */
+			UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
+			HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
+			Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+
+			while (deviceIterator.hasNext()) {
+				/*
+				 * For each device that we found attached, see if we are able to
+				 * load a demo for that device.
+				 */
+				demo = new DemoCustomHID(this.getApplicationContext(),
+						deviceIterator.next(), handler);
+				if (demo != null) {
+					break;
+				}
+			}
+		}
+
+		// Create a new filter to detect USB device events
+		IntentFilter filter = new IntentFilter();
+
+		filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
+		filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+
+		registerReceiver(receiver, filter);
+
+		pendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(
+				getPackageName() + ".USB_PERMISSION"), 0);
+	}
+
+	/***********************************************************************/
+	/** Private section **/
+	/***********************************************************************/
+
+	/**
+	 * New BroadcastReceiver object that will handle all of the USB device
+	 * attach and detach events.
+	 */
+	BroadcastReceiver receiver = new BroadcastReceiver() {
+		public void onReceive(Context context, Intent intent) {
+			/* Get the information about what action caused this event */
+			String action = intent.getAction();
+
+			if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+				/*
+				 * If it was a USB device detach event, then get the USB device
+				 * that cause the event from the intent.
+				 */
+				UsbDevice device = (UsbDevice) intent
+						.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+
+				if (device != null) {
+					/*
+					 * Synchronize to demo here to make sure that the main GUI
+					 * isn't doing something with the demo at the moment.
+					 */
+					synchronized (demo) {
+						/* If the demo exists, close it down and free it up */
+						if (demo != null) {
+							demo.close();
+							demo = null;
+						}
+					}
+					mHandler.post(connectedSensorText);
+				}
+			}
+		}
+	};
 
 }
