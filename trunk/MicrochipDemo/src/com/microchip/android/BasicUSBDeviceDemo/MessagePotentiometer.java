@@ -23,13 +23,13 @@
 package com.microchip.android.BasicUSBDeviceDemo;
 
 public class MessagePotentiometer {
-	public int percentage = 0;
+	public double pressure = 0;
 	public String percentageChar = "";
 	
-	MessagePotentiometer(int p,String percentageChar ) {
+	MessagePotentiometer(double pressure,String percentageChar ) {
 		//Do some boundary checking
 		this.percentageChar = percentageChar;
-		percentage = p;
+		this.pressure = pressure;
 	}
 	
 
