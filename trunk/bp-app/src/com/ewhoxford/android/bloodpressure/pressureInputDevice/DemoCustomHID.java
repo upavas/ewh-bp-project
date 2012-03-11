@@ -23,6 +23,8 @@
 package com.ewhoxford.android.bloodpressure.pressureInputDevice;
 
 import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
 
 import android.content.Context;
 import android.hardware.usb.UsbDevice;
@@ -31,8 +33,8 @@ import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.os.Handler;
+import android.util.Log;
 
-import com.ewhoxford.android.bloodpressure.MeasureActivity;
 import com.ewhoxford.android.bloodpressure.signalProcessing.ConvertTommHg;
 
 /**
@@ -44,7 +46,7 @@ import com.ewhoxford.android.bloodpressure.signalProcessing.ConvertTommHg;
  * This example shows how to connect an Android device with USB host capability
  * to a device using a custom class driver.
  */
-public class DemoCustomHID extends Demo implements Runnable {
+public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 	private UsbDevice device = null;
 	private UsbManager manager = null;
 	private Handler handler = null;
@@ -58,7 +60,8 @@ public class DemoCustomHID extends Demo implements Runnable {
 	public static final int SIGNAL1 = 0;
 	// private static final int SAMPLE_SIZE = 1;
 
-	private static final int MAX_SIZE = MeasureActivity.BOUNDARY_NUMBER_OF_POINTS;
+	// private static final int MAX_SIZE =
+	// MeasureActivity.BOUNDARY_NUMBER_OF_POINTS;
 
 	private int count = 0;
 	private boolean active = true;
@@ -71,6 +74,19 @@ public class DemoCustomHID extends Demo implements Runnable {
 	private LinkedList<Number> bpMeasureHistory = new LinkedList<Number>();
 	private int x = 0;
 	private int y = 0;
+	private MyObservable notifier;
+
+	class MyObservable extends Observable {
+		@Override
+		public void notifyObservers() {
+			setChanged();
+			super.notifyObservers();
+		}
+	}
+
+	{
+		notifier = new MyObservable();
+	}
 
 	/**
 	 * Constructor - creates connection to device and launches the thread that
@@ -164,8 +180,6 @@ public class DemoCustomHID extends Demo implements Runnable {
 	 */
 	@Override
 	public void run() {
-		/* Get the OUT endpoint. It is the second endpoint in the interface */
-		UsbEndpoint endpointOUT = intf.getEndpoint(1);
 
 		/* Get the IN endpoint. It is the first endpoint in the interface */
 		UsbEndpoint endpointIN = intf.getEndpoint(0);
@@ -176,79 +190,92 @@ public class DemoCustomHID extends Demo implements Runnable {
 		// byte[] getPotentiometerRequest = new byte[]{(byte)0x37};
 		//
 		byte[] getPotentiometerResults = new byte[64];
-		int potentiometerLastResults = Integer.MAX_VALUE;
+		// int potentiometerLastResults = Integer.MAX_VALUE;
 		int result = 0;
 		int yValue = 0;
 		int xValue = 0;
 
 		int mod = 1;
-		int currentPosition = 0;
-		boolean update = false;
+		// int currentPosition = 0;
+		// boolean update = false;
+		try {
+			while (true) {
+				/*
+				 * If the connection was closed, destroy the connections and
+				 * variables and exit this thread.
+				 */
+				if (wasCloseRequested() == true) {
+					destroy();
+					return;
+				}
 
-		while (true) {
-			/*
-			 * If the connection was closed, destroy the connections and
-			 * variables and exit this thread.
-			 */
-			if (wasCloseRequested() == true) {
-				destroy();
-				return;
+				/* Sleep the thread for a while */
+				try {
+					Thread.sleep(13);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				/* Read the results of that request */
+				do {
+					result = connection.bulkTransfer(endpointIN,
+							getPotentiometerResults,
+							getPotentiometerResults.length, 1000);
+				} while ((result < 0) && (wasCloseRequested() == false));
+
+				/* Convert the resulting data to an int */
+				byte[] potentiometerBuffer = new byte[] { 0, 0, 0, 0 };// MAURO
+																		// CHANGED
+																		// THIS
+																		// TO 2
+																		// BUFFERS
+				potentiometerBuffer[0] = getPotentiometerResults[0];
+				potentiometerBuffer[1] = getPotentiometerResults[1];
+
+				xValue = (int) (potentiometerBuffer[0]);
+				yValue = (int) (potentiometerBuffer[1]);
+				setX(xValue);
+				setY(yValue);
+
+				double aux = ConvertTommHg.convertTommHg(xValue, yValue);
+				bpMeasureHistory.add(aux);
+
+				// TODO : check this code.
+
+				if (bpMeasureHistory.size() != 0) {
+
+					pressureValue = bpMeasureHistory.getLast().doubleValue();
+					// System.out.printf("e do DEMOCUSTOMHID:"+count);
+					count++;
+					mod = count % 75;
+
+					if (mod == 0) {
+						// Log.v("DemoCustom", "e do MeasureActiviry: Im here 2"
+						// + bpMeasureHistory.size());
+						// handler.obtainMessage(0,
+						// new MessageSampledPressure(pressureValue))
+						// .sendToTarget();
+						this.setPressureValue(bpMeasureHistory.getLast()
+								.doubleValue());
+						this.setBpMeasureHistory(bpMeasureHistory);
+						notifier.notifyObservers();
+					}
+				}
+				//
+				// ByteBuffer buf = ByteBuffer.wrap(potentiometerBuffer);
+				// buf.order(ByteOrder.LITTLE_ENDIAN);
+				// int potentiometerResults = buf.getInt();
+				//
+				/*
+				 * If the new results are different from the previous results,
+				 * then send a message to the specified handler containing the
+				 * new data.
+				 */
+
 			}
-
-			/* Sleep the thread for a while */
-			try {
-				Thread.sleep(13);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			/* Read the results of that request */
-			do {
-				result = connection.bulkTransfer(endpointIN,
-						getPotentiometerResults,
-						getPotentiometerResults.length, 1000);
-			} while ((result < 0) && (wasCloseRequested() == false));
-
-			/* Convert the resulting data to an int */
-			byte[] potentiometerBuffer = new byte[] { 0, 0, 0, 0 };// MAURO
-																	// CHANGED
-																	// THIS TO 2
-																	// BUFFERS
-			potentiometerBuffer[0] = getPotentiometerResults[0];
-			potentiometerBuffer[1] = getPotentiometerResults[1];
-
-			xValue = (int) (potentiometerBuffer[0]);
-			yValue = (int) (potentiometerBuffer[1]);
-			setX(xValue);
-			setY(yValue);
-
-			double aux = ConvertTommHg.convertTommHg(xValue, yValue);
-
-			// TODO : check this code.
-			aux = bpMeasureHistory.getLast().doubleValue();
-			bpMeasureHistory.add(aux);
-
-			pressureValue = bpMeasureHistory.getLast().doubleValue();
-
-			count++;
-			mod = count % 75;
-
-			if (mod == 0) {
-				handler.obtainMessage(
-						0,
-						(new MessageSampledPressure(pressureValue,
-								bpMeasureHistory))).sendToTarget();
-			}
-			//
-			// ByteBuffer buf = ByteBuffer.wrap(potentiometerBuffer);
-			// buf.order(ByteOrder.LITTLE_ENDIAN);
-			// int potentiometerResults = buf.getInt();
-			//
-			/*
-			 * If the new results are different from the previous results, then
-			 * send a message to the specified handler containing the new data.
-			 */
-
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.v("DemoCustomHID", "e do DEMOCUSTOMHID");
 		}
 	}
 
@@ -323,8 +350,8 @@ public class DemoCustomHID extends Demo implements Runnable {
 		return pressureValue;
 	}
 
-	public void setPressureValue(float pressureValue) {
-		this.pressureValue = pressureValue;
+	public void setPressureValue(double d) {
+		this.pressureValue = d;
 	}
 
 	public int getX() {
@@ -335,6 +362,14 @@ public class DemoCustomHID extends Demo implements Runnable {
 	public int getY() {
 		// TODO Auto-generated method stub
 		return y;
+	}
+
+	public void addObserver(Observer observer) {
+		notifier.addObserver(observer);
+	}
+
+	public void removeObserver(Observer observer) {
+		notifier.deleteObserver(observer);
 	}
 
 }
