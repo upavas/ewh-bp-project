@@ -24,7 +24,7 @@
 
 
 		<com.androidplot.xy.XYPlot android:id="@+id/mySimpleXYPlot"
-			android:layout_width="fill_parent" android:layout_height="150px"
+			android:layout_width="fill_parent" android:layout_height="300px"
 			android:layout_marginTop="10px" android:layout_marginLeft="10px"
 			android:layout_marginRight="10px" title="" android:layout_below="@+id/text0" />
 

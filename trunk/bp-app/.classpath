@@ -3,9 +3,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="libs/AndroidPlot-0.3-beta2-release.jar">
+	<classpathentry kind="lib" path="libs/Androidplot-core-0.4.4-release.jar" sourcepath="/data/projects/ewh/download/Androidplot-core-0.4.4-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/home/user/projects/android2/tutorials/AndroidPlot-0.3c-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:/data/projects/ewh/download/Androidplot-core-0.4.4-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/HermitLibrary.jar">

@@ -69,13 +69,13 @@ public class SignalProcessing {
 		values = r5.pressureValues(oscillations, filtSignal, indexUp,
 				indexDown, samplingFrequency);
 
-		if (values.getDiastolicBP() == 0 || values.getSystolicBP() == 0) {
-			throw new TempBadMeasureException(TAG);
-		}
-
-		if (values.getDiastolicBP() > 95 || values.getSystolicBP() < 105) {
-			throw new TempBadMeasureException(TAG);
-		}
+//		if (values.getDiastolicBP() == 0 || values.getSystolicBP() == 0) {
+//			throw new TempBadMeasureException(TAG);
+//		}
+//
+//		if (values.getDiastolicBP() > 95 || values.getSystolicBP() < 105) {
+//			throw new TempBadMeasureException(TAG);
+//		}
 		// output
 		return values;
 	}

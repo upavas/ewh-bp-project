@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,6 +27,8 @@ import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -32,6 +36,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.androidplot.Plot;
+import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.LineAndPointRenderer;
 import com.androidplot.xy.SimpleXYSeries;
@@ -41,7 +47,6 @@ import com.ewhoxford.android.bloodpressure.exception.BadMeasureException;
 import com.ewhoxford.android.bloodpressure.exception.TempBadMeasureException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
 import com.ewhoxford.android.bloodpressure.pressureInputDevice.DemoCustomHID;
-import com.ewhoxford.android.bloodpressure.pressureInputDevice.MessageSampledPressure;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 import com.ewhoxford.android.bloodpressure.utils.FileManager;
@@ -61,7 +66,7 @@ public class MeasureActivity extends Activity {
 	// save measure button
 	private Button saveButton;
 	// Observer object that is notified by pressure data stream observable file
-	// private MyPlotUpdater plotUpdater;
+	private MyPlotUpdater plotUpdater;
 	// Observable object that notifies observer that new values were acquired.
 	// private TestDatasource data;
 	// pressure time series shown in the real time chart
@@ -81,7 +86,7 @@ public class MeasureActivity extends Activity {
 	// Structure that holds blood pressure values result
 	private BloodPressureValue bloodPressureValue;
 	// Need handler for callbacks to the UI thread
-	private final Handler mHandler = new Handler();
+	private final Handler messageHandler = new Handler();
 	// Checkbox to save measure csv file
 	private CheckBox checkBox;
 	// user notes
@@ -89,7 +94,7 @@ public class MeasureActivity extends Activity {
 	// number of points in X axis
 	public static int BOUNDARY_NUMBER_OF_POINTS = 100;
 	// max pressure value for measure
-	private int maxPressureValueForMeasure = 200;
+	private int maxPressureValueForMeasure = 140;
 	// min pressure value for measure
 	private double minPressureReached = 35;
 	// signal frequency
@@ -106,8 +111,70 @@ public class MeasureActivity extends Activity {
 	DemoCustomHID demo = null;
 	PendingIntent pendingIntent = null;
 
-	LinkedList<Number> bpHistory = new LinkedList<Number>();
+	private PowerManager.WakeLock wl;
+
 	LinkedList<Number> plotData = new LinkedList<Number>();
+	double pressureValue = 0;
+
+	// redraws a plot whenever an update is received:
+	private class MyPlotUpdater implements Observer {
+		Plot plot;
+
+		public MyPlotUpdater(Plot plot) {
+			this.plot = plot;
+		}
+
+		@Override
+		public void update(Observable o, Object arg) {
+			plotData.add(demo.getPressureValue());
+
+			if (plotData.size() == measureSize
+					&& measureSize < BOUNDARY_NUMBER_OF_POINTS) {
+				messageHandler.post(connectedSensorText);
+			} else {
+				measureSize = plotData.size();
+				// check if operator has reached reasonable cuff pressure
+				if (!maxPressureReached) {
+					if (plotData.getLast().doubleValue() > maxPressureValueForMeasure) {
+						maxPressureReached = true;
+						messageHandler.post(changeTextMessage);
+
+					} else {
+						messageHandler.post(changeTextMessagePump);
+					}
+				}
+			}
+
+			if (maxPressureReached) {
+				// if max pressure reached, check if measurement is now over
+				if (plotData.getLast().doubleValue() < minPressureReached) {
+					// o.deleteObservers();
+					demo.close();
+					messageHandler.post(runSignalProcessing);
+				} else {
+					updatePlot(plot);
+				}
+			} else {
+				updatePlot(plot);
+			}
+
+		}
+	}
+
+	private void updatePlot(Plot plot) {
+
+		try {
+			bpMeasureSeries.setModel(plotData,
+					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+
+			plot.postRedraw();
+		} catch (InterruptedException e) {
+			e.printStackTrace(); // To change body of catch statement use
+									// File | Settings | File Templates.
+		}
+
+	}
+
 	// Create runnable for signal processing
 	final Runnable runSignalProcessing = new Runnable() {
 		public void run() {
@@ -117,10 +184,6 @@ public class MeasureActivity extends Activity {
 	final Runnable updataBPResultView = new Runnable() {
 
 		public void run() {
-			// Display blood pressure algorithm result in the Measure layout
-			// bloodPressureValue.setDiastolicBP(76);
-			// bloodPressureValue.setSystolicBP(128);
-			// bloodPressureValue.setMeanArterialBP(78);
 
 			int dPressure = (int) bloodPressureValue.getDiastolicBP();
 			int sPressure = (int) bloodPressureValue.getSystolicBP();
@@ -133,15 +196,13 @@ public class MeasureActivity extends Activity {
 			valuesView.invalidate();
 			saveButton.setEnabled(true);
 			saveButton.invalidate();
-			mHandler.post(disconnectedSensor);
-
+			messageHandler.post(disconnectedSensor);
 		}
 	};
 
 	{
 		// initialized time series
 		bpMeasureSeries = new SimpleXYSeries("");
-
 	}
 
 	// Create runnable for chaging messages while pressure is being acquired
@@ -188,70 +249,13 @@ public class MeasureActivity extends Activity {
 	 * Handler for receiving messages from the USB Manager thread or the LED
 	 * control modules
 	 */
-	private Handler handler = new Handler() {
+	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			/*
-			 * Determine what type of message was sent. And process it
-			 * accordingly
-			 */
-			if (msg.obj.getClass().equals(MessageSampledPressure.class)) {
-				plotData.add(((MessageSampledPressure) msg.obj).pressureValue);
-				bpHistory = ((MessageSampledPressure) msg.obj).bpHistory;
-				update();
-			}
-		} // handleMessage
+
+		}
+
 	}; // handler
-	double pressureValue = 0;
-
-	public void update() {
-
-		//pressureValue = demo.getPressureValue();
-
-		if (plotData.size() == measureSize
-				&& measureSize < BOUNDARY_NUMBER_OF_POINTS) {
-			mHandler.post(connectedSensorText);
-		} else {
-			measureSize = demo.getBpMeasure().size();
-			// check if operator has reached reasonable cuff pressure
-			if (!maxPressureReached) {
-				if (plotData.getLast().doubleValue() > maxPressureValueForMeasure) {
-					maxPressureReached = true;
-					mHandler.post(changeTextMessage);
-
-				} else {
-					mHandler.post(changeTextMessagePump);
-				}
-			}
-		}
-		if (maxPressureReached) {
-			// if max pressure reached, check if measurement is now over
-			if (pressureValue < minPressureReached) {
-				// o.deleteObservers();
-				demo.setActive(false);
-				// measurement is over, we are prepared to determine blood
-				// pressure
-				mHandler.post(runSignalProcessing);
-			} else {
-				updatePlot();
-			}
-		} else {
-			updatePlot();
-		}
-
-	}
-
-	private void updatePlot() {
-		bpMeasureSeries.setModel(plotData,
-				SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-		try {
-			bpMeasureXYPlot.postRedraw();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
 
 	// To be performed on the creation
 	public void onCreate(Bundle savedInstanceState) {
@@ -381,16 +385,18 @@ public class MeasureActivity extends Activity {
 
 		bpMeasureXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 		// register plot with plot updater observer
-		// plotUpdater = new MyPlotUpdater(bpMeasureXYPlot);
+		plotUpdater = new MyPlotUpdater(bpMeasureXYPlot);
 		// freeze the range boundaries:
-		bpMeasureXYPlot.setRangeBoundaries(0, 300, XYPlot.BoundaryMode.FIXED);
+		bpMeasureXYPlot.setRangeBoundaries(0, 300, BoundaryMode.FIXED);
 
 		bpMeasureXYPlot.setDomainBoundaries(0, BOUNDARY_NUMBER_OF_POINTS,
-				XYPlot.BoundaryMode.FIXED);
-		bpMeasureXYPlot
-				.addSeries(bpMeasureSeries, LineAndPointRenderer.class,
-						new LineAndPointFormatter(Color.rgb(100, 100, 200),
-								Color.BLACK));
+				BoundaryMode.FIXED);
+		bpMeasureSeries = new SimpleXYSeries("Pressure(mmHg)");
+		bpMeasureSeries.setModel(plotData,
+				SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+		bpMeasureXYPlot.addSeries(bpMeasureSeries, LineAndPointRenderer.class,
+				new LineAndPointFormatter(Color.rgb(100, 100, 200),
+						Color.BLACK, null));
 
 		List<Number> pressureListArray = new ArrayList<Number>();
 		for (int i = 0; i < BOUNDARY_NUMBER_OF_POINTS; i++) {
@@ -400,7 +406,8 @@ public class MeasureActivity extends Activity {
 		SimpleXYSeries pressureLimit = new SimpleXYSeries(pressureListArray,
 				SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "");
 		bpMeasureXYPlot.addSeries(pressureLimit, LineAndPointRenderer.class,
-				new LineAndPointFormatter(Color.rgb(100, 100, 200), Color.RED));
+				new LineAndPointFormatter(Color.rgb(100, 100, 200), Color.RED,
+						null));
 		bpMeasureXYPlot.setDomainStepValue(3);
 		bpMeasureXYPlot.setTicksPerRangeLabel(3);
 		bpMeasureXYPlot.setDomainLabel(getResources().getText(
@@ -410,10 +417,14 @@ public class MeasureActivity extends Activity {
 				R.string.pressure_y_legend).toString());
 		bpMeasureXYPlot.getRangeLabelWidget().pack();
 		bpMeasureXYPlot.disableAllMarkup();
+
 		// hook up the plotUpdater to the data model:
 		// data.addObserver(plotUpdater);
 		// start observable datasource thread
 		// new Thread(data).start();
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "DoNotDimScreen");
+
 	}
 
 	// event : click on something
@@ -441,13 +452,13 @@ public class MeasureActivity extends Activity {
 		new Thread() {
 			public void run() {
 
-				int l = bpHistory.size();
+				int l = demo.getBpMeasureHistory().size();
 				arrayTime = new float[l];
 				arrayPressure = new double[l];
 				int i = 0;
 				int fs = 100;
 				while (i < l) {
-					arrayPressure[i] = bpHistory.get(i)
+					arrayPressure[i] = demo.getBpMeasureHistory().get(i)
 							.doubleValue();
 					arrayTime[i] = ((float) i / (float) fs);
 					i++;
@@ -463,16 +474,16 @@ public class MeasureActivity extends Activity {
 					bloodPressureValue = r.signalProcessing(signal, fs);
 				} catch (BadMeasureException e) {
 					myProgressDialog.dismiss();
-					mHandler.post(discardMeasure);
+					messageHandler.post(discardMeasure);
 
 				} catch (TempBadMeasureException e) {
 					myProgressDialog.dismiss();
-					mHandler.post(discardTemBadMeasure);
+					messageHandler.post(discardTemBadMeasure);
 				}
 
 				// Dismiss the Dialog
 				myProgressDialog.dismiss();
-				mHandler.post(updataBPResultView);
+				messageHandler.post(updataBPResultView);
 			}
 		}.start();
 
@@ -582,12 +593,13 @@ public class MeasureActivity extends Activity {
 		unregisterReceiver(receiver);
 
 		super.onPause();
+		wl.release();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		wl.acquire();
 		/*
 		 * Check to see if it was a USB device attach that caused the app to
 		 * start or if the user opened the program manually.
@@ -602,16 +614,19 @@ public class MeasureActivity extends Activity {
 			 * from the intent, and load the demo that corresponds to that
 			 * device.
 			 */
+			Log.v("MAURO", "APP WAS RESUMED AUTOMATICALLY");
 			UsbDevice device = (UsbDevice) intent
 					.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 			demo = new DemoCustomHID(this.getApplicationContext(), device,
 					handler);
+			demo.addObserver(plotUpdater);
 		} else {
 			/*
 			 * This application is starting up by a user opening the app
 			 * manually. We need to look through to see if there are any devices
 			 * that are already attached.
 			 */
+			Log.v("MAURO", "APP WAS RESUMED,BY USER");
 			UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
 			HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
 			Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
@@ -623,6 +638,7 @@ public class MeasureActivity extends Activity {
 				 */
 				demo = new DemoCustomHID(this.getApplicationContext(),
 						deviceIterator.next(), handler);
+				demo.addObserver(plotUpdater);
 				if (demo != null) {
 					break;
 				}
@@ -653,30 +669,38 @@ public class MeasureActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 			/* Get the information about what action caused this event */
 			String action = intent.getAction();
+			try {
 
-			if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
-				/*
-				 * If it was a USB device detach event, then get the USB device
-				 * that cause the event from the intent.
-				 */
-				UsbDevice device = (UsbDevice) intent
-						.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-
-				if (device != null) {
+				if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
 					/*
-					 * Synchronize to demo here to make sure that the main GUI
-					 * isn't doing something with the demo at the moment.
+					 * If it was a USB device detach event, then get the USB
+					 * device that cause the event from the intent.
 					 */
-					synchronized (demo) {
-						/* If the demo exists, close it down and free it up */
-						if (demo != null) {
-							demo.close();
-							demo = null;
+					UsbDevice device = (UsbDevice) intent
+							.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+					Log.v("MAURO", "index=" + "DEVICE ATTACHED");
+					// System.out.printf("e do Measure Activity: circulation");
+
+					if (device != null) {
+						/*
+						 * Synchronize to demo here to make sure that the main
+						 * GUI isn't doing something with the demo at the
+						 * moment.
+						 */
+						synchronized (demo) {
+							/* If the demo exists, close it down and free it up */
+							if (demo != null) {
+								demo.close();
+								demo = null;
+							}
 						}
+						messageHandler.post(connectedSensorText);
 					}
-					mHandler.post(connectedSensorText);
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 		}
 	};
 
