@@ -133,7 +133,7 @@ public class PressureValues {
 
 			while (FLAG == false) {
 				MaxResult maxMAP = ArrayOperator.maxValue(meanOscillationsMod);
-				if (curve[meanTimeIntMod[maxMAP.index]] > 160) {
+				if (curve[meanTimeIntMod[maxMAP.index]] > 130) {
 					meanOscillationsMod[maxMAP.index] = 0;
 				} else {
 					FLAG = true;
@@ -152,7 +152,7 @@ public class PressureValues {
 			double DP = 0;
 			int i = MAPPos + 1;
 			while (i < maxOscillationsInterp.length && FLAG == false) {
-				if ((double) (maxOscillationsInterp[i] / maxOscillationsInterp[MAPPos]) < 0.75) {
+				if ((double) (maxOscillationsInterp[i] / maxOscillationsInterp[MAPPos]) < 0.60) {
 					FLAG = true;
 					DP = curve[i];
 					// DPPos = i;
@@ -166,7 +166,7 @@ public class PressureValues {
 			double SP = 0;
 			i = MAPPos - 1;
 			while (i > 0 && FLAG == false) {
-				if ((double) (maxOscillationsInterp[i] / maxOscillationsInterp[MAPPos]) < 0.65) {
+				if ((double) (maxOscillationsInterp[i] / maxOscillationsInterp[MAPPos]) < 0.70) {
 					FLAG = true;
 					SP = curve[i];
 					// SPPos = i;
@@ -189,7 +189,7 @@ public class PressureValues {
 			
 			boolean hrFound = false; 
 			
-			int heartRate = 72;
+			int heartRate = 67;
 			
 			while (hrFound == false) {
 				// FileManager.createVectors("spectrum1.m", spectrum);
@@ -218,6 +218,7 @@ public class PressureValues {
 			bloodPressure.setSystolicBP(SP);
 			bloodPressure.setMeanArterialBP(MAP);
 			bloodPressure.setHeartRate(heartRate);
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
