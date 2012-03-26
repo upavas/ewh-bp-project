@@ -6,8 +6,8 @@ import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
 
 /**
  * 
- * @author mpimentel Compile the entire signal processing code by calling the
- *         implemented routines
+ * @author Compile the entire signal processing code by calling the
+ *         implemented methods
  */
 public class SignalProcessing {
 
@@ -30,7 +30,8 @@ public class SignalProcessing {
 		BloodPressureValue values = new BloodPressureValue();
 		TimeSeriesMod filtSignal = new TimeSeriesMod();
 		TimeSeriesMod oscillations = new TimeSeriesMod();
-		boolean badMeasure;
+		//boolean badMeasure;
+		
 		// TimeSeriesMod filteredOscillations = new TimeSeriesMod();
 		int indexUp = 0;
 		int indexDown = 0;
@@ -43,11 +44,14 @@ public class SignalProcessing {
 		filtSignal = r2.getDecrCurve(aux5);
 		indexUp = r2.getDecrCurveIndexUp();
 		indexDown = r2.getDecrCurveIndexDown();
-		badMeasure = r2.isBadMeasure(filtSignal, 20);
+		//badMeasure = r2.isBadMeasure(filtSignal, 20);
 
-		if (badMeasure) {
+		/**
+		 * 
+		 * if (badMeasure) {
 			throw new BadMeasureException(TAG);
 		}
+		*/
 		// /**
 		// * CURVE FITTING get oscillations by applying exponential LSF
 		// */
