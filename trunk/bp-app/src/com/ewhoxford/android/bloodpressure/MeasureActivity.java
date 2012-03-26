@@ -184,7 +184,7 @@ public class MeasureActivity extends Activity {
 	final Runnable updataBPResultView = new Runnable() {
 
 		public void run() {
-
+			Log.d("MARCO", bloodPressureValue.toString());
 			int dPressure = (int) bloodPressureValue.getDiastolicBP();
 			int sPressure = (int) bloodPressureValue.getSystolicBP();
 			int pulse = (int) bloodPressureValue.getHeartRate();

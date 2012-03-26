@@ -84,5 +84,11 @@ public class BloodPressureValue {
 	public void setHeartRate(int heartRate) {
 		this.heartRate = heartRate;
 	}
+	
+	@Override
+	public String toString() {
+		String s= "sysBP:"+getSystolicBP()+",DiaBP+:"+getSystolicBP()+",MAP:"+getMeanArterialBP()+"\n";
+		return s;
+	}
 
 }
