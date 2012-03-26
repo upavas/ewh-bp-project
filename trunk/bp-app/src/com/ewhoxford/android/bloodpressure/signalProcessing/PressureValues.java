@@ -12,13 +12,14 @@ public class PressureValues {
 	/**
 	 * 
 	 * @param signalInFrequency
-	 *            TODO
 	 * @param oscillations
 	 * @param curve
 	 * @return SP, DP, MAP, and interpolated signal
 	 * @throws ArrayIsNullException
 	 * @see bloodPressure
+	 * 
 	 */
+	
 	public BloodPressureValue pressureValues(TimeSeriesMod signalOscillations,
 			TimeSeriesMod signalIn, int indexUp, int indexDown,
 			float signalInFrequency) {
@@ -28,7 +29,7 @@ public class PressureValues {
 		try {
 
 			/**
-			 * Trunk signal between 200 and 40
+			 * Trunk signal between 180 and 40
 			 */
 			// initialize variables 1
 			int l1 = indexDown - indexUp + 1;
@@ -51,8 +52,6 @@ public class PressureValues {
 			int defaultSize = 100;
 			double[] maxOscillations = new double[defaultSize];
 			float[] maxTime = new float[defaultSize];
-			// double[] meanOscillations = new double[defaultSize];
-			// float[] meanTime = new float[defaultSize];
 			int[] maxTimeInt = new int[defaultSize];
 			double[] minOscillations = new double[defaultSize];
 			float[] minTime = new float[defaultSize];
@@ -62,7 +61,7 @@ public class PressureValues {
 			double value = 0;
 			int mnPos = 0;
 			int mxPos = 0;
-			double delta = (double) (10 * Math.pow(10, -6));
+			double delta = (double) (5 * Math.pow(10, -6));
 			boolean lookForMax = true;
 			int jmx = 0;
 			int jmn = 0;
@@ -153,7 +152,7 @@ public class PressureValues {
 			double DP = 0;
 			int i = MAPPos + 1;
 			while (i < maxOscillationsInterp.length && FLAG == false) {
-				if ((double) (maxOscillationsInterp[i] / maxOscillationsInterp[MAPPos]) < 0.7) {
+				if ((double) (maxOscillationsInterp[i] / maxOscillationsInterp[MAPPos]) < 0.75) {
 					FLAG = true;
 					DP = curve[i];
 					// DPPos = i;
@@ -167,7 +166,7 @@ public class PressureValues {
 			double SP = 0;
 			i = MAPPos - 1;
 			while (i > 0 && FLAG == false) {
-				if ((double) (maxOscillationsInterp[i] / maxOscillationsInterp[MAPPos]) < 0.35) {
+				if ((double) (maxOscillationsInterp[i] / maxOscillationsInterp[MAPPos]) < 0.65) {
 					FLAG = true;
 					SP = curve[i];
 					// SPPos = i;
