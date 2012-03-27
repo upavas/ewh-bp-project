@@ -268,7 +268,7 @@ public class MeasureActivity extends Activity {
 		// #### Set up click listeners for all the buttons
 
 		notesText = (EditText) findViewById(R.id.edittext);
-
+		notesText.setFocusable(false);
 		// initialize checkbox variable
 		checkBox = (CheckBox) findViewById(R.id.checkbox);
 
@@ -451,7 +451,7 @@ public class MeasureActivity extends Activity {
 
 		new Thread() {
 			public void run() {
-
+				Log.v("MAURO:", "BEFORE SIGNAL PROCESSING");
 				int l = demo.getBpMeasureHistory().size();
 				arrayTime = new float[l];
 				arrayPressure = new double[l];
@@ -466,21 +466,20 @@ public class MeasureActivity extends Activity {
 
 				TimeSeriesMod signal = new TimeSeriesMod();
 				signal.setPressure(arrayPressure);
+				
 				signal.setTime(arrayTime);
 				bloodPressureValue = new BloodPressureValue();
 				SignalProcessing r = new SignalProcessing();
 
 				try {
 					bloodPressureValue = r.signalProcessing(signal, fs);
-				} catch (BadMeasureException e) {
-					myProgressDialog.dismiss();
-					messageHandler.post(discardMeasure);
-
-				} catch (TempBadMeasureException e) {
+				} catch (Exception e) {
 					myProgressDialog.dismiss();
 					messageHandler.post(discardTemBadMeasure);
-				}
-
+					e.printStackTrace();
+				} 
+ 
+				Log.v("MAURO:", "AFTER CALCULATE BLOOD PRESSURE VALUES");
 				// Dismiss the Dialog
 				myProgressDialog.dismiss();
 				messageHandler.post(updataBPResultView);
