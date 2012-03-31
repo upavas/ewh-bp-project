@@ -58,9 +58,11 @@
 	<string name="created_date">Creado:</string>
 	<string name="alert_dialog_changes_saved">Cambios Guardados</string>
 	<!-- measure -->
-	<string name="pump">Cerrar Válvula y Bombear! Bombear! Bombear!</string>
-	<string name="stop_pump">"Deténgase! Abra la válvula y despresurice de forma 
-		lenta y constante"</string>
+<!-- 	<string name="pump">Cerrar Válvula y Bombear! Bombear! Bombear!</string> -->
+		<string name="pump">Bombear! Bombear! Bombear!</string>
+<!-- 	<string name="stop_pump">"Deténgase! Abra la válvula y despresurice de forma  -->
+<!-- 		lenta y constante"</string> -->
+	<string name="stop_pump">"Deténgase!"</string>
 	<string name="create_csv_file">Crear archivo csv</string>
 	<string name="notes">Notas:</string>
 	<string name="alert_dialog_discard_measure">Está seguro que desea descartar la medida?</string>
