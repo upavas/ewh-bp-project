@@ -380,10 +380,10 @@ WORD_VAL ReadPOT(void);
         #endif
 
 // ************** OUR CODE ***********************************************************************************************************************
-	if (INTCONbits.TMR0IF == 1)	{		INTCONbits.TMR0IF = 0;		// sampling frequency:
-		TMR0H = 0x63;				// for 250Hz: 0xD1  ; 75Hz: 0x63  ; 50Hz: 0x15
-		TMR0L = 0xC0;				// for 250Hz: 0x20  ; 75Hz: 0xC0  ; 50Hz: 0xA0
-		mInitPressure();		ADCON0bits.GO = 1;		}
+	if (INTCONbits.TMR0IF == 1)	{		INTCONbits.TMR0IF = 0;				// sampling frequency:
+		TMR0H = 0x63;						// for 250Hz (0.004s): 0xD1  ; 75Hz (13.3ms): 0x63  ; 50Hz (0.02s): 0x15
+		TMR0L = 0xC0;						// for 250Hz (0.004s): 0x20  ; 75Hz (13.3ms): 0xC0  ; 50Hz (0.02s): 0xA0
+		ADCON0bits.GO = 1;		}
 	
 	if (PIR1bits.ADIF == 1)	{		PIR1bits.ADIF = 0;
 		
@@ -497,17 +497,16 @@ static void InitializeSystem(void)
 		//TRISCbits.TRISC0 = 1;						//By default this happens already
 		//TRISCbits.TRISC1 = 1;						//By default this happens already
 		
-		//ANSELbits.ANS4 = 1;							//By default this happens already
-		//ANSELbits.ANS5 = 1;							//By default this happens already
-		//ANSELHbits.ANS9 = 1; 						//Defining RC6 as Analog Input (in devel. board) or RC7 in the prototype PCB
+		ANSELHbits.ANS9 = 1; 						//Defining RC6 as Analog Input (in devel. board) or RC7 in the prototype PCB
     	//TRISBbits.TRISB5 = 1;						//0 = PORTB pin configured as an output    and    1 = PORTB pin configured as an input
     	//TRISBbits.TRISB7 = 1;						//RB7/TX   and   RB5/RX: serial
 
 		//Initialize ADC
-		//ADCON0 = 0x25;								//MODIFIED BY US: 0x21 to the devel. board or 0x25 for prototype PCB
-        //ADCON1 = 0x05;      						// ADC: For Positive and Negative voltage reference supplied externally through VREF+/- pin.
-		//ADCON2 = 0xB2;								//B2;		//Right justified, 20 Tad, FOSC/2  90
-    	mInitPressure();
+		//mInitPressure();
+		ADCON0 = 0x25;								//MODIFIED BY US: 0x21 to the devel. board or 0x25 for prototype PCB
+        ADCON1 = 0x05;      						//ADC: For Positive and Negative voltage reference supplied externally through VREF+/- pin.
+		ADCON2 = 0xBA;								//BA;		//Right justified, 20 Tad, FOSC/32 (FOSC/34 might be a too fast conversion in the ADC, and something might happen.. soo FOSC/32 is middle ground)
+
 		PIE1bits.ADIE = 1;							//ADC interrupt enable		PIR1bits.ADIF = 0;
 		IPR1bits.ADIP = 1;							//ADIP: A/D Converter Interrupt Priority bit: 1 = High priority
 
@@ -702,10 +701,10 @@ static void InitializeSystem(void)
 void UserInit(void)
 {
     //Initialize all of the LED pins
-    mInitAllLEDs();
+    //mInitAllLEDs();								// WATCHOUT! IF ENABLED IT CHANGES TRISC0 AND TRISC1 TO 0 AND THEN THE PIC DOESN'T INTERRUPT ON THE ADIF!!
     
     //Initialize all of the push buttons
-    mInitAllSwitches();
+    //mInitAllSwitches();
     
     //initialize the variable holding the handle for the last
     // transmission
