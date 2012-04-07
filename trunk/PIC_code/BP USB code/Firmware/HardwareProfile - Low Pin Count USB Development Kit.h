@@ -94,7 +94,7 @@
     #define CLOCK_FREQ 48000000
     
     /** LED ************************************************************/
-    #define mInitAllLEDs()      LATC &= 0xF0; TRISC &= 0xF0;
+    #define mInitAllLEDs()      LATC &= 0xF0; TRISC &= 0xF0; //WATCHOUT WITH THIS TRISC CHANGE: IT CHANGES TRISC0 AND TRISC1 TO 0 AND THEN THE PIC DOESN'T INTERRUPT ON THE ADIF!!
     
     #define mLED_1              LATCbits.LATC0
     #define mLED_2              LATCbits.LATC1
@@ -131,11 +131,11 @@
 
 
     /** POT ************************************************************/
-    #define mInitPOT()          {TRISBbits.TRISB4=1;ADCON0=0x29;ADCON1=0;ADCON2=0x3E;ADCON2bits.ADFM = 1;}
+    //#define mInitPOT()          {TRISBbits.TRISB4=1;ADCON0=0x29;ADCON1=0;ADCON2=0x3E;ADCON2bits.ADFM = 1;}
 
 	/** Pressure Sensor ************************************************/
-	#define mInitPressure()		{TRISCbits.TRISC7=1; TRISCbits.TRISC0 = 1; TRISCbits.TRISC1 = 1;ANSELHbits.ANS9 = 1;;ADCON0=0x25;ADCON1=0x05;ADCON2=0x3E;ADCON2bits.ADFM = 1;}
-    //#define mInitPressure()		{TRISCbits.TRISC7=1;ANSELHbits.ANS9 = 1;ADCON0=0x25;ADCON1=0x05;ADCON2=0xB2;ADCON2bits.ADFM = 1;}
+	//#define mInitPressure()		{TRISCbits.TRISC7=1; TRISCbits.TRISC0 = 1; TRISCbits.TRISC1 = 1;ANSELHbits.ANS9 = 1; ADCON0=0x25;ADCON1=0x05;ADCON2=0x3E;ADCON2bits.ADFM = 1;}
+
 	/** I/O pin definitions ********************************************/
     #define INPUT_PIN 1
     #define OUTPUT_PIN 0
