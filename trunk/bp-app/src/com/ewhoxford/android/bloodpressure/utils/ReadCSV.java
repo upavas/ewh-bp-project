@@ -9,10 +9,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-import android.app.Activity;
-
-import com.ewhoxford.android.bloodpressure.R;
-
 /**
  * class to read a csv pressure file and test the application
  * 
@@ -21,14 +17,14 @@ import com.ewhoxford.android.bloodpressure.R;
  */
 public class ReadCSV {
 
-	public int[][] readCSV(Activity activity) {
+	public int[][] readCSV(InputStream file) {
 
 		// int[] x= new int[20000];
 		// int[] y=new int[20000];
 
 		int[][] numbers = new int[10000][2];
 
-		InputStream is = activity.getResources().openRawResource(R.raw.bp);
+		InputStream is = file;
 		BufferedReader bufRdr;
 
 		try {

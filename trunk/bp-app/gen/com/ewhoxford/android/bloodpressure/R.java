@@ -192,6 +192,7 @@ measure list
         public static final int pulse=0x7f070014;
         /**  measure 
  measure 
+ 	<string name="pump">Cerrar Válvula y Bombear! Bombear! Bombear!</string> 
  measure 
  
  measure 
@@ -201,6 +202,9 @@ measure list
          */
         public static final int pump=0x7f07001c;
         public static final int save_button=0x7f07000f;
+        /**  	<string name="stop_pump">"Deténgase! Abra la válvula y despresurice de forma  
+ 		lenta y constante"</string> 
+         */
         public static final int stop_pump=0x7f07001d;
         public static final int sync_ghealth_button=0x7f070038;
         public static final int sync_measures=0x7f070033;

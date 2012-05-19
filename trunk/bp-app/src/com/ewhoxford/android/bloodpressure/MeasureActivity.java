@@ -43,10 +43,8 @@ import com.androidplot.xy.LineAndPointRenderer;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
-import com.ewhoxford.android.bloodpressure.exception.BadMeasureException;
-import com.ewhoxford.android.bloodpressure.exception.TempBadMeasureException;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
-import com.ewhoxford.android.bloodpressure.pressureInputDevice.DemoCustomHID;
+import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDemoCustomHID;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 import com.ewhoxford.android.bloodpressure.utils.FileManager;
@@ -107,8 +105,9 @@ public class MeasureActivity extends Activity {
 	private int measureSize = 0;
 	// event count
 	private int totalCount = 0;
-
-	DemoCustomHID demo = null;
+	// event count
+		private boolean testMode = true;
+	TestDemoCustomHID demo = null;
 	PendingIntent pendingIntent = null;
 
 	private PowerManager.WakeLock wl;
@@ -130,17 +129,17 @@ public class MeasureActivity extends Activity {
 
 			if (plotData.size() == measureSize
 					&& measureSize < BOUNDARY_NUMBER_OF_POINTS) {
-				messageHandler.post(connectedSensorText);
+				//messageHandler.post(connectedSensorText);
 			} else {
 				measureSize = plotData.size();
 				// check if operator has reached reasonable cuff pressure
 				if (!maxPressureReached) {
 					if (plotData.getLast().doubleValue() > maxPressureValueForMeasure) {
 						maxPressureReached = true;
-						messageHandler.post(changeTextMessage);
+					//	messageHandler.post(changeTextMessage);
 
 					} else {
-						messageHandler.post(changeTextMessagePump);
+					//	messageHandler.post(changeTextMessagePump);
 					}
 				}
 			}
@@ -185,18 +184,19 @@ public class MeasureActivity extends Activity {
 
 		public void run() {
 			Log.d("MARCO", bloodPressureValue.toString());
-			int dPressure = (int) bloodPressureValue.getDiastolicBP();
-			int sPressure = (int) bloodPressureValue.getSystolicBP();
-			int pulse = (int) bloodPressureValue.getHeartRate();
+//			int dPressure = (int) bloodPressureValue.getDiastolicBP();
+//			int sPressure = (int) bloodPressureValue.getSystolicBP();
+//			int pulse = (int) bloodPressureValue.getHeartRate();
+			//TODO debugging!
 			ValuesView valuesView = (ValuesView) findViewById(R.id.results);
 			valuesView.requestFocus();
-			valuesView.setSPressure(sPressure);
-			valuesView.setDPressure(dPressure);
-			valuesView.setPulseRate(pulse);
+			valuesView.setSPressure(120);
+			valuesView.setDPressure(76);
+			valuesView.setPulseRate(20);
 			valuesView.invalidate();
 			saveButton.setEnabled(true);
 			saveButton.invalidate();
-			messageHandler.post(disconnectedSensor);
+		//	messageHandler.post(disconnectedSensor);
 		}
 	};
 
@@ -444,10 +444,10 @@ public class MeasureActivity extends Activity {
 	 */
 	private void startSignalProcessing() {
 
-		myProgressDialog = ProgressDialog.show(MeasureActivity.this,
-				getResources().getText(R.string.alert_dialog_processing_data),
-				getResources().getText(R.string.alert_dialog_determine_bp),
-				true);
+//		myProgressDialog = ProgressDialog.show(MeasureActivity.this,
+//				getResources().getText(R.string.alert_dialog_processing_data),
+//				getResources().getText(R.string.alert_dialog_determine_bp),
+//				true);
 
 		new Thread() {
 			public void run() {
@@ -466,22 +466,22 @@ public class MeasureActivity extends Activity {
 
 				TimeSeriesMod signal = new TimeSeriesMod();
 				signal.setPressure(arrayPressure);
-				
+
 				signal.setTime(arrayTime);
 				bloodPressureValue = new BloodPressureValue();
-				SignalProcessing r = new SignalProcessing();
+				//SignalProcessing r = new SignalProcessing();
 
-				try {
-					bloodPressureValue = r.signalProcessing(signal, fs);
-				} catch (Exception e) {
-					myProgressDialog.dismiss();
-					messageHandler.post(discardTemBadMeasure);
-					e.printStackTrace();
-				} 
- 
+//				try {
+//					bloodPressureValue = r.signalProcessing(signal, fs);
+//				} catch (Exception e) {
+//					myProgressDialog.dismiss();
+//					messageHandler.post(discardTemBadMeasure);
+//					e.printStackTrace();
+//				}
+
 				Log.v("MAURO:", "AFTER CALCULATE BLOOD PRESSURE VALUES");
 				// Dismiss the Dialog
-				myProgressDialog.dismiss();
+				//myProgressDialog.dismiss();
 				messageHandler.post(updataBPResultView);
 			}
 		}.start();
@@ -616,7 +616,7 @@ public class MeasureActivity extends Activity {
 			Log.v("MAURO", "APP WAS RESUMED AUTOMATICALLY");
 			UsbDevice device = (UsbDevice) intent
 					.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-			demo = new DemoCustomHID(this.getApplicationContext(), device,
+			demo = new TestDemoCustomHID(this.getApplicationContext(), device,
 					handler);
 			demo.addObserver(plotUpdater);
 		} else {
@@ -635,13 +635,21 @@ public class MeasureActivity extends Activity {
 				 * For each device that we found attached, see if we are able to
 				 * load a demo for that device.
 				 */
-				demo = new DemoCustomHID(this.getApplicationContext(),
+				demo = new TestDemoCustomHID(this.getApplicationContext(),
 						deviceIterator.next(), handler);
 				demo.addObserver(plotUpdater);
 				if (demo != null) {
 					break;
 				}
 			}
+		}
+		
+
+		if (testMode) {
+			demo = new TestDemoCustomHID(this.getApplicationContext(),
+					null, handler);
+			demo.addObserver(plotUpdater);
+			// break;
 		}
 
 		// Create a new filter to detect USB device events
@@ -693,7 +701,7 @@ public class MeasureActivity extends Activity {
 								demo = null;
 							}
 						}
-						messageHandler.post(connectedSensorText);
+						//messageHandler.post(connectedSensorText);
 					}
 				}
 			} catch (Exception e) {
