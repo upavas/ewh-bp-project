@@ -5,11 +5,11 @@
 	<ImageView android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:src="@drawable/heartbloodpressure" />
 	<Button android:id="@+id/new_measure_button"
-		android:layout_width="240px" android:layout_height="wrap_content"
+		android:layout_width="300px" android:layout_height="wrap_content"
 		android:text="@string/new_measure_button" />
-	<Button android:id="@+id/measure_list" android:layout_width="240px"
+	<Button android:id="@+id/measure_list" android:layout_width="300px"
 		android:layout_height="wrap_content" android:text="@string/view_measure_button"/>
-	<Button android:id="@+id/help_button" android:layout_width="240px"
+	<Button android:id="@+id/help_button" android:layout_width="300px"
 		android:layout_height="wrap_content" android:text="@string/help_button" />
 </LinearLayout>
 

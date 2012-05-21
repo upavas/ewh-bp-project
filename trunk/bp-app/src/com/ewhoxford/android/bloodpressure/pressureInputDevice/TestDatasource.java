@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.os.Handler;
 
 import com.ewhoxford.android.bloodpressure.MeasureActivity;
+import com.ewhoxford.android.bloodpressure.R;
 import com.ewhoxford.android.bloodpressure.signalProcessing.ConvertTommHg;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 import com.ewhoxford.android.bloodpressure.utils.ReadCSV;
@@ -104,7 +105,8 @@ public class TestDatasource implements Runnable {
 			// }.start();
 			ReadCSV r = new ReadCSV();
 
-			int[][] pressureValues = r.readCSV(activity);
+			int[][] pressureValues = r.readCSV(activity.getApplicationContext().getResources()
+					.openRawResource(R.raw.bp));
 			int l = pressureValues.length;
 			TimeSeriesMod pressureValuesMod = ConvertTommHg.convertArrayTommHg(
 					pressureValues, 100);

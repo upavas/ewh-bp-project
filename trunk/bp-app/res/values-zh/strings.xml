@@ -54,8 +54,8 @@
 	<string name="created_date">创建:</string>
 	<string name="alert_dialog_changes_saved">保存更改</string>
 	<!-- measure -->
-	<string name="pump">关闭阀门！反复挤压气泵，直到气压超过红线！</string>
-	<string name="stop_pump">停止泵气！打开阀门，减压缓慢</string>
+	<string name="pump">反复挤压气泵，直到气压超过红线！</string>
+	<string name="stop_pump">停止泵气！</string>
 	<string name="create_csv_file">创建CSV文件</string>
 	<string name="notes">注释:</string>
 	<string name="alert_dialog_discard_measure">您确定要放弃测量?</string>

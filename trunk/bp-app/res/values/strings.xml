@@ -61,9 +61,8 @@
 	<string name="created_date">Created:</string>
 	<string name="alert_dialog_changes_saved">Changes Saved</string>
 	<!-- measure -->
-	<string name="pump">Close valve! PUMP! PUMP! PUMP!</string>
-	<string name="stop_pump">"STOP PUMPING! Open valve, depressure slowly at
-		constante rate!"</string>
+	<string name="pump">PUMP! PUMP! PUMP!</string>
+	<string name="stop_pump">"STOP PUMPING!"</string>
 	<string name="create_csv_file">create csv file</string>
 	<string name="notes">Notes:</string>
 	<string name="alert_dialog_discard_measure">Are you sure you want to discard measure?</string>
