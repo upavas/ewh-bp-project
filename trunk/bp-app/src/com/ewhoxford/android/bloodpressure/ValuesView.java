@@ -135,8 +135,8 @@ public class ValuesView extends View {
 
 		canvas.drawText(sPressure + " mmHg", w - 5, y, paintFontRight);
 		canvas.drawText(dPressure + " mmHg", w - 5, h / 3 + y, paintFontRight);
-		if (pulseRate > 88 || pulseRate < 50) {
-			if (pulseRate == 0)
+		if (pulseRate > 150 || pulseRate < 40) {
+			if (pulseRate != 0)
 				canvas.drawText(pulseRate + " bpm    ", w - 5, 2 * h / 3 + y,
 						paintFontRight);
 			else
