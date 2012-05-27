@@ -34,6 +34,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.androidplot.Plot;
@@ -114,6 +115,10 @@ public class MeasureActivity extends Activity {
 
 	LinkedList<Number> plotData = new LinkedList<Number>();
 	double pressureValue = 0;
+	// progressBar
+	VerticalRatingBar progressBar;
+	// progressBarStatus
+	private int progressBarStatus = 0;
 
 	// redraws a plot whenever an update is received:
 	private class MyPlotUpdater implements Observer {
@@ -424,6 +429,22 @@ public class MeasureActivity extends Activity {
 		// new Thread(data).start();
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "DoNotDimScreen");
+		
+		
+		
+		// plot bar
+		
+		// prepare for a progress bar dialog
+					progressBar = new VerticalRatingBar(measureContext);
+					//progressBar.setCancelable(true);
+					//progressBar.setMessage("File downloading ...");
+					//progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+					progressBar.setProgress(0);
+					progressBar.setMax(300);
+					//progressBar.show();
+		 
+					//reset progress bar status
+					progressBarStatus = 0;
 
 	}
 
@@ -710,5 +731,24 @@ public class MeasureActivity extends Activity {
 
 		}
 	};
+	
+	
+	/**
+	 * Updates the specified ProgressBar resource with the specified status
+	 * 
+	 * @param id
+	 *            The resource id of the ProgressBar that needs to be updated
+	 * @param percentage
+	 *            The new status of the progress bar.
+	 */
+	private void updatePotentiometer(int id, int percentage) {
+		ProgressBar bar;
+		// TextView tv;
+		// tv=(TextView)findViewById(R.id.textView1);
+		// tv.append(","+percentage);
+		bar = (ProgressBar) findViewById(id);
+		bar.setProgress(percentage);
+	}
+	
 
 }
