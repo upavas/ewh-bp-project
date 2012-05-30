@@ -28,7 +28,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -149,7 +148,7 @@ public class MeasureActivity extends Activity {
 				if (plotData.getLast().doubleValue() < minPressureReached) {
 					// o.deleteObservers();
 					demo.close();
-					//startSignalProcessing();
+					// startSignalProcessing();
 					messageHandler.post(runSignalProcessing);
 				} else {
 					updatePlot(plot);
@@ -170,7 +169,7 @@ public class MeasureActivity extends Activity {
 			plot.postRedraw();
 		} catch (InterruptedException e) {
 			e.printStackTrace(); // To change body of catch statement use
-									// File | Settings | File Templates.
+			// File | Settings | File Templates.
 		}
 
 	}
@@ -494,7 +493,7 @@ public class MeasureActivity extends Activity {
 	 */
 	private void startSignalProcessing() {
 
-		Log.v("MAURO:", "BEFORE SIGNAL PROCESSING");
+		// Log.v("MAURO:", "BEFORE SIGNAL PROCESSING");
 		int l = demo.getBpMeasureHistory().size();
 		arrayTime = new float[l];
 		arrayPressure = new double[l];
@@ -516,17 +515,17 @@ public class MeasureActivity extends Activity {
 		try {
 			bloodPressureValue = r.signalProcessing(signal, fs);
 		} catch (Exception e) {
-			myProgressDialog.dismiss();
-			messageHandler.post(discardTemBadMeasure);
+			// myProgressDialog.dismiss();
+			// messageHandler.post(discardTemBadMeasure);
 			e.printStackTrace();
 		}
 
-		Log.v("MAURO:", "AFTER CALCULATE BLOOD PRESSURE VALUES");
+		// Log.v("MAURO:", "AFTER CALCULATE BLOOD PRESSURE VALUES");
 		// Dismiss the Dialog
 		// myProgressDialog.dismiss();
 		// messageHandler.post(updataBPResultView);
 
-		Log.d("MARCO", bloodPressureValue.toString());
+		// Log.d("MARCO", bloodPressureValue.toString());
 		int dPressure = (int) bloodPressureValue.getDiastolicBP();
 		int sPressure = (int) bloodPressureValue.getSystolicBP();
 		int pulse = (int) bloodPressureValue.getHeartRate();
@@ -667,7 +666,7 @@ public class MeasureActivity extends Activity {
 			 * from the intent, and load the demo that corresponds to that
 			 * device.
 			 */
-			Log.v("MAURO", "APP WAS RESUMED AUTOMATICALLY");
+			// Log.v("MAURO", "APP WAS RESUMED AUTOMATICALLY");
 			UsbDevice device = (UsbDevice) intent
 					.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 			demo = new TestDemoCustomHID(this.getApplicationContext(), device,
@@ -679,7 +678,7 @@ public class MeasureActivity extends Activity {
 			 * manually. We need to look through to see if there are any devices
 			 * that are already attached.
 			 */
-			Log.v("MAURO", "APP WAS RESUMED,BY USER");
+			// Log.v("MAURO", "APP WAS RESUMED,BY USER");
 			UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
 			HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
 			Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
@@ -738,7 +737,7 @@ public class MeasureActivity extends Activity {
 					 */
 					UsbDevice device = (UsbDevice) intent
 							.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-					Log.v("MAURO", "index=" + "DEVICE ATTACHED");
+					// Log.v("MAURO", "index=" + "DEVICE ATTACHED");
 					// System.out.printf("e do Measure Activity: circulation");
 
 					if (device != null) {
