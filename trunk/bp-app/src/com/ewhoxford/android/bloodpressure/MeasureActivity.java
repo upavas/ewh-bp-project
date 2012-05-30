@@ -106,7 +106,7 @@ public class MeasureActivity extends Activity {
 	// event count
 	private int totalCount = 0;
 	// event count
-		private boolean testMode = true;
+	private boolean testMode = true;
 	TestDemoCustomHID demo = null;
 	PendingIntent pendingIntent = null;
 
@@ -129,17 +129,17 @@ public class MeasureActivity extends Activity {
 
 			if (plotData.size() == measureSize
 					&& measureSize < BOUNDARY_NUMBER_OF_POINTS) {
-				//messageHandler.post(connectedSensorText);
+				// messageHandler.post(connectedSensorText);
 			} else {
 				measureSize = plotData.size();
 				// check if operator has reached reasonable cuff pressure
 				if (!maxPressureReached) {
 					if (plotData.getLast().doubleValue() > maxPressureValueForMeasure) {
 						maxPressureReached = true;
-					//	messageHandler.post(changeTextMessage);
+						// messageHandler.post(changeTextMessage);
 
 					} else {
-					//	messageHandler.post(changeTextMessagePump);
+						// messageHandler.post(changeTextMessagePump);
 					}
 				}
 			}
@@ -149,6 +149,7 @@ public class MeasureActivity extends Activity {
 				if (plotData.getLast().doubleValue() < minPressureReached) {
 					// o.deleteObservers();
 					demo.close();
+					//startSignalProcessing();
 					messageHandler.post(runSignalProcessing);
 				} else {
 					updatePlot(plot);
@@ -180,25 +181,25 @@ public class MeasureActivity extends Activity {
 			startSignalProcessing();
 		}
 	};
-	final Runnable updataBPResultView = new Runnable() {
-
-		public void run() {
-			Log.d("MARCO", bloodPressureValue.toString());
-//			int dPressure = (int) bloodPressureValue.getDiastolicBP();
-//			int sPressure = (int) bloodPressureValue.getSystolicBP();
-//			int pulse = (int) bloodPressureValue.getHeartRate();
-			//TODO debugging!
-			ValuesView valuesView = (ValuesView) findViewById(R.id.results);
-			valuesView.requestFocus();
-			valuesView.setSPressure(120);
-			valuesView.setDPressure(76);
-			valuesView.setPulseRate(20);
-			valuesView.invalidate();
-			saveButton.setEnabled(true);
-			saveButton.invalidate();
-		//	messageHandler.post(disconnectedSensor);
-		}
-	};
+	// final Runnable updataBPResultView = new Runnable() {
+	//
+	// public void run() {
+	// Log.d("MARCO", bloodPressureValue.toString());
+	// int dPressure = (int) bloodPressureValue.getDiastolicBP();
+	// int sPressure = (int) bloodPressureValue.getSystolicBP();
+	// int pulse = (int) bloodPressureValue.getHeartRate();
+	// // TODO debugging!
+	// ValuesView valuesView = (ValuesView) findViewById(R.id.results);
+	// valuesView.requestFocus();
+	// valuesView.setSPressure(sPressure);
+	// valuesView.setDPressure(dPressure);
+	// valuesView.setPulseRate(pulse);
+	// valuesView.invalidate();
+	// saveButton.setEnabled(true);
+	// saveButton.invalidate();
+	// // messageHandler.post(disconnectedSensor);
+	// }
+	// };
 
 	{
 		// initialized time series
@@ -439,53 +440,106 @@ public class MeasureActivity extends Activity {
 		}
 	}
 
+	// /**
+	// * Determination of BP and pulse algorithm
+	// */
+	// private void startSignalProcessing() {
+	//
+	// // myProgressDialog = ProgressDialog.show(MeasureActivity.this,
+	// // getResources().getText(R.string.alert_dialog_processing_data),
+	// // getResources().getText(R.string.alert_dialog_determine_bp),
+	// // true);
+	//
+	// new Thread() {
+	// public void run() {
+	// Log.v("MAURO:", "BEFORE SIGNAL PROCESSING");
+	// int l = demo.getBpMeasureHistory().size();
+	// arrayTime = new float[l];
+	// arrayPressure = new double[l];
+	// int i = 0;
+	// int fs = 100;
+	// while (i < l) {
+	// arrayPressure[i] = demo.getBpMeasureHistory().get(i)
+	// .doubleValue();
+	// arrayTime[i] = ((float) i / (float) fs);
+	// i++;
+	// }
+	//
+	// TimeSeriesMod signal = new TimeSeriesMod();
+	// signal.setPressure(arrayPressure);
+	//
+	// signal.setTime(arrayTime);
+	// bloodPressureValue = new BloodPressureValue();
+	// //SignalProcessing r = new SignalProcessing();
+	//
+	// try {
+	// bloodPressureValue = r.signalProcessing(signal, fs);
+	// } catch (Exception e) {
+	// myProgressDialog.dismiss();
+	// messageHandler.post(discardTemBadMeasure);
+	// e.printStackTrace();
+	// }
+	//
+	// Log.v("MAURO:", "AFTER CALCULATE BLOOD PRESSURE VALUES");
+	// // Dismiss the Dialog
+	// //myProgressDialog.dismiss();
+	// messageHandler.post(updataBPResultView);
+	// }
+	// }.start();
+	//
+	// }
+
 	/**
 	 * Determination of BP and pulse algorithm
 	 */
 	private void startSignalProcessing() {
 
-//		myProgressDialog = ProgressDialog.show(MeasureActivity.this,
-//				getResources().getText(R.string.alert_dialog_processing_data),
-//				getResources().getText(R.string.alert_dialog_determine_bp),
-//				true);
+		Log.v("MAURO:", "BEFORE SIGNAL PROCESSING");
+		int l = demo.getBpMeasureHistory().size();
+		arrayTime = new float[l];
+		arrayPressure = new double[l];
+		int i = 0;
+		int fs = 100;
+		while (i < l) {
+			arrayPressure[i] = demo.getBpMeasureHistory().get(i).doubleValue();
+			arrayTime[i] = ((float) i / (float) fs);
+			i++;
+		}
 
-		new Thread() {
-			public void run() {
-				Log.v("MAURO:", "BEFORE SIGNAL PROCESSING");
-				int l = demo.getBpMeasureHistory().size();
-				arrayTime = new float[l];
-				arrayPressure = new double[l];
-				int i = 0;
-				int fs = 100;
-				while (i < l) {
-					arrayPressure[i] = demo.getBpMeasureHistory().get(i)
-							.doubleValue();
-					arrayTime[i] = ((float) i / (float) fs);
-					i++;
-				}
+		TimeSeriesMod signal = new TimeSeriesMod();
+		signal.setPressure(arrayPressure);
 
-				TimeSeriesMod signal = new TimeSeriesMod();
-				signal.setPressure(arrayPressure);
+		signal.setTime(arrayTime);
+		bloodPressureValue = new BloodPressureValue();
+		SignalProcessing r = new SignalProcessing();
 
-				signal.setTime(arrayTime);
-				bloodPressureValue = new BloodPressureValue();
-				//SignalProcessing r = new SignalProcessing();
+		try {
+			bloodPressureValue = r.signalProcessing(signal, fs);
+		} catch (Exception e) {
+			myProgressDialog.dismiss();
+			messageHandler.post(discardTemBadMeasure);
+			e.printStackTrace();
+		}
 
-//				try {
-//					bloodPressureValue = r.signalProcessing(signal, fs);
-//				} catch (Exception e) {
-//					myProgressDialog.dismiss();
-//					messageHandler.post(discardTemBadMeasure);
-//					e.printStackTrace();
-//				}
+		Log.v("MAURO:", "AFTER CALCULATE BLOOD PRESSURE VALUES");
+		// Dismiss the Dialog
+		// myProgressDialog.dismiss();
+		// messageHandler.post(updataBPResultView);
 
-				Log.v("MAURO:", "AFTER CALCULATE BLOOD PRESSURE VALUES");
-				// Dismiss the Dialog
-				//myProgressDialog.dismiss();
-				messageHandler.post(updataBPResultView);
-			}
-		}.start();
-
+		Log.d("MARCO", bloodPressureValue.toString());
+		int dPressure = (int) bloodPressureValue.getDiastolicBP();
+		int sPressure = (int) bloodPressureValue.getSystolicBP();
+		int pulse = (int) bloodPressureValue.getHeartRate();
+		// TODO debugging!
+		ValuesView valuesView = (ValuesView) findViewById(R.id.results);
+		valuesView.requestFocus();
+		valuesView.setSPressure(sPressure);
+		valuesView.setDPressure(dPressure);
+		valuesView.setPulseRate(pulse);
+		valuesView.invalidate();
+		saveButton.setEnabled(true);
+		saveButton.invalidate();
+		// messageHandler.post(disconnectedSensor);
 	}
 
 	// Create runnable for chaging messages while pressure is being acquired
@@ -643,11 +697,10 @@ public class MeasureActivity extends Activity {
 				}
 			}
 		}
-		
 
 		if (testMode) {
-			demo = new TestDemoCustomHID(this.getApplicationContext(),
-					null, handler);
+			demo = new TestDemoCustomHID(this.getApplicationContext(), null,
+					handler);
 			demo.addObserver(plotUpdater);
 			// break;
 		}
@@ -701,7 +754,7 @@ public class MeasureActivity extends Activity {
 								demo = null;
 							}
 						}
-						//messageHandler.post(connectedSensorText);
+						// messageHandler.post(connectedSensorText);
 					}
 				}
 			} catch (Exception e) {
