@@ -409,7 +409,7 @@ public class MeasureActivity extends Activity {
 		}
 
 		SimpleXYSeries pressureLimit = new SimpleXYSeries(pressureListArray,
-				SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "");
+				SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Optimal value");
 		bpMeasureXYPlot.addSeries(pressureLimit, LineAndPointRenderer.class,
 				new LineAndPointFormatter(Color.rgb(100, 100, 200), Color.RED,
 						null));
@@ -422,7 +422,7 @@ public class MeasureActivity extends Activity {
 				R.string.pressure_y_legend).toString());
 		bpMeasureXYPlot.getRangeLabelWidget().pack();
 		bpMeasureXYPlot.disableAllMarkup();
-
+		
 		// hook up the plotUpdater to the data model:
 		// data.addObserver(plotUpdater);
 		// start observable datasource thread
