@@ -43,7 +43,7 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
-import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDemoCustomHID;
+import com.ewhoxford.android.bloodpressure.pressureInputDevice.DemoCustomHID;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 import com.ewhoxford.android.bloodpressure.utils.FileManager;
@@ -105,8 +105,8 @@ public class MeasureActivity extends Activity {
 	// event count
 	private int totalCount = 0;
 	// event count
-	private boolean testMode = true;
-	TestDemoCustomHID demo = null;
+	private boolean testMode = false;
+	DemoCustomHID demo = null;
 	PendingIntent pendingIntent = null;
 
 	private PowerManager.WakeLock wl;
@@ -165,8 +165,11 @@ public class MeasureActivity extends Activity {
 		try {
 			bpMeasureSeries.setModel(plotData,
 					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-
+			// notesText.setText(notesText.getText()+", "+demo.getPressureValueFiltered());
 			plot.postRedraw();
+			// // notesText.append(demo.getPressureValueFiltered() + ", ");
+			// notesText.postInvalidate();
+			System.out.println("MEASURE FILTERED SIGNALL:"+demo.getPressureValueFiltered());
 		} catch (InterruptedException e) {
 			e.printStackTrace(); // To change body of catch statement use
 			// File | Settings | File Templates.
@@ -332,6 +335,8 @@ public class MeasureActivity extends Activity {
 						savedFileName = FileManager.saveFile(measureContext,
 								bloodPressureValue, arrayPressure, arrayTime,
 								time, notes);
+						FileManager.createVectors("amplified_signal_" + time,
+								demo.getBpMeasureFilteredHistory());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -669,7 +674,7 @@ public class MeasureActivity extends Activity {
 			// Log.v("MAURO", "APP WAS RESUMED AUTOMATICALLY");
 			UsbDevice device = (UsbDevice) intent
 					.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-			demo = new TestDemoCustomHID(this.getApplicationContext(), device,
+			demo = new DemoCustomHID(this.getApplicationContext(), device,
 					handler);
 			demo.addObserver(plotUpdater);
 		} else {
@@ -688,7 +693,7 @@ public class MeasureActivity extends Activity {
 				 * For each device that we found attached, see if we are able to
 				 * load a demo for that device.
 				 */
-				demo = new TestDemoCustomHID(this.getApplicationContext(),
+				demo = new DemoCustomHID(this.getApplicationContext(),
 						deviceIterator.next(), handler);
 				demo.addObserver(plotUpdater);
 				if (demo != null) {
@@ -698,7 +703,7 @@ public class MeasureActivity extends Activity {
 		}
 
 		if (testMode) {
-			demo = new TestDemoCustomHID(this.getApplicationContext(), null,
+			demo = new DemoCustomHID(this.getApplicationContext(), null,
 					handler);
 			demo.addObserver(plotUpdater);
 			// break;
