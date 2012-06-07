@@ -49,13 +49,13 @@ import com.ewhoxford.android.bloodpressure.signalProcessing.ConvertTommHg;
 public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 	private UsbDevice device = null;
 	private UsbManager manager = null;
-	private Handler handler = null;
 	private Boolean closeRequested = new Boolean(false);
 	private UsbDeviceConnection connection;
 	private UsbInterface intf;
 	private boolean connected = false;
 	Thread thread;
 	private double pressureValue = 0;
+	private double pressureValueFiltered = 0;
 
 	public static final int SIGNAL1 = 0;
 	// private static final int SAMPLE_SIZE = 1;
@@ -72,6 +72,7 @@ public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 	private LinkedList<Number> bpMeasure = new LinkedList<Number>();
 
 	private LinkedList<Number> bpMeasureHistory = new LinkedList<Number>();
+	private LinkedList<Number> bpMeasureFilteredHistory = new LinkedList<Number>();
 	private int x = 0;
 	private int y = 0;
 	private MyObservable notifier;
@@ -102,8 +103,6 @@ public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 	public DemoCustomHID(Context context, UsbDevice device, Handler handler) {
 		/* Save the device and handler information for later use. */
 		this.device = device;
-		this.handler = handler;
-
 		/* Get the USB manager from the requesting context */
 		this.manager = (UsbManager) context
 				.getSystemService(Context.USB_SERVICE);
@@ -194,6 +193,8 @@ public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 		int result = 0;
 		int yValue = 0;
 		int xValue = 0;
+		int yValueFiltered = 0;
+		int xValueFiltered = 0;
 
 		int mod = 1;
 		// int currentPosition = 0;
@@ -231,33 +232,43 @@ public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 																		// BUFFERS
 				potentiometerBuffer[0] = getPotentiometerResults[0];
 				potentiometerBuffer[1] = getPotentiometerResults[1];
+				potentiometerBuffer[2] = getPotentiometerResults[2];
+				potentiometerBuffer[3] = getPotentiometerResults[3];
 
 				xValue = (int) (potentiometerBuffer[0]);
 				yValue = (int) (potentiometerBuffer[1]);
-				setX(xValue);
-				setY(yValue);
+				xValueFiltered = (int) (potentiometerBuffer[2]);
+				yValueFiltered = (int) (potentiometerBuffer[3]);
+				// setX(xValue);
+				// setY(yValue);
 
-				double aux = ConvertTommHg.convertTommHg(xValue, yValue);
+				double aux = ConvertTommHg.convertTommHg(xValueFiltered, yValueFiltered);
+				double aux2 = ConvertTommHg.convertToVolt(xValue,
+						yValue);
 				bpMeasureHistory.add(aux);
-
+				bpMeasureFilteredHistory.add(aux2);
 				// TODO : check this code.
 
 				if (bpMeasureHistory.size() != 0) {
 
 					pressureValue = bpMeasureHistory.getLast().doubleValue();
-					// System.out.printf("e do DEMOCUSTOMHID:"+count);
+					pressureValueFiltered = bpMeasureFilteredHistory.getLast()
+							.doubleValue();
+				//	System.out.printf("e do DEMOCUSTOMHID:"+count);
 					count++;
 					mod = count % 75;
 
 					if (mod == 0) {
-						// Log.v("DemoCustom", "e do MeasureActiviry: Im here 2"
-						// + bpMeasureHistory.size());
+						 Log.v("DemoCustom", "e do MeasureActiviry: Im here 2"
+						 + bpMeasureHistory.size());
 						// handler.obtainMessage(0,
 						// new MessageSampledPressure(pressureValue))
 						// .sendToTarget();
 						this.setPressureValue(bpMeasureHistory.getLast()
 								.doubleValue());
+						this.setPressureValueFiltered(pressureValueFiltered);
 						this.setBpMeasureHistory(bpMeasureHistory);
+						this.setBpMeasureFilteredHistory(bpMeasureFilteredHistory);
 						notifier.notifyObservers();
 					}
 				}
@@ -316,7 +327,6 @@ public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 		/* Clear up all of the locals */
 		device = null;
 		manager = null;
-		handler = null;
 		closeRequested = false;
 		connection = null;
 		intf = null;
@@ -370,6 +380,23 @@ public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 
 	public void removeObserver(Observer observer) {
 		notifier.deleteObserver(observer);
+	}
+
+	public LinkedList<Number> getBpMeasureFilteredHistory() {
+		return bpMeasureFilteredHistory;
+	}
+
+	public void setBpMeasureFilteredHistory(
+			LinkedList<Number> bpMeasureFilteredHistory) {
+		this.bpMeasureFilteredHistory = bpMeasureFilteredHistory;
+	}
+
+	public double getPressureValueFiltered() {
+		return pressureValueFiltered;
+	}
+
+	public void setPressureValueFiltered(double pressureValueFiltered) {
+		this.pressureValueFiltered = pressureValueFiltered;
 	}
 
 }
