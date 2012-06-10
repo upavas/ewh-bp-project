@@ -45,7 +45,7 @@
         <string name="save_button">Sauvegarder</string>
 
         <!--measure list        -->
-        <string name="number">N°</string>
+        <string name="number">Mesure N°</string>
         <string name="date_time">DATE HEURE</string>
         <string name="sys">PAS</string>
         <string name="dia">PAD</string>

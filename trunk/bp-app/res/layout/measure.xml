@@ -56,14 +56,16 @@
             android:layout_marginBottom="5dip"
             android:layout_marginLeft="50dip"
             android:layout_marginRight="50dip"
-            android:layout_marginTop="5dip" />
+            android:layout_marginTop="5dip" 
+            android:textSize="30px"/>
 
         <TextView
             android:id="@+id/text1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/notes"
-            android:textStyle="bold" />
+            android:textStyle="bold" 
+            android:textSize="20px" />
 
         <EditText
             android:id="@+id/edittext"
@@ -76,7 +78,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/edittext"
-            android:text="@string/create_csv_file" />
+            android:text="@string/create_csv_file" 
+            android:textSize="20px"
+            />
 
         <TableLayout
             android:id="@+id/table_buttons"

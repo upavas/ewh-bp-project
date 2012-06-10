@@ -24,8 +24,9 @@ public class FileManager {
 	public static final String DIRECTORY = "com_ewhoxford_android_bloodpressure";
 
 	public static String saveFile(Context context, BloodPressureValue values,
-			double[] arrayPressure, float[] arrayTime, long createdDate,
-			String note) throws ExternalStorageNotAvailableException {
+			double[] arrayPressure, float[] arrayTime,
+			LinkedList<Number> arrayOscillations, long createdDate, String note)
+			throws ExternalStorageNotAvailableException {
 
 		String fileName = "";
 
@@ -48,7 +49,8 @@ public class FileManager {
 
 		if (mExternalStorageAvailable && mExternalStorageWriteable) {
 			fileName = createExternalStoragePublicBPMeasureFile(context,
-					values, arrayPressure, arrayTime, createdDate, note);
+					values, arrayPressure, arrayTime, arrayOscillations,
+					createdDate, note);
 		} else {
 			throw new ExternalStorageNotAvailableException(context.getClass()
 					.getName());
@@ -87,8 +89,8 @@ public class FileManager {
 
 	public static String createExternalStoragePublicBPMeasureFile(
 			Context context, BloodPressureValue values, double[] arrayPressure,
-			float[] arrayTime, long createdDate, String note)
-			throws IllegalArgumentException {
+			float[] arrayTime, LinkedList<Number> arrayOscillations,
+			long createdDate, String note) throws IllegalArgumentException {
 
 		if (arrayPressure.length == 0 || arrayTime.length == 0) {
 			String detailMessage = "illegal argument in input";
@@ -129,7 +131,8 @@ public class FileManager {
 			int i = 0;
 			while (i < arrayPressure.length) {
 
-				writer.append(arrayTime[i] + "," + arrayPressure[i] + "\n");
+				writer.append(arrayTime[i] + "," + arrayPressure[i] + ","
+						+ arrayOscillations.get(i) + "\n");
 				i = i + 1;
 			}
 
@@ -348,79 +351,7 @@ public class FileManager {
 		}
 		return name;
 	}
-	
-	
-	public static String createVectors(String name, LinkedList<Number> arrayPressure)
-			throws IllegalArgumentException {
 
-		if (arrayPressure.size() == 0) {
-			String detailMessage = "illegal argument in input";
-			throw new IllegalArgumentException(detailMessage);
-		}
 
-		// Create a path where we will place our file in the user's
-		// public pictures directory. Note that you should be careful about
-		// what you place here, since the user often manages these files. For
-		// pictures and other media owned by the application, consider
-		// Context.getExternalMediaDir().
-		// String uuid = UUID.randomUUID().toString();
-		File path;
-		File file;
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		if (currentapiVersion >= android.os.Build.VERSION_CODES.FROYO) {
-			path = Environment.getExternalStoragePublicDirectory(DIRECTORY);
-			file = new File(path, name);
-		} else {
-			path = Environment.getExternalStorageDirectory();
-			file = new File(path, "/" + DIRECTORY + "/" + name);
-		}
-
-		try {
-			// Make sure the Pictures directory exists.
-			path.mkdirs();
-
-			FileWriter writer = new FileWriter(file);
-			writer.append("y=[");
-
-			int i = 0;
-			while (i < arrayPressure.size()) {
-
-				if (i == arrayPressure.size()) {
-					writer.append(arrayPressure.get(i) + "");
-				}
-				writer.append(arrayPressure.get(i) + ",");
-				i = i + 1;
-			}
-			writer.append("];");
-			// generate whatever data you want
-
-			writer.flush();
-			writer.close();
-
-			// // Tell the media scanner about the new file so that it is
-			// // immediately available to the user.
-
-			// if (currentapiVersion >= android.os.Build.VERSION_CODES.FROYO) {
-			// MediaScannerConnection.scanFile(context, new String[] { file
-			// .toString() }, new String[] { MimeTypeMap
-			// .getFileExtensionFromUrl(file.toString()) },
-			// new MediaScannerConnection.OnScanCompletedListener() {
-			// public void onScanCompleted(String path, Uri uri) {
-			// Log.i("ExternalStorage", "Scanned " + path + ":");
-			// Log.i("ExternalStorage", "-> uri=" + uri);
-			// }
-			// });
-			// } else{
-			//
-			//
-			// }
-
-		} catch (IOException e) {
-			// Unable to create file, likely because external storage is
-			// not currently mounted.
-			Log.w("ExternalStorage", "Error writing " + file, e);
-		}
-		return name;
-	}
 
 }
