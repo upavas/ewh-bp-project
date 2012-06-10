@@ -43,7 +43,7 @@
 	<string name="save_button">Guardar</string>
 
 	<!--measure list	-->
-	<string name="number">Nr</string>
+	<string name="number">Medida:</string>
 	<string name="date_time">FECHA HORA</string>
 	<string name="sys">SIS</string>
 	<string name="dia">DIA</string>

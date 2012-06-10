@@ -146,6 +146,8 @@ public class ValuesView extends View {
 			canvas.drawText(pulseRate + " bpm    ", w - 5, 2 * h / 3 + y,
 					paintFontRight);
 		}
+		
+		
 	}
 
 	public int getSPressure() {

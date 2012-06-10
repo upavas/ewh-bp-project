@@ -46,7 +46,7 @@
 	<string name="save_button">Save</string>
 
 	<!--measure list	-->
-	<string name="number">Nr</string>
+	<string name="number">Measure ID:</string>
 	<string name="date_time">DATE TIME</string>
 	<string name="sys">SYS</string>
 	<string name="dia">DIA</string>

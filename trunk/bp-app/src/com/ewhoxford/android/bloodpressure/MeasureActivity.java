@@ -169,7 +169,8 @@ public class MeasureActivity extends Activity {
 			plot.postRedraw();
 			// // notesText.append(demo.getPressureValueFiltered() + ", ");
 			// notesText.postInvalidate();
-			System.out.println("MEASURE FILTERED SIGNALL:"+demo.getPressureValueFiltered());
+			System.out.println("MEASURE FILTERED SIGNALL:"
+					+ demo.getPressureValueFiltered());
 		} catch (InterruptedException e) {
 			e.printStackTrace(); // To change body of catch statement use
 			// File | Settings | File Templates.
@@ -332,11 +333,11 @@ public class MeasureActivity extends Activity {
 				if (checkBox.isChecked()) {
 
 					try {
-						savedFileName = FileManager.saveFile(measureContext,
-								bloodPressureValue, arrayPressure, arrayTime,
-								time, notes);
-						FileManager.createVectors("amplified_signal_" + time,
-								demo.getBpMeasureFilteredHistory());
+						savedFileName = FileManager
+								.saveFile(measureContext, bloodPressureValue,
+										arrayPressure, arrayTime,
+										demo.getBpMeasureFilteredHistory(),
+										time, notes);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -422,7 +423,7 @@ public class MeasureActivity extends Activity {
 				R.string.pressure_y_legend).toString());
 		bpMeasureXYPlot.getRangeLabelWidget().pack();
 		bpMeasureXYPlot.disableAllMarkup();
-		
+
 		// hook up the plotUpdater to the data model:
 		// data.addObserver(plotUpdater);
 		// start observable datasource thread

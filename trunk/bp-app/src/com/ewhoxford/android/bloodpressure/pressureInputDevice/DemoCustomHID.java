@@ -76,7 +76,9 @@ public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 	private int x = 0;
 	private int y = 0;
 	private MyObservable notifier;
-
+	
+	int deviceId=2;// device 1=old device,2= new device. this is a hack.
+	
 	class MyObservable extends Observable {
 		@Override
 		public void notifyObservers() {
@@ -241,10 +243,18 @@ public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 				yValueFiltered = (int) (potentiometerBuffer[3]);
 				// setX(xValue);
 				// setY(yValue);
-
-				double aux = ConvertTommHg.convertTommHg(xValueFiltered, yValueFiltered);
-				double aux2 = ConvertTommHg.convertToVolt(xValue,
-						yValue);
+				double aux = 0;
+				double aux2 = 0;
+			
+				if (deviceId==1){
+					 aux = ConvertTommHg.convertTommHg(xValue, yValue);
+					 aux2 = ConvertTommHg.convertToVolt(xValueFiltered,yValueFiltered);
+				}else{
+					 aux = ConvertTommHg.convertTommHg(xValueFiltered, yValueFiltered);
+					 aux2 = ConvertTommHg.convertToVolt(xValue,yValue);
+				}
+				
+			
 				bpMeasureHistory.add(aux);
 				bpMeasureFilteredHistory.add(aux2);
 				// TODO : check this code.
