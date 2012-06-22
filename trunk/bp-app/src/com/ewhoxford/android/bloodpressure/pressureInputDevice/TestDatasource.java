@@ -43,6 +43,7 @@ public class TestDatasource implements Runnable {
 	private static final int MAX_SIZE = MeasureActivity.BOUNDARY_NUMBER_OF_POINTS;
 
 	private double pressureValue = 0;
+	private double pressureFilteredValue = 0;
 	private MyObservable notifier;
 	private int count = 0;
 	private boolean active = true;
@@ -66,6 +67,8 @@ public class TestDatasource implements Runnable {
 
 	private LinkedList<Number> bpMeasureHistory = new LinkedList<Number>();
 
+	private LinkedList<Number> bpMeasureFilteredHistory = new LinkedList<Number>();
+	
 	public boolean isActive() {
 		return active;
 	}
@@ -105,25 +108,15 @@ public class TestDatasource implements Runnable {
 			// }.start();
 			ReadCSV r = new ReadCSV();
 
-			int[][] pressureValues = r.readCSV(activity.getApplicationContext().getResources()
+			float[][] pressureValues = r.readCSV2(activity.getApplicationContext().getResources()
 					.openRawResource(R.raw.bp));
 			int l = pressureValues.length;
-			TimeSeriesMod pressureValuesMod = ConvertTommHg.convertArrayTommHg(
-					pressureValues, 100);
-			double[] pressureValuesFloat = pressureValuesMod.getPressure();
 			int k = 1;
 			while (k < l) {
-				if (bpMeasureHistory.size() != 0) {
-					if (Math.abs(bpMeasureHistory.getLast().doubleValue()
-							- pressureValuesFloat[k]) > linearFilterThreshold) {
-						bpMeasureHistory.add(bpMeasureHistory.getLast()
-								.doubleValue());
-					} else {
-						bpMeasureHistory.add(pressureValuesFloat[k]);
-					}
-				} else {
-					bpMeasureHistory.add(pressureValuesFloat[k]);
-				}
+						
+						bpMeasureHistory.add(pressureValues[k][1]);
+						bpMeasureFilteredHistory.add(pressureValues[k][2]);
+				
 				k = k + 1;
 			}
 
@@ -140,8 +133,8 @@ public class TestDatasource implements Runnable {
 						if (bpMeasure.size() > MAX_SIZE) {
 							bpMeasure.removeFirst();
 						}
-						pressureValue = pressureValuesFloat[count];
-
+						pressureValue = pressureValues[count][1];
+					    pressureFilteredValue=pressureValues[count][2];
 						bpMeasure.add(pressureValue);
 					}
 					j++;
@@ -248,6 +241,22 @@ public class TestDatasource implements Runnable {
 
 			}
 		}
+	}
+
+	public LinkedList<Number> getBpMeasureFilteredHistory() {
+		return bpMeasureFilteredHistory;
+	}
+
+	public void setBpMeasureFilteredHistory(LinkedList<Number> bpMeasureFilteredHistory) {
+		this.bpMeasureFilteredHistory = bpMeasureFilteredHistory;
+	}
+
+	public double getPressureFilteredValue() {
+		return pressureFilteredValue;
+	}
+
+	public void setPressureFilteredValue(double pressureFilteredValue) {
+		this.pressureFilteredValue = pressureFilteredValue;
 	}
 
 }
