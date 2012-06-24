@@ -73,8 +73,6 @@ public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 
 	private LinkedList<Number> bpMeasureHistory = new LinkedList<Number>();
 	private LinkedList<Number> bpMeasureFilteredHistory = new LinkedList<Number>();
-	private int x = 0;
-	private int y = 0;
 	private MyObservable notifier;
 	
 	int deviceId=2;// device 1=old device,2= new device. this is a hack.
@@ -266,19 +264,18 @@ public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 							.doubleValue();
 				//	System.out.printf("e do DEMOCUSTOMHID:"+count);
 					count++;
-					mod = count % 75;
+					mod = count % 50;
 
 					if (mod == 0) {
-						 Log.v("DemoCustom", "e do MeasureActiviry: Im here 2"
-						 + bpMeasureHistory.size());
+//						 Log.v("DemoCustom", "e do MeasureActiviry: Im here 2"
+//						 + bpMeasureHistory.size());
 						// handler.obtainMessage(0,
 						// new MessageSampledPressure(pressureValue))
 						// .sendToTarget();
 						this.setPressureValue(bpMeasureHistory.getLast()
 								.doubleValue());
 						this.setPressureValueFiltered(pressureValueFiltered);
-						this.setBpMeasureHistory(bpMeasureHistory);
-						this.setBpMeasureFilteredHistory(bpMeasureFilteredHistory);
+						
 						notifier.notifyObservers();
 					}
 				}
@@ -298,16 +295,6 @@ public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 			e.printStackTrace();
 			Log.v("DemoCustomHID", "e do DEMOCUSTOMHID");
 		}
-	}
-
-	private void setY(int yValue) {
-		this.y = yValue;
-
-	}
-
-	private void setX(int xValue) {
-		this.x = xValue;
-
 	}
 
 	/***********************************************************************
@@ -372,16 +359,6 @@ public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 
 	public void setPressureValue(double d) {
 		this.pressureValue = d;
-	}
-
-	public int getX() {
-		// TODO Auto-generated method stub
-		return x;
-	}
-
-	public int getY() {
-		// TODO Auto-generated method stub
-		return y;
 	}
 
 	public void addObserver(Observer observer) {

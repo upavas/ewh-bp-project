@@ -43,7 +43,7 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.ewhoxford.android.bloodpressure.database.BloodPressureMeasureTable.BPMeasure;
 import com.ewhoxford.android.bloodpressure.model.BloodPressureValue;
-import com.ewhoxford.android.bloodpressure.pressureInputDevice.DemoCustomHID;
+import com.ewhoxford.android.bloodpressure.pressureInputDevice.TestDemoCustomHID;
 import com.ewhoxford.android.bloodpressure.signalProcessing.SignalProcessing;
 import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 import com.ewhoxford.android.bloodpressure.utils.FileManager;
@@ -105,8 +105,8 @@ public class MeasureActivity extends Activity {
 	// event count
 	private int totalCount = 0;
 	// event count
-	private boolean testMode = false;
-	DemoCustomHID demo = null;
+	private boolean testMode = true;
+	TestDemoCustomHID demo = null;
 	PendingIntent pendingIntent = null;
 
 	private PowerManager.WakeLock wl;
@@ -675,7 +675,7 @@ public class MeasureActivity extends Activity {
 			// Log.v("MAURO", "APP WAS RESUMED AUTOMATICALLY");
 			UsbDevice device = (UsbDevice) intent
 					.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-			demo = new DemoCustomHID(this.getApplicationContext(), device,
+			demo = new TestDemoCustomHID(this.getApplicationContext(), device,
 					handler);
 			demo.addObserver(plotUpdater);
 		} else {
@@ -694,7 +694,7 @@ public class MeasureActivity extends Activity {
 				 * For each device that we found attached, see if we are able to
 				 * load a demo for that device.
 				 */
-				demo = new DemoCustomHID(this.getApplicationContext(),
+				demo = new TestDemoCustomHID(this.getApplicationContext(),
 						deviceIterator.next(), handler);
 				demo.addObserver(plotUpdater);
 				if (demo != null) {
@@ -704,7 +704,7 @@ public class MeasureActivity extends Activity {
 		}
 
 		if (testMode) {
-			demo = new DemoCustomHID(this.getApplicationContext(), null,
+			demo = new TestDemoCustomHID(this.getApplicationContext(), null,
 					handler);
 			demo.addObserver(plotUpdater);
 			// break;
