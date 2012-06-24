@@ -118,19 +118,20 @@ public class ReadCSV {
 
 			String line = null;
 			int row = 0;
-			int col = 0;
-
 			// read each line of text file
 			while ((line = bufRdr.readLine()) != null && row < 5000) {
 				StringTokenizer st = new StringTokenizer(line, ",");
-				int aux=0;				
+				int aux=0;	
+				int col = 0;
 				while (st.hasMoreTokens()) {
 					// get next token and store it in the array
 					if(aux>0){
-					numbers[row][col] = new Float(st.nextToken());
-					col++;
+						numbers[row][col] = new Float(st.nextToken());
+						col++;
+					}else{
+						st.nextToken();
 					}
-					aux++;
+					aux=aux+1;
 				}
 				col = 0;
 				row++;

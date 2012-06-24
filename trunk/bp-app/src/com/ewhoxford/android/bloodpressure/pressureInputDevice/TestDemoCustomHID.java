@@ -34,8 +34,6 @@ import android.hardware.usb.UsbManager;
 import android.os.Handler;
 
 import com.ewhoxford.android.bloodpressure.R;
-import com.ewhoxford.android.bloodpressure.signalProcessing.ConvertTommHg;
-import com.ewhoxford.android.bloodpressure.signalProcessing.TimeSeriesMod;
 import com.ewhoxford.android.bloodpressure.utils.ReadCSV;
 
 /**
@@ -58,6 +56,7 @@ public class TestDemoCustomHID extends Demo implements Runnable, DemoInterface {
 	private Context context = null;
 	Thread thread;
 	private double pressureValue = 0;
+	private double pressureValueFiltered = 0;
 
 	public static final int SIGNAL1 = 0;
 	// private static final int SAMPLE_SIZE = 1;
@@ -72,9 +71,10 @@ public class TestDemoCustomHID extends Demo implements Runnable, DemoInterface {
 	int linearFilterThreshold = 40;
 	int mouseDisconnectedCount = 0;
 
-	private LinkedList<Number> bpMeasure = new LinkedList<Number>();
+	private LinkedList<Number> bpMeasureFilteredHistory = new LinkedList<Number>();
 
 	private LinkedList<Number> bpMeasureHistory = new LinkedList<Number>();
+
 	private int x = 0;
 	private int y = 0;
 	private MyObservable notifier;
@@ -119,27 +119,27 @@ public class TestDemoCustomHID extends Demo implements Runnable, DemoInterface {
 		 * this case since we know the exact device we are connecting to, we can
 		 * hard code it.
 		 */
-		//intf = device.getInterface(0);
+		// intf = device.getInterface(0);
 
 		/* Open a connection to the USB device */
-//		connection = manager.openDevice(device);
-//
-//		if (connection == null) {
-//			return;
-//		}
-//
-//		/* Claim the required interface to gain access to it */
-//		if (connection.claimInterface(intf, true) == true) {
-			thread = new Thread(this);
+		// connection = manager.openDevice(device);
+		//
+		// if (connection == null) {
+		// return;
+		// }
+		//
+		// /* Claim the required interface to gain access to it */
+		// if (connection.claimInterface(intf, true) == true) {
+		thread = new Thread(this);
 		thread.start();
-//			connected = true;
-//		} else {
-//			/*
-//			 * if the interface claim failed, we should close the connection and
-//			 * exit.
-//			 */
-//			connection.close();
-//		}
+		// connected = true;
+		// } else {
+		// /*
+		// * if the interface claim failed, we should close the connection and
+		// * exit.
+		// */
+		// connection.close();
+		// }
 	}
 
 	/**
@@ -194,25 +194,15 @@ public class TestDemoCustomHID extends Demo implements Runnable, DemoInterface {
 			// }.start();
 			ReadCSV r = new ReadCSV();
 
-			int[][] pressureValues = r.readCSV(context.getResources()
-					.openRawResource(R.raw.bp));
+			float[][] pressureValues = r.readCSV2(context.getResources()
+					.openRawResource(R.raw.bp2));
+
 			int l = pressureValues.length;
-			TimeSeriesMod pressureValuesMod = ConvertTommHg.convertArrayTommHg(
-					pressureValues, 100);
-			double[] pressureValuesFloat = pressureValuesMod.getPressure();
+
 			int k = 1;
 			while (k < l) {
-				if (bpMeasureHistory.size() != 0) {
-					if (Math.abs(bpMeasureHistory.getLast().doubleValue()
-							- pressureValuesFloat[k]) > linearFilterThreshold) {
-						bpMeasureHistory.add(bpMeasureHistory.getLast()
-								.doubleValue());
-					} else {
-						bpMeasureHistory.add(pressureValuesFloat[k]);
-					}
-				} else {
-					bpMeasureHistory.add(pressureValuesFloat[k]);
-				}
+				bpMeasureHistory.add(pressureValues[k][0]);
+				bpMeasureFilteredHistory.add(pressureValues[k][1]);
 				k = k + 1;
 			}
 
@@ -226,18 +216,17 @@ public class TestDemoCustomHID extends Demo implements Runnable, DemoInterface {
 					// signal processing problem correction
 
 					if (j == 100) {
-						if (bpMeasure.size() > MAX_SIZE) {
-							bpMeasure.removeFirst();
-						}
-						pressureValue = pressureValuesFloat[count];
 
-						bpMeasure.add(pressureValue);
+						pressureValue = pressureValues[count][0];
+						pressureValueFiltered = pressureValues[count][1];
+
 					}
 					j++;
-					count=count+1;;
-					if(count==l){
-						active=false;
-						//this.close();
+					count = count + 1;
+					;
+					if (count == l) {
+						active = false;
+						// this.close();
 					}
 				}
 
@@ -247,112 +236,6 @@ public class TestDemoCustomHID extends Demo implements Runnable, DemoInterface {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
-		// /* Get the IN endpoint. It is the first endpoint in the interface */
-		// UsbEndpoint endpointIN = intf.getEndpoint(0);
-		// /*
-		// * Create the packets that we are going to send to the attached USB
-		// * device.
-		// */
-		// // byte[] getPotentiometerRequest = new byte[]{(byte)0x37};
-		// //
-		// byte[] getPotentiometerResults = new byte[64];
-		// // int potentiometerLastResults = Integer.MAX_VALUE;
-		// int result = 0;
-		// int yValue = 0;
-		// int xValue = 0;
-		//
-		// int mod = 1;
-		// // int currentPosition = 0;
-		// // boolean update = false;
-		// try {
-		// while (true) {
-		// /*
-		// * If the connection was closed, destroy the connections and
-		// * variables and exit this thread.
-		// */
-		// if (wasCloseRequested() == true) {
-		// destroy();
-		// return;
-		// }
-		//
-		// /* Sleep the thread for a while */
-		// try {
-		// Thread.sleep(13);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		//
-		// /* Read the results of that request */
-		// do {
-		// result = connection.bulkTransfer(endpointIN,
-		// getPotentiometerResults,
-		// getPotentiometerResults.length, 1000);
-		// } while ((result < 0) && (wasCloseRequested() == false));
-		//
-		// /* Convert the resulting data to an int */
-		// byte[] potentiometerBuffer = new byte[] { 0, 0, 0, 0 };// MAURO
-		// // CHANGED
-		// // THIS
-		// // TO 2
-		// // BUFFERS
-		// potentiometerBuffer[0] = getPotentiometerResults[0];
-		// potentiometerBuffer[1] = getPotentiometerResults[1];
-		//
-		// xValue = (int) (potentiometerBuffer[0]);
-		// yValue = (int) (potentiometerBuffer[1]);
-		// setX(xValue);
-		// setY(yValue);
-		//
-		// double aux = ConvertTommHg.convertTommHg(xValue, yValue);
-		// bpMeasureHistory.add(aux);
-		//
-		// // TODO : check this code.
-		//
-		// if (bpMeasureHistory.size() != 0) {
-		//
-		// pressureValue = bpMeasureHistory.getLast().doubleValue();
-		// // System.out.printf("e do DEMOCUSTOMHID:"+count);
-		// count++;
-		// mod = count % 75;
-		//
-		// if (mod == 0) {
-		// // Log.v("DemoCustom", "e do MeasureActiviry: Im here 2"
-		// // + bpMeasureHistory.size());
-		// // handler.obtainMessage(0,
-		// // new MessageSampledPressure(pressureValue))
-		// // .sendToTarget();
-		// this.setPressureValue(bpMeasureHistory.getLast()
-		// .doubleValue());
-		// this.setBpMeasureHistory(bpMeasureHistory);
-		// notifier.notifyObservers();
-		// }
-		// }
-		// //
-		// // ByteBuffer buf = ByteBuffer.wrap(potentiometerBuffer);
-		// // buf.order(ByteOrder.LITTLE_ENDIAN);
-		// // int potentiometerResults = buf.getInt();
-		// //
-		// /*
-		// * If the new results are different from the previous results,
-		// * then send a message to the specified handler containing the
-		// * new data.
-		// */
-		//
-		// }
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// Log.v("DemoCustomHID", "e do DEMOCUSTOMHID");
-		// }
-	}
-
-	private void setY(int yValue) {
-		this.y = yValue;
-
-	}
-
-	private void setX(int xValue) {
-		this.x = xValue;
 
 	}
 
@@ -397,14 +280,6 @@ public class TestDemoCustomHID extends Demo implements Runnable, DemoInterface {
 		this.active = active;
 	}
 
-	public LinkedList<Number> getBpMeasure() {
-		return bpMeasure;
-	}
-
-	public void setBpMeasure(LinkedList<Number> bpMeasure) {
-		this.bpMeasure = bpMeasure;
-	}
-
 	public LinkedList<Number> getBpMeasureHistory() {
 		return bpMeasureHistory;
 	}
@@ -437,6 +312,23 @@ public class TestDemoCustomHID extends Demo implements Runnable, DemoInterface {
 
 	public void removeObserver(Observer observer) {
 		notifier.deleteObserver(observer);
+	}
+
+	public LinkedList<Number> getBpMeasureFilteredHistory() {
+		return bpMeasureFilteredHistory;
+	}
+
+	public void setBpMeasureFilteredHistory(
+			LinkedList<Number> bpMeasureFilteredHistory) {
+		this.bpMeasureFilteredHistory = bpMeasureFilteredHistory;
+	}
+
+	public double getPressureValueFiltered() {
+		return pressureValueFiltered;
+	}
+
+	public void setPressureValueFiltered(double pressureValueFiltered) {
+		this.pressureValueFiltered = pressureValueFiltered;
 	}
 
 }
