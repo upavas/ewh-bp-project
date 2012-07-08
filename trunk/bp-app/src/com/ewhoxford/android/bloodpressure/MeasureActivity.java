@@ -128,17 +128,17 @@ public class MeasureActivity extends Activity {
 
 			if (plotData.size() == measureSize
 					&& measureSize < BOUNDARY_NUMBER_OF_POINTS) {
-				// messageHandler.post(connectedSensorText);
+				messageHandler.post(connectedSensorText);
 			} else {
 				measureSize = plotData.size();
 				// check if operator has reached reasonable cuff pressure
 				if (!maxPressureReached) {
 					if (plotData.getLast().doubleValue() > maxPressureValueForMeasure) {
 						maxPressureReached = true;
-						// messageHandler.post(changeTextMessage);
+						messageHandler.post(changeTextMessage);
 
 					} else {
-						// messageHandler.post(changeTextMessagePump);
+						messageHandler.post(changeTextMessagePump);
 					}
 				}
 			}
@@ -166,12 +166,8 @@ public class MeasureActivity extends Activity {
 		try {
 			bpMeasureSeries.setModel(plotData,
 					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-			// notesText.setText(notesText.getText()+", "+demo.getPressureValueFiltered());
 			plot.postRedraw();
-			// // notesText.append(demo.getPressureValueFiltered() + ", ");
-			// notesText.postInvalidate();
-			System.out.println("MEASURE FILTERED SIGNALL:"
-					+ demo.getPressureValueFiltered());
+
 		} catch (InterruptedException e) {
 			e.printStackTrace(); // To change body of catch statement use
 			// File | Settings | File Templates.
@@ -185,25 +181,24 @@ public class MeasureActivity extends Activity {
 			startSignalProcessing();
 		}
 	};
-	// final Runnable updataBPResultView = new Runnable() {
-	//
-	// public void run() {
-	// Log.d("MARCO", bloodPressureValue.toString());
-	// int dPressure = (int) bloodPressureValue.getDiastolicBP();
-	// int sPressure = (int) bloodPressureValue.getSystolicBP();
-	// int pulse = (int) bloodPressureValue.getHeartRate();
-	// // TODO debugging!
-	// ValuesView valuesView = (ValuesView) findViewById(R.id.results);
-	// valuesView.requestFocus();
-	// valuesView.setSPressure(sPressure);
-	// valuesView.setDPressure(dPressure);
-	// valuesView.setPulseRate(pulse);
-	// valuesView.invalidate();
-	// saveButton.setEnabled(true);
-	// saveButton.invalidate();
-	// // messageHandler.post(disconnectedSensor);
-	// }
-	// };
+	final Runnable updataBPResultView = new Runnable() {
+
+		public void run() {
+
+			int dPressure = (int) bloodPressureValue.getDiastolicBP();
+			int sPressure = (int) bloodPressureValue.getSystolicBP();
+			int pulse = (int) bloodPressureValue.getHeartRate();
+			// TODO debugging!
+			ValuesView valuesView = (ValuesView) findViewById(R.id.results);
+			valuesView.requestFocus();
+			valuesView.setSPressure(sPressure);
+			valuesView.setDPressure(dPressure);
+			valuesView.setPulseRate(pulse);
+			valuesView.invalidate();
+			saveButton.setEnabled(true);
+			saveButton.invalidate();
+		}
+	};
 
 	{
 		// initialized time series
@@ -381,15 +376,7 @@ public class MeasureActivity extends Activity {
 					}
 				});
 
-		// #### End of Set up click listeners for all the buttons
-
-		// initialize our XYPlot reference and real time update code:
-
-		// getInstance and position datasets:
-		// data = new TestDatasource(this);
-		// SampleDynamicSeries signalSeries = new SampleDynamicSeries(data, 0,
-		// "Blood Pressure");plotUpdater = new MyPlotUpdater(bpMeasureXYPlot);
-
+		
 		bpMeasureXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 		// register plot with plot updater observer
 		plotUpdater = new MyPlotUpdater(bpMeasureXYPlot);
@@ -425,10 +412,6 @@ public class MeasureActivity extends Activity {
 		bpMeasureXYPlot.getRangeLabelWidget().pack();
 		bpMeasureXYPlot.disableAllMarkup();
 
-		// hook up the plotUpdater to the data model:
-		// data.addObserver(plotUpdater);
-		// start observable datasource thread
-		// new Thread(data).start();
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "DoNotDimScreen");
 
@@ -449,103 +432,47 @@ public class MeasureActivity extends Activity {
 	// /**
 	// * Determination of BP and pulse algorithm
 	// */
-	// private void startSignalProcessing() {
-	//
-	// // myProgressDialog = ProgressDialog.show(MeasureActivity.this,
-	// // getResources().getText(R.string.alert_dialog_processing_data),
-	// // getResources().getText(R.string.alert_dialog_determine_bp),
-	// // true);
-	//
-	// new Thread() {
-	// public void run() {
-	// Log.v("MAURO:", "BEFORE SIGNAL PROCESSING");
-	// int l = demo.getBpMeasureHistory().size();
-	// arrayTime = new float[l];
-	// arrayPressure = new double[l];
-	// int i = 0;
-	// int fs = 100;
-	// while (i < l) {
-	// arrayPressure[i] = demo.getBpMeasureHistory().get(i)
-	// .doubleValue();
-	// arrayTime[i] = ((float) i / (float) fs);
-	// i++;
-	// }
-	//
-	// TimeSeriesMod signal = new TimeSeriesMod();
-	// signal.setPressure(arrayPressure);
-	//
-	// signal.setTime(arrayTime);
-	// bloodPressureValue = new BloodPressureValue();
-	// //SignalProcessing r = new SignalProcessing();
-	//
-	// try {
-	// bloodPressureValue = r.signalProcessing(signal, fs);
-	// } catch (Exception e) {
-	// myProgressDialog.dismiss();
-	// messageHandler.post(discardTemBadMeasure);
-	// e.printStackTrace();
-	// }
-	//
-	// Log.v("MAURO:", "AFTER CALCULATE BLOOD PRESSURE VALUES");
-	// // Dismiss the Dialog
-	// //myProgressDialog.dismiss();
-	// messageHandler.post(updataBPResultView);
-	// }
-	// }.start();
-	//
-	// }
-
-	/**
-	 * Determination of BP and pulse algorithm
-	 */
 	private void startSignalProcessing() {
 
-		// Log.v("MAURO:", "BEFORE SIGNAL PROCESSING");
-		int l = demo.getBpMeasureHistory().size();
-		arrayTime = new float[l];
-		arrayPressure = new double[l];
-		int i = 0;
-		int fs = 100;
-		while (i < l) {
-			arrayPressure[i] = demo.getBpMeasureHistory().get(i).doubleValue();
-			arrayTime[i] = ((float) i / (float) fs);
-			i++;
-		}
+		myProgressDialog = ProgressDialog.show(MeasureActivity.this,
+				getResources().getText(R.string.alert_dialog_processing_data),
+				getResources().getText(R.string.alert_dialog_determine_bp),
+				true);
 
-		TimeSeriesMod signal = new TimeSeriesMod();
-		signal.setPressure(arrayPressure);
+		new Thread() {
+			public void run() {
+				// Log.v("MAURO:", "BEFORE SIGNAL PROCESSING");
+				int l = demo.getBpMeasureHistory().size();
+				arrayTime = new float[l];
+				arrayPressure = new double[l];
+				int i = 0;
+				int fs = 100;
+				while (i < l) {
+					arrayPressure[i] = demo.getBpMeasureHistory().get(i)
+							.doubleValue();
+					arrayTime[i] = ((float) i / (float) fs);
+					i++;
+				}
 
-		signal.setTime(arrayTime);
-		bloodPressureValue = new BloodPressureValue();
-		SignalProcessing r = new SignalProcessing();
+				TimeSeriesMod signal = new TimeSeriesMod();
+				signal.setPressure(arrayPressure);
 
-		try {
-			bloodPressureValue = r.signalProcessing(signal, fs);
-		} catch (Exception e) {
-			// myProgressDialog.dismiss();
-			// messageHandler.post(discardTemBadMeasure);
-			e.printStackTrace();
-		}
+				signal.setTime(arrayTime);
+				bloodPressureValue = new BloodPressureValue();
+				SignalProcessing r = new SignalProcessing();
 
-		// Log.v("MAURO:", "AFTER CALCULATE BLOOD PRESSURE VALUES");
-		// Dismiss the Dialog
-		// myProgressDialog.dismiss();
-		// messageHandler.post(updataBPResultView);
+				try {
+					bloodPressureValue = r.signalProcessing(signal, fs);
+				} catch (Exception e) {
+					myProgressDialog.dismiss();
+					messageHandler.post(discardTemBadMeasure);
+					e.printStackTrace();
+				}
+				myProgressDialog.dismiss();
+				messageHandler.post(updataBPResultView);
+			}
+		}.start();
 
-		// Log.d("MARCO", bloodPressureValue.toString());
-		int dPressure = (int) bloodPressureValue.getDiastolicBP();
-		int sPressure = (int) bloodPressureValue.getSystolicBP();
-		int pulse = (int) bloodPressureValue.getHeartRate();
-		// TODO debugging!
-		ValuesView valuesView = (ValuesView) findViewById(R.id.results);
-		valuesView.requestFocus();
-		valuesView.setSPressure(sPressure);
-		valuesView.setDPressure(dPressure);
-		valuesView.setPulseRate(pulse);
-		valuesView.invalidate();
-		saveButton.setEnabled(true);
-		saveButton.invalidate();
-		// messageHandler.post(disconnectedSensor);
 	}
 
 	// Create runnable for chaging messages while pressure is being acquired
