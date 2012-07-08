@@ -266,7 +266,7 @@ public class DemoCustomHID extends Demo implements Runnable, DemoInterface {
 					count++;
 					mod = count % 50;
 
-					if (mod == 0) {
+					if (mod == 0 && active) {
 //						 Log.v("DemoCustom", "e do MeasureActiviry: Im here 2"
 //						 + bpMeasureHistory.size());
 						// handler.obtainMessage(0,

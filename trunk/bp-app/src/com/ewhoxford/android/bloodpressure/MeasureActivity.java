@@ -147,6 +147,7 @@ public class MeasureActivity extends Activity {
 				// if max pressure reached, check if measurement is now over
 				if (plotData.getLast().doubleValue() < minPressureReached) {
 					// o.deleteObservers();
+					demo.setActive(false);
 					demo.close();
 					// startSignalProcessing();
 					messageHandler.post(runSignalProcessing);

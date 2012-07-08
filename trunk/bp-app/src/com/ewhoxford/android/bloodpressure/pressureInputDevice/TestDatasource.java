@@ -125,7 +125,7 @@ public class TestDatasource implements Runnable {
 				Thread.sleep(5);
 
 				int j = 1;
-				while (j < 51) {
+				while (j < 51 && active) {
 
 					// signal processing problem correction
 
@@ -140,7 +140,7 @@ public class TestDatasource implements Runnable {
 					j++;
 					count++;
 				}
-
+				if(active)
 				notifier.notifyObservers();
 
 			}
