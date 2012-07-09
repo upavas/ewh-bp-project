@@ -1,0 +1,28 @@
+
+syntax: regexp
+\.apk$
+syntax: regexp
+\.dex$
+syntax: regexp
+\.ap_$
+syntax: regexp
+^trunk/bp-app/bin$
+\.swp$
+\~$
+\.out$
+\.log$
+
+syntax: regexp
+^trunk/bp-swt-app/\.settings$
+syntax: regexp
+^trunk/bp-swt-app/bin$
+syntax: regexp
+^trunk/bp-swt-app/bin$
+syntax: regexp
+^trunk/bp-swt-app/\.classpath$
+syntax: regexp
+^trunk/bp-swt-app/\.classpath$
+syntax: regexp
+^trunk/bp-swt-app/\.classpath$
+syntax: regexp
+^trunk/bp-swt-app/\.classpath$

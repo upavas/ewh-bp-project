@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Blood Pressure</string>
+	<string name="measure_title">New Measure</string>
+
+	<string name="help_title">Instructions</string>
+
+	<string name="help_subtitle1">What you need:</string>
+
+	<string name="help_needed">- Cuff without manometer\n
+		- BP device\n
+		- Android
+		phone\n
+		- USB cable</string>
+	<string name="help_before">
+		Before taking readings:\n
+		- Do not drink caffeine
+		or\n
+		smoke for at least 30min\n
+		- Remove tight fitting clothes\n
+		from
+		your arm
+	</string>
+	<string name="help_reading">
+		Taking readings:\n
+		- Rest your arm on a table\n
+		at
+		the
+		level of your heart
+   </string>
+
+	<string name="help_record">
+		Recording readings:\n
+		- Push save button after the
+		reading\n
+		- bp_measure_timeInMilliseconds.csv will have the data
+	</string>
+
+	<string name="new_measure_button">New Blood Pressure Measure</string>
+	<string name="view_measure_button">View Saved Measurements</string>
+	<string name="help_button">Help</string>
+	<string name="delete_button">Delete</string>
+	<string name="discard_button">Discard</string>
+	<string name="measure_list_no_items">No items</string>
+	<string name="empty_measure_list">No Blood Pressure Measures</string>
+	<string name="save_button">Save</string>
+
+	<!--measure list	-->
+	<string name="number">Measure ID</string>
+	<string name="date_time">DATE TIME</string>
+	<string name="sys">SYS</string>
+	<string name="dia">DIA</string>
+	<string name="pulse">HR </string>
+
+	<!--measure view page -->
+	<string name="view_measure_header">View Blood Pressure Measure</string>
+	<string name="has_csv_file_no">Has csv file: No</string>
+	<string name="has_csv_file_yes">Has csv file: Yes</string>
+	<string name="alert_dialog_delete_measure">"Are you sure you want to delete measure?</string>
+	<string name="modified_date">Modified:</string>
+	<string name="created_date">Created:</string>
+	<string name="alert_dialog_changes_saved">Changes Saved</string>
+	<!-- measure -->
+	<string name="pump">PUMP! PUMP! PUMP!</string>
+	<string name="stop_pump">"STOP PUMPING!"</string>
+	<string name="create_csv_file">create csv file</string>
+	<string name="notes">Notes:</string>
+	<string name="alert_dialog_discard_measure">Are you sure you want to discard measure?</string>
+	<string name="alert_dialog_no">No</string>
+	<string name="alert_dialog_yes">Yes</string>
+	<string name="alert_dialog_data_saved_file_and_database">Data saved to csv file and to database</string>
+	<string name="alert_dialog_data_saved_to_database">Data saved to database</string>
+	<string name="pressure_x_legend">Points</string>
+	<string name="pressure_y_legend">Pressure (mmHg)</string>
+	<string name="alert_dialog_processing_data">Processing Data...</string>
+	<string name="alert_dialog_determine_bp">Determining Blood Pressure...</string>
+	<string name="alert_dialog_discard_changes">
+		Are you sure you want to discard changes?
+	</string>
+	<string name="alert_dialog_discard_bad_measure">Please repeat measure. Deflate slowly</string>
+	<string name="alert_dialog_discard_temp_bad_measure">Not Measurable. Please repeat measure.</string>
+	
+	<string name="disconnect_sensor">Disconnect USB device.</string>
+	<string name="connect_sensor">Connect USB device.</string>
+	
+	
+	<!--
+			Google account selection
+		-->
+	<string name="no_account_found_title">No Account Found</string>
+	<string name="no_account_found">No account found on device for connecting to
+		Google
+		services.</string>
+	<string name="choose_account_title">Choose Account</string>
+
+	<!-- Health profile selection -->
+	<string name="choose_profile_title">Choose Health Profile</string>
+
+	<!-- Main activity button and menu option strings -->
+	<string name="new_result">New Result</string>
+	<string name="sync_measures">Sync Measures</string>
+	<string name="choose_account">Choose Account</string>
+	<string name="choose_profile">Choose Profile</string>
+	<string name="delete_results">Delete Result</string>
+
+	<string name="sync_profile">Sync</string>
+	<string name="sync_ghealth_button">Sync GHealth</string>
+
+	<string name="syncked_no">Syncked with EMR: No</string>
+	<string name="phr_provider_no">Provider: None</string>
+	<string name="phr_profile_no">Patient Profile: None</string>
+	<string name="phr_username_no">Account: None</string>
+
+	<string name="phr_provider_google">com.google</string>
+	<string name="syncked">Syncked with EMR: Yes</string>
+	<string name="phr_provider">EMR Provider: </string>
+	<string name="phr_profile">Patient Profile: </string>
+	<string name="phr_username">Account: </string>
+
+	<!-- Progress dialog text -->
+	<string name="loading">Loading... Please wait.</string>
+
+
+	<!-- Network error dialog strings -->
+	<string name="connection_error_title">Connection Error</string>
+	<string name="connection_error_message">Unable to connect to Google Health service. Please
+		check your network connection and try again.</string>
+
+	<!-- Health notice dialog text -->
+	<string name="health_notice">If you have not yet enabled your Google Health
+		account, any data uploaded by this application will be held at
+		Google
+		until you do so. To enable your account and view your data,
+		just go to
+		https://health.google.com and sign in.</string>
+
+	<!-- Main activity dashboard buttons -->
+	<string name="account">Account</string>
+	<string name="profile">Profile</string>
+
+	<string name="ok">OK</string>
+	<string name="alert_dialog_bp_syncked">Measure data synched with Google Health Account
+	</string>
+	<string name="alert_dialog_bp_syncked_error">Synck with Google Health was not sucessfull
+	</string>
+	<string name="alert_dialog_bp_synck_again">Push the "Sync GHealth" Button again to sync</string>
+	</resources>

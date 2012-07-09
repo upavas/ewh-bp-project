@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string name="app_name">Pression artérielle</string>
+        <string name="measure_title">Mesure</string>
+
+        <string name="help_title">Instructions</string>
+
+        <string name="help_subtitle1">Matériel requis</string>
+
+        <string name="help_needed">- Brassard sans manomètre\n
+                - péripherique PA\n
+                - téléphone
+                Android\n
+                - câble USB</string>
+        <string name="help_before">
+                Avant de prendre la mesure\n
+                - Ne buvez pas de caféine
+                et\n
+                ne fumez pas pendant au moins 30min\n
+                - Retirez les vêtements qui vous serrent\n
+                le
+                bras
+        </string>
+        <string name="help_reading">
+                Pour la mesure\n
+                - Posez votre bras sur une table\n
+                au
+                niveau de votre cœur
+   </string>
+
+        <string name="help_record">
+                Enregistrer la mesure\n
+                - Appuyez sur le bouton Sauvegarder
+                après la mesure\n
+                - le fichier bp_measure_timeInMilliseconds.csv contiendra les données
+        </string>
+
+        <string name="new_measure_button">Nouvelle mesure de Pression Artérielle</string>
+        <string name="view_measure_button">Voir les mesures sauvegardées</string>
+        <string name="help_button">Aide</string>
+        <string name="delete_button">Supprimer</string>
+        <string name="discard_button">Ignorer</string>
+        <string name="measure_list_no_items">Aucun élément</string>
+        <string name="empty_measure_list">Aucune mesure de Pression Artérielle</string>
+        <string name="save_button">Sauvegarder</string>
+
+        <!--measure list        -->
+        <string name="number">Mesure N°</string>
+        <string name="date_time">DATE HEURE</string>
+        <string name="sys">PAS</string>
+        <string name="dia">PAD</string>
+        <string name="pulse">RC </string>
+
+        <!--measure view page -->
+        <string name="view_measure_header">Voir les mesures de Pression Artérielle</string>
+        <string name="has_csv_file_no">Possède un fichier csv : Non</string>
+        <string name="has_csv_file_yes">Possède un fichier csv : Oui</string>
+        <string name="alert_dialog_delete_measure">Êtes vous sûr(e) de vouloir ignorer la mesure ?</string>
+        <string name="modified_date">Modifié le :</string>
+        <string name="created_date">Crée le :</string>
+        <string name="alert_dialog_changes_saved">Changements sauvegardés</string>
+        <!-- measure -->
+        <string name="pump">POMPEZ ! POMPEZ ! POMPEZ !</string>
+        <string name="stop_pump">"ARRÊTER DE POMPER!"</string>
+        <string name="create_csv_file">créer un fichier csv</string>
+        <string name="notes">Notes :</string>
+        <string name="alert_dialog_discard_measure">Êtes vous sûr(e) de vouloir jeter la mesure ?</string>
+        <string name="alert_dialog_no">Non</string>
+        <string name="alert_dialog_yes">Oui</string>
+        <string name="alert_dialog_data_saved_file_and_database">Données sauvegardées dans le fichier csv et dans la
+                base de données</string>
+        <string name="alert_dialog_data_saved_to_database">Données enregistrées dans la base de données</string>
+        <string name="pressure_x_legend">Temps (s)</string>
+        <string name="pressure_y_legend">Pression (mmHg)</string>
+        <string name="alert_dialog_processing_data">Calcul en cours...</string>
+        <string name="alert_dialog_determine_bp">Détermine la Pression Artérielle...</string>
+        <string name="alert_dialog_discard_changes">Êtes vous sûr(e) de vouloir ignorer les changements ?
+        </string>
+
+</resources>
