@@ -197,6 +197,8 @@ public class MeasureActivity extends Activity {
 			valuesView.invalidate();
 			saveButton.setEnabled(true);
 			saveButton.invalidate();
+			
+			//if is called by sana, send some other values
 		}
 	};
 
