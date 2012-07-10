@@ -112,8 +112,8 @@ public class MeasureActivity extends Activity {
 	PendingIntent pendingIntent = null;
 
 	private PowerManager.WakeLock wl;
-	
-	private boolean sanaFlag=false;
+
+	private boolean sanaFlag = false;
 
 	LinkedList<Number> plotData = new LinkedList<Number>();
 	double pressureValue = 0;
@@ -193,42 +193,29 @@ public class MeasureActivity extends Activity {
 			int sPressure = (int) bloodPressureValue.getSystolicBP();
 			int pulse = (int) bloodPressureValue.getHeartRate();
 			// TODO debugging!
-			
+
 			ValuesView valuesView = (ValuesView) findViewById(R.id.results);
 			valuesView.requestFocus();
 			/*
+			 * valuesView.setSPressure(sPressure);
+			 * valuesView.setDPressure(dPressure);
+			 * valuesView.setPulseRate(pulse); valuesView.invalidate();
+			 * saveButton.setEnabled(true); saveButton.invalidate();
+			 */
+			// if is called by sana, send some other values
+
+			if (sanaFlag) {
+				saveButton.setText("Sana");
+			}
+			// ValuesView valuesView = (ValuesView) findViewById(R.id.results);
+			valuesView.requestFocus();
 			valuesView.setSPressure(sPressure);
 			valuesView.setDPressure(dPressure);
 			valuesView.setPulseRate(pulse);
 			valuesView.invalidate();
 			saveButton.setEnabled(true);
 			saveButton.invalidate();
-			*/
-			//if is called by sana, send some other values
-			
-			if(sanaFlag){
-                //return to sana with the values that are obtained here
-                valuesView.setSPressure(101);
-                valuesView.setDPressure(101);
-                valuesView.setPulseRate(101);
-                valuesView.invalidate();
-                saveButton.setText("Sana");
-                saveButton.setEnabled(true);
-                saveButton.invalidate();
-            }
-            else {
-           
-            	//ValuesView valuesView = (ValuesView) findViewById(R.id.results);
-    			valuesView.requestFocus();
-    			valuesView.setSPressure(sPressure);
-    			valuesView.setDPressure(dPressure);
-    			valuesView.setPulseRate(pulse);
-    			valuesView.invalidate();
-    			saveButton.setEnabled(true);
-    			saveButton.invalidate();
-    
-            }
-			
+
 		}
 	};
 
@@ -349,73 +336,75 @@ public class MeasureActivity extends Activity {
 
 		saveButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-			
-				if(sanaFlag) {
+
+				if (sanaFlag) {
 					ValuesView pressureValues = (ValuesView) findViewById(R.id.results);
-                    int sPressure = pressureValues.getSPressure();
-                    int dPressure = pressureValues.getDPressure();
-                    int pRate = pressureValues.getPulseRate();
-                   
-                    String sanaAnswer = "Sistolic:" + sPressure + ", Distolic:" + dPressure + ", HR:" + pRate;
-                    //String sanaAnswer = sPressure + " - " + dPressure;
-                   
-                    Intent data = getIntent();
-                    data.putExtra(Intent.EXTRA_TEXT,sanaAnswer);
-                    //data.putExtra(Intent.EXTRA_TEXT,"1234");
-                   
-                    setResult(RESULT_OK,data); 
-                    finish();
-				}
-				
-				else{
-			
-				String savedFileName = "";
-				String notes = "";
+					int sPressure = pressureValues.getSPressure();
+					int dPressure = pressureValues.getDPressure();
+					int pRate = pressureValues.getPulseRate();
 
-				if (notesText.getText().length() != 0) {
-					notes = notesText.getText().toString();
+					String sanaAnswer = "Sistolic:" + sPressure + ", Distolic:"
+							+ dPressure + ", HR:" + pRate;
+					// String sanaAnswer = sPressure + " - " + dPressure;
+
+					Intent data = getIntent();
+					data.putExtra(Intent.EXTRA_TEXT, sanaAnswer);
+					// data.putExtra(Intent.EXTRA_TEXT,"1234");
+
+					setResult(RESULT_OK, data);
+					finish();
 				}
 
-				Long time = System.currentTimeMillis();
+				else {
 
-				if (checkBox.isChecked()) {
+					String savedFileName = "";
+					String notes = "";
 
-					try {
-						savedFileName = FileManager
-								.saveFile(measureContext, bloodPressureValue,
-										arrayPressure, arrayTime,
-										demo.getBpMeasureFilteredHistory(),
-										time, notes);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} finally {
+					if (notesText.getText().length() != 0) {
+						notes = notesText.getText().toString();
+					}
+
+					Long time = System.currentTimeMillis();
+
+					if (checkBox.isChecked()) {
+
+						try {
+							savedFileName = FileManager.saveFile(
+									measureContext, bloodPressureValue,
+									arrayPressure, arrayTime,
+									demo.getBpMeasureFilteredHistory(), time,
+									notes);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} finally {
+							addNewMeasureAndFile(savedFileName,
+									bloodPressureValue, notes, time);
+						}
+
+					} else {
 						addNewMeasureAndFile(savedFileName, bloodPressureValue,
 								notes, time);
 					}
+					AlertDialog alert = saveAlert.create();
 
-				} else {
-					addNewMeasureAndFile(savedFileName, bloodPressureValue,
-							notes, time);
-				}
-				AlertDialog alert = saveAlert.create();
-
-				if (checkBox.isChecked()) {
-					if (FileManager.checkExternalStorage()) {
-						alert.setMessage(getResources()
-								.getText(
-										R.string.alert_dialog_data_saved_file_and_database));
+					if (checkBox.isChecked()) {
+						if (FileManager.checkExternalStorage()) {
+							alert.setMessage(getResources()
+									.getText(
+											R.string.alert_dialog_data_saved_file_and_database));
+						} else {
+							alert.setMessage(getResources()
+									.getText(
+											R.string.alert_dialog_data_saved_to_database));
+						}
 					} else {
 						alert.setMessage(getResources().getText(
 								R.string.alert_dialog_data_saved_to_database));
 					}
-				} else {
-					alert.setMessage(getResources().getText(
-							R.string.alert_dialog_data_saved_to_database));
+					alert.show();
 				}
-				alert.show();
 			}
-		}
 
 		});
 		saveAlert = new AlertDialog.Builder(this);
@@ -429,7 +418,6 @@ public class MeasureActivity extends Activity {
 					}
 				});
 
-		
 		bpMeasureXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 		// register plot with plot updater observer
 		plotUpdater = new MyPlotUpdater(bpMeasureXYPlot);
@@ -487,7 +475,6 @@ public class MeasureActivity extends Activity {
 	// */
 	private void startSignalProcessing() {
 
-
 		myProgressDialog = ProgressDialog.show(MeasureActivity.this,
 				getResources().getText(R.string.alert_dialog_processing_data),
 				getResources().getText(R.string.alert_dialog_determine_bp),
@@ -504,8 +491,10 @@ public class MeasureActivity extends Activity {
 				int i = 0;
 				int fs = 50;
 				while (i < l) {
-					arrayPressure[i] = demo.getBpMeasureHistory().get(i).doubleValue();
-					oscill[i] = demo.getBpMeasureFilteredHistory().get(i).doubleValue();
+					arrayPressure[i] = demo.getBpMeasureHistory().get(i)
+							.doubleValue();
+					oscill[i] = demo.getBpMeasureFilteredHistory().get(i)
+							.doubleValue();
 					arrayTime[i] = ((float) i / (float) fs);
 					i++;
 				}
@@ -514,7 +503,7 @@ public class MeasureActivity extends Activity {
 				signal.setPressure(arrayPressure);
 				signal.setOscill(oscill);
 				signal.setTime(arrayTime);
-				
+
 				bloodPressureValue = new BloodPressureValue();
 				SignalProcessing r = new SignalProcessing();
 
@@ -528,7 +517,7 @@ public class MeasureActivity extends Activity {
 				myProgressDialog.dismiss();
 				messageHandler.post(updataBPResultView);
 			}
-		}.start();		
+		}.start();
 	}
 
 	// Create runnable for chaging messages while pressure is being acquired
@@ -648,19 +637,20 @@ public class MeasureActivity extends Activity {
 		 */
 		Intent intent = getIntent();
 		String action = intent.getAction();
-		
-		//TODO: callingApp set to 1 automatically 
-		int callingApp=0;
-		
-		if (intent.getExtras() != null){
-            //callingApp=intent.getIntExtra("callingApp", 999); --using the bundle instead
-            Bundle myBundle = intent.getExtras();
-            callingApp=myBundle.getInt("callingApp", 999);
-           
-            if (callingApp==1)
-                sanaFlag=true;
-            else
-                sanaFlag=false;
+
+		// TODO: callingApp set to 1 automatically
+		int callingApp = 0;
+
+		if (intent.getExtras() != null) {
+			// callingApp=intent.getIntExtra("callingApp", 999); --using the
+			// bundle instead
+			Bundle myBundle = intent.getExtras();
+			callingApp = myBundle.getInt("callingApp", 999);
+
+			if (callingApp == 1)
+				sanaFlag = true;
+			else
+				sanaFlag = false;
 		}
 
 		if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
