@@ -13,6 +13,11 @@ public class TimeSeriesMod {
 	double[] pressure;
 	
 	/**
+	 * oscillations array 
+	 */
+	double[] oscill;
+
+	/**
 	 * time array (based on the sampling frequency)
 	 */
 	float[] time;
@@ -25,6 +30,14 @@ public class TimeSeriesMod {
 		this.pressure = pressure;
 	}
 
+	public double[] getOscill() {
+		return oscill;
+	}
+
+	public void setOscill(double[] oscill) {
+		this.oscill = oscill;
+	}
+	
 	public float[] getTime() {
 		return time;
 	}
@@ -32,6 +45,8 @@ public class TimeSeriesMod {
 	public void setTime(float[] time) {
 		this.time = time;
 	}
+	
+	
 
 	
 	
