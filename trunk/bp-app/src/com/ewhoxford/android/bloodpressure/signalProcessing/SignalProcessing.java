@@ -30,28 +30,30 @@ public class SignalProcessing {
 
 		// initialize variables
 		BloodPressureValue values = new BloodPressureValue();
-		TimeSeriesMod filtSignal = new TimeSeriesMod();
-		TimeSeriesMod oscillations = new TimeSeriesMod();
+		TimeSeriesMod newSignal = new TimeSeriesMod();
+		//TimeSeriesMod oscillations = new TimeSeriesMod();
 		// boolean badMeasure;
-
+		
 		// TimeSeriesMod filteredOscillations = new TimeSeriesMod();
 		int indexUp = 0;
 		int indexDown = 0;
 
 		/**
-		 * GET CUFF DEFLATION get indexes from the decreasing part of the signal
-		 * in the range 220 to 40 mm Hg
+		 * 
+		 * GET CUFF DEFLATION 
+		 * Get indexes from the decreasing part of the signal
+		 * 
 		 */
 		try {
 			
-			Log.v("MAURO:", "BEFORE CURVE");
+			Log.v("MAURO & MARCO:", "BEFORE SELECTING CURVE");
 			GetDecrCurve r2 = new GetDecrCurve();
-			filtSignal = r2.getDecrCurve(aux5);
+			newSignal = r2.getDecrCurve(aux5);
 			indexUp = r2.getDecrCurveIndexUp();
 			indexDown = r2.getDecrCurveIndexDown();
 			// badMeasure = r2.isBadMeasure(filtSignal, 20);
 
-			Log.v("MAURO:", "AFTER CURVE");
+			Log.v("MAURO & MARCO:", "AFTER SELECTING CURVE");
 			/**
 			 * 
 			 * if (badMeasure) { throw new BadMeasureException(TAG); }
@@ -66,18 +68,18 @@ public class SignalProcessing {
 			 * APPLY BAND-PASS FILTER get filtered signal by applying a
 			 * Butterworth band-pass filter
 			 */
-			FilterButter r4 = new FilterButter();
-			oscillations = r4.filterButter(filtSignal);
+			//FilterButter r4 = new FilterButter();
+			//oscillations = r4.filterButter(filtSignal);
 
 			/**
 			 * CALCULATE BLOOD PRESSURE VALUES get systolic, diastolic and mean
 			 * arterial blood pressure values
 			 */
 			PressureValues r5 = new PressureValues();
-			values = r5.pressureValues(oscillations, filtSignal, indexUp,
-					indexDown, samplingFrequency);
+			values = r5.pressureValues(newSignal, indexUp, indexDown, 
+					samplingFrequency);
 			
-			Log.v("MAURO:", "AFTER CALCULATE BLOOD PRESSURE VALUES");
+			Log.v("MAURO & MARCO:", "AFTER CALCULATING BLOOD PRESSURE VALUES");
 			
 		} catch (Exception e) {
 			// TODO: handle exception

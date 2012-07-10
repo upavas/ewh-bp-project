@@ -70,6 +70,8 @@ public class MeasureActivity extends Activity {
 	private SimpleXYSeries bpMeasureSeries = null;
 	// array with time points
 	private float[] arrayTime;
+	// array with oscillation (filtered signal) points
+	private double[] oscill;
 	// array with pressure points
 	private double[] arrayPressure;
 	// auxiliary variable to control measurement.
@@ -434,6 +436,7 @@ public class MeasureActivity extends Activity {
 	// */
 	private void startSignalProcessing() {
 
+
 		myProgressDialog = ProgressDialog.show(MeasureActivity.this,
 				getResources().getText(R.string.alert_dialog_processing_data),
 				getResources().getText(R.string.alert_dialog_determine_bp),
@@ -445,19 +448,22 @@ public class MeasureActivity extends Activity {
 				int l = demo.getBpMeasureHistory().size();
 				arrayTime = new float[l];
 				arrayPressure = new double[l];
+				oscill = new double[l];
+				// check if vectors have same size
 				int i = 0;
-				int fs = 100;
+				int fs = 50;
 				while (i < l) {
-					arrayPressure[i] = demo.getBpMeasureHistory().get(i)
-							.doubleValue();
+					arrayPressure[i] = demo.getBpMeasureHistory().get(i).doubleValue();
+					oscill[i] = demo.getBpMeasureFilteredHistory().get(i).doubleValue();
 					arrayTime[i] = ((float) i / (float) fs);
 					i++;
 				}
 
 				TimeSeriesMod signal = new TimeSeriesMod();
 				signal.setPressure(arrayPressure);
-
+				signal.setOscill(oscill);
 				signal.setTime(arrayTime);
+				
 				bloodPressureValue = new BloodPressureValue();
 				SignalProcessing r = new SignalProcessing();
 
@@ -471,8 +477,7 @@ public class MeasureActivity extends Activity {
 				myProgressDialog.dismiss();
 				messageHandler.post(updataBPResultView);
 			}
-		}.start();
-
+		}.start();		
 	}
 
 	// Create runnable for chaging messages while pressure is being acquired

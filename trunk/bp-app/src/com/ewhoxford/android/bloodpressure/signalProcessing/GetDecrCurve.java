@@ -2,7 +2,8 @@ package com.ewhoxford.android.bloodpressure.signalProcessing;
 
 /**
  * 
- * @author user Get decreasing part of the signal
+ * @author 
+ * Get decreasing part of the signal
  */
 public class GetDecrCurve {
 
@@ -27,10 +28,12 @@ public class GetDecrCurve {
 		TimeSeriesMod signalOut = new TimeSeriesMod();
 		int l = signal.pressure.length - maxval.index;
 		double[] curve = new double[signal.pressure.length];
+		double[] oscillation = new double[signal.oscill.length];
 		float[] time = new float[signal.pressure.length];
 		
 		// apply additional filter - remove transitions/jumps higher than 50 mmHg
 		curve = signal.pressure;
+		oscillation = signal.oscill;
 		time = signal.time;
 		//curve[0] = signal.pressure[maxval.index];
 		//time[0] = signal.time[maxval.index];
@@ -72,25 +75,31 @@ public class GetDecrCurve {
 			// get result - the middle element
 			curve[i - 2] = window[2];
 		}
-
-		// SELECT VALUES FROM 240 TO 40 mm Hg
+		
+		// SELECT VALUES OF DECREASING PART OF THE CURVE
+		// Also, let's ignore the first 2 secs (100 data points after the maximum) 
 		// initialize variables
-		boolean FLAG1 = false;
-		boolean FLAG2 = false;
+		//boolean FLAG1 = false;
+		//boolean FLAG2 = false;
 		//int indxup = 0;
 		//int indxdown = 0;
 
 		// get indexes
-		for (int i = maxval.index + 1; i < curve.length; ++i) {
+		indxup = maxval.index + 100;
+		indxdown = curve.length - 1;
+		/*for (int i = maxval.index + 100; i < curve.length; ++i) {
 			if (curve[i] <= 160 && FLAG1 == false) {
 				indxup = i;
 				FLAG1 = true;
+			}
+			else {
+				// DISPLAY ERROR MESSAGE OR 
 			}
 			if (curve[i] <= 50 && FLAG2 == false) {
 				indxdown = i;
 				FLAG2 = true;
 			}
-		}
+		}*/
 		
 		/*
 		int l1 = indxdown - indxup + 1;
@@ -110,8 +119,9 @@ public class GetDecrCurve {
 		//indxdown = indxdown + maxval.index;
 		
 		// output
-		signalOut.setPressure(curve);
+		signalOut.setPressure(signal.pressure); // Forget median Filter
 		signalOut.setTime(time);
+		signalOut.setOscill(oscillation);
 		return signalOut;
 	}
 	
@@ -126,14 +136,14 @@ public class GetDecrCurve {
 	}
 
 	
-	public boolean isBadMeasure(TimeSeriesMod signal, int timeTreshold) {
+	/*public boolean isBadMeasure(TimeSeriesMod signal, int timeTreshold) {
 		float time = signal.time[indxdown] - signal.time[indxup]; 
 		System.out.println("initial:"+signal.time[indxdown]+"s, end:"+signal.time[indxup]+"s");
 		if (time < timeTreshold) {
 			return true;
 		}
 		return false;
-	}
+	}*/
 	
 	
 
