@@ -195,7 +195,7 @@ public class TestDemoCustomHID extends Demo implements Runnable, DemoInterface {
 			ReadCSV r = new ReadCSV();
 
 			float[][] pressureValues = r.readCSV2(context.getResources()
-					.openRawResource(R.raw.bp2));
+					.openRawResource(R.raw.mstest2));
 
 			int l = pressureValues.length;
 

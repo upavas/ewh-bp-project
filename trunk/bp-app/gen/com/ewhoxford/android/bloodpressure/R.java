@@ -93,8 +93,15 @@ public final class R {
         public static final int measure_view=0x7f030007;
     }
     public static final class raw {
-        public static final int bp=0x7f050000;
-        public static final int bp2=0x7f050001;
+        public static final int amtest1=0x7f050000;
+        public static final int amtest2=0x7f050001;
+        public static final int bp=0x7f050002;
+        public static final int bp2=0x7f050003;
+        public static final int mptest1=0x7f050004;
+        public static final int mptest2=0x7f050005;
+        public static final int mstest1=0x7f050006;
+        public static final int mstest2=0x7f050007;
+        public static final int mstest3=0x7f050008;
     }
     public static final class string {
         /**  Main activity dashboard buttons 
