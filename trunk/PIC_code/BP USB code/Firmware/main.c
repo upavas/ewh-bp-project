@@ -265,7 +265,7 @@
 #endif
 
 unsigned char ReceivedDataBuffer[64];
-unsigned char ToSendDataBuffer[2];
+unsigned char ToSendDataBuffer[4];
 //unsigned int counter;
 //BOOL FLAG;
 #pragma udata
@@ -381,18 +381,31 @@ WORD_VAL ReadPOT(void);
 
 // ************** OUR CODE ***********************************************************************************************************************
 	if (INTCONbits.TMR0IF == 1)	{		INTCONbits.TMR0IF = 0;				// sampling frequency:
-		TMR0H = 0x63;						// for 250Hz (0.004s): 0xD1  ; 75Hz (13.3ms): 0x63  ; 50Hz (0.02s): 0x15
-		TMR0L = 0xC0;						// for 250Hz (0.004s): 0x20  ; 75Hz (13.3ms): 0xC0  ; 50Hz (0.02s): 0xA0
-		ADCON0bits.GO = 1;		}
+		TMR0H = 0x8A;						// for 250Hz (4ms): 0xD1  ; 100Hz (10ms): 0x8A  ; 75Hz (13.3ms): 0x63  ; 50Hz (20ms): 0x15
+		TMR0L = 0xD0;						// for 250Hz (4ms): 0x20  ; 100Hz (10ms): 0xD0  ; 75Hz (13.3ms): 0xC0  ; 50Hz (20ms): 0xA0
+		ADCON0bits.GO = 1;	}
 	
 	if (PIR1bits.ADIF == 1)	{		PIR1bits.ADIF = 0;
 		
 		if(!HIDTxHandleBusy(USBInHandle))
 		{
-			ToSendDataBuffer[0] = ADRESH;	//ADRESH
-			ToSendDataBuffer[1] = ADRESL;	//ADRESL
-
-			USBInHandle = HIDTxPacket(HID_EP,(BYTE*)&ToSendDataBuffer[0],sizeof(ToSendDataBuffer));
+			if (ANSELHbits.ANS10 == 1)
+			{
+				ToSendDataBuffer[0] = ADRESH;	//ADRESH
+				ToSendDataBuffer[1] = ADRESL;	//ADRESL
+				ANSELHbits.ANS10 = 0;
+				ANSELHbits.ANS11 = 1;
+				ADCON0 = 0x2D;
+			}
+			else							//if (ANSELHbits.ANS8 == 1)
+			{
+				ToSendDataBuffer[2] = ADRESH;
+				ToSendDataBuffer[3] = ADRESL;
+				ANSELHbits.ANS11 = 0;
+				ANSELHbits.ANS10 = 1;
+				ADCON0 = 0x29;
+				USBInHandle = HIDTxPacket(HID_EP,(BYTE*)&ToSendDataBuffer[0],sizeof(ToSendDataBuffer));
+			}				
 		}
 	}
 // ************** END OF OUR CODE *******************************************************************************************************************
@@ -496,14 +509,15 @@ static void InitializeSystem(void)
 		//TRISCbits.TRISC7 = 1;
 		//TRISCbits.TRISC0 = 1;						//By default this happens already
 		//TRISCbits.TRISC1 = 1;						//By default this happens already
-		
-		ANSELHbits.ANS9 = 1; 						//Defining RC6 as Analog Input (in devel. board) or RC7 in the prototype PCB
+
+		//ANSELHbits.ANS8 = 1; 						//Defining RC6 in the prototype PCB		
+		ANSELHbits.ANS10 = 1; 						//Defining RB4 as Analog Input
     	//TRISBbits.TRISB5 = 1;						//0 = PORTB pin configured as an output    and    1 = PORTB pin configured as an input
     	//TRISBbits.TRISB7 = 1;						//RB7/TX   and   RB5/RX: serial
 
 		//Initialize ADC
 		//mInitPressure();
-		ADCON0 = 0x25;								//MODIFIED BY US: 0x21 to the devel. board or 0x25 for prototype PCB
+		ADCON0 = 0x29;								// RB4/AN10 (0x29) for the RAW signal and RB5/AN11 (0x2D) for the filtered signal(0x21 to the dev. board)
         ADCON1 = 0x05;      						//ADC: For Positive and Negative voltage reference supplied externally through VREF+/- pin.
 		ADCON2 = 0xBA;								//BA;		//Right justified, 20 Tad, FOSC/32 (FOSC/34 might be a too fast conversion in the ADC, and something might happen.. soo FOSC/32 is middle ground)
 
@@ -511,8 +525,8 @@ static void InitializeSystem(void)
 		IPR1bits.ADIP = 1;							//ADIP: A/D Converter Interrupt Priority bit: 1 = High priority
 
 		//initilalise Timer0 as the PIC timer
-		TMR0H = 0xD1;
-		TMR0L = 0x20;
+		TMR0H = 0x8A;								// for 250Hz (0.004s): 0xD1  ; 100Hz ( ms): 0x77  ; 75Hz (13.3ms): 0x63  ; 50Hz (0.02s): 0x15
+		TMR0L = 0xD0;								// for 250Hz (0.004s): 0x20  ; 100Hz ( ms): 0x48  ; 75Hz (13.3ms): 0xC0  ; 50Hz (0.02s): 0xA0
 		T0CON = 0x91;
 		INTCONbits.TMR0IE = 1;
 		INTCONbits.TMR0IF = 0;
