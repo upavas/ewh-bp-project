@@ -1,0 +1,34 @@
+<Procedure title="BP Plugin" author="Ali">
+    <!-- Plugin template
+    <Page>
+        <Element type="PLUGIN | ENTRY_PLUGIN" id="$VALUE" 
+        concept="$VALUE"
+        question="$VALUE per concept"
+        action="[Intent action string]"
+        package=""
+        text=""
+        answer=""/>
+    </Page>
+    -->
+    <!-- generic element
+    <Page>
+        <Element type="" id="" 
+    	    concept="" 
+    	    question=""
+    	    required="" 
+    	    answer=""
+    	    audio=""
+    	    figure=""/>
+    </Page>
+    -->
+    
+    <Page>
+        <Element type="ENTRY_PLUGIN" id="multianswer_plugin"
+        concept="bp_values"
+        question="bp_values"
+        action="android.intent.action.MAIN"
+        mimeType="vnd.android.cursor.item/com.ewhoxford.android.bloodpressure.MainActivity"
+        answer=""/>
+    </Page>
+    
+</Procedure>
